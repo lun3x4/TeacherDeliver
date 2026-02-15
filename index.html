@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Meal Preorder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="glass-header">
+        <div class="logo">TeacherMeals</div>
+        <nav>
+            <button class="nav-btn active" data-target="home">Home</button>
+            <button class="nav-btn" data-target="order" id="nav-order">Order</button>
+            <button class="nav-btn hidden" data-target="management" id="nav-admin">Management</button>
+            <button class="nav-btn" data-target="contact">Contact</button>
+            <button class="nav-btn" data-target="signin" id="nav-signin">Sign In</button>
+            <button class="nav-btn hidden" id="nav-logout">Sign Out</button>
+        </nav>
+    </header>
+
+    <main id="app-container">
+
+        <section id="home" class="page active">
+            <div class="hero">
+                <h1>Teacher Meal Preorder</h1>
+                <p>Preorder your daily meals Monday through Friday. Fresh, convenient, and ready for pickup.</p>
+                
+                <div class="status-strip" id="status-strip">
+                    </div>
+            </div>
+
+            <div class="steps-grid">
+                <div class="card">
+                    <h3>1. Sign In</h3>
+                    <p>Log in with your school credentials to access the menu.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Order</h3>
+                    <p>Select your main, starter, and extras before midnight.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Pick Up</h3>
+                    <p>Collect your meal at the canteen the next working day.</p>
+                </div>
+            </div>
+
+            <div class="faq-section">
+                <h3>FAQ</h3>
+                <details>
+                    <summary>When do orders reset?</summary>
+                    <p>Orders reset every weeknight at 00:00 CET.</p>
+                </details>
+                <details>
+                    <summary>Can I order on weekends?</summary>
+                    <p>No, the site is closed on Saturday and Sunday.</p>
+                </details>
+            </div>
+        </section>
+
+        <section id="order" class="page">
+            <h2>Daily Order</h2>
+            
+            <div id="weekend-banner" class="banner error hidden">
+                Site is closed on weekends. Returns Monday.
+            </div>
+
+            <div id="order-form-container">
+                <form id="order-form">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>First Name</label>
+                            <input type="text" id="order-fname" required disabled>
+                        </div>
+                        <div class="input-group">
+                            <label>Last Name</label>
+                            <input type="text" id="order-lname" required disabled>
+                        </div>
+                    </div>
+
+                    <div id="menu-container"></div>
+
+                    <div class="card section-extras">
+                        <h3>Extras</h3>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="extra" value="cutlery"> Cutlery</label>
+                            <label><input type="checkbox" name="extra" value="napkin"> Napkin</label>
+                        </div>
+                        <div class="input-group">
+                            <label>Sauces / Other</label>
+                            <input type="text" id="order-sauces" placeholder="e.g. Ketchup, Mayo">
+                        </div>
+                        <div class="input-group">
+                            <label>Notes (Max 500 chars)</label>
+                            <textarea id="order-notes" maxlength="500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="order-summary">
+                        <span>Total Items: <b id="total-count">0</b></span>
+                        <span>Est. Price: €<b id="total-price">0.00</b></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Order</button>
+                        <button type="button" class="btn-danger" id="cancel-order-btn">Cancel Order</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="management" class="page">
+            <h2>Management Dashboard</h2>
+            <div class="admin-controls">
+                <input type="text" placeholder="Search orders..." id="admin-search">
+                <button class="btn-secondary">Filter by Date</button>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Summary</th>
+                            <th>Extras</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="contact" class="page">
+            <div id="contact-form-view">
+                <h2>Contact Support</h2>
+                <form id="contact-form">
+                    <div class="input-group">
+                        <label>Problem Type</label>
+                        <select required id="contact-type">
+                            <option value="">Select...</option>
+                            <option value="Billing">Billing</option>
+                            <option value="Order issue">Order issue</option>
+                            <option value="Menu issue">Menu issue</option>
+                            <option value="Account">Account</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Details (20-2000 chars)</label>
+                        <textarea id="contact-msg" minlength="20" maxlength="2000" required></textarea>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="contact-anon"> Submit Anonymously
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Submit Feedback</button>
+                </form>
+            </div>
+
+            <div id="contact-success-view" class="hidden text-center">
+                <h2>Thank you for your feedback</h2>
+                <button class="btn-secondary" id="contact-return-home">Return to Home</button>
+            </div>
+        </section>
+
+        <section id="signin" class="page">
+            <div class="auth-card">
+                <h2>Sign In</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" required placeholder="name@school.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="remember-me"> Remember me</label>
+                    </div>
+                    <button type="submit" class="btn-primary full-width">Sign In</button>
+                    <p class="auth-link">New here? <a href="#">Create an account</a></p>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Teacher Meal Preorder. <a href="#">Privacy</a> &bull; <a href="#">Terms</a></p>
+    </footer>
+
+    <div id="toast" class="toast hidden">Action Successful</div>
+
+    <script src="script.js"></script>
+    <div id="settings-wrapper">
+    <div id="settings-popover" class="settings-popover hidden">
+        <ul class="settings-list">
+            <li onclick="navigateTo('profile')">👤 Profile</li>
+            <li onclick="navigateTo('privacy')">🔒 Privacy Settings</li>
+            <li onclick="navigateTo('history')">🕒 Orders Made</li>
+            <li class="settings-toggle">
+                🌙 Dark Mode
+                <label class="switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="slider"></span>
+                </label>
+            </li>
+            <hr>
+            <li onclick="logout()" class="logout-red">🚪 Log Out</li>
+        </ul>
+    </div>
+
+    <button id="settings-btn" class="settings-fab">⚙️</button>
+</div>
+</body>
+</html>
