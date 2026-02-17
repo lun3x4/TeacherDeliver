@@ -1,139 +1,398 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Meal Preorder</title>
+    <meta name="description" content="Système de précommande de repas pour les professeurs">
+    <title>Réservation Repas Professeurs</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="glass-header">
-        <div class="logo">TeacherMeals</div>
-        <nav>
-            <button class="nav-btn active" data-target="home">Home</button>
-            <button class="nav-btn" data-target="order" id="nav-order">Order</button>
-            <button class="nav-btn hidden" data-target="management" id="nav-admin">Management</button>
-            <button class="nav-btn" data-target="contact">Contact</button>
-            <button class="nav-btn" data-target="signin" id="nav-signin">Sign In</button>
-            <button class="nav-btn hidden" id="nav-logout">Sign Out</button>
+    <header class="glass-header" role="banner">
+        <div class="logo" aria-label="Logo TeacherMeals">
+            <span>TeacherMeals</span>
+        </div>
+        <nav role="navigation" aria-label="Navigation principale">
+            <button class="nav-btn active" data-target="home" aria-current="page">
+                <span>Accueil</span>
+            </button>
+            <button class="nav-btn" data-target="order" id="nav-order">
+                <span>Commander</span>
+            </button>
+            <button class="nav-btn hidden" data-target="management" id="nav-admin">
+                <span>Gestion</span>
+            </button>
+            <button class="nav-btn" data-target="contact">
+                <span>Contact</span>
+            </button>
+            <button class="nav-btn" data-target="signin" id="nav-signin">
+                <span>Connexion</span>
+            </button>
+            <button class="nav-btn hidden" id="nav-logout">
+                <span>Déconnexion</span>
+            </button>
         </nav>
     </header>
 
-    <main id="app-container">
+    <main id="main-content" role="main">
 
-        <section id="home" class="page active">
-            <div class="hero">
-                <h1>Teacher Meal Preorder</h1>
-                <p>Preorder your daily meals Monday through Friday. Fresh, convenient, and ready for pickup.</p>
-                
-                <div class="status-strip" id="status-strip">
-                    </div>
-            </div>
-
-            <div class="steps-grid">
-                <div class="card">
-                    <h3>1. Sign In</h3>
-                    <p>Log in with your school credentials to access the menu.</p>
-                </div>
-                <div class="card">
-                    <h3>2. Order</h3>
-                    <p>Select your main, starter, and extras before midnight.</p>
-                </div>
-                <div class="card">
-                    <h3>3. Pick Up</h3>
-                    <p>Collect your meal at the canteen the next working day.</p>
+        <!-- Home Section -->
+        <section id="home" class="page active" role="tabpanel" aria-labelledby="home-title">
+            <div class="hero-section">
+                <h1 id="home-title">Teacher Meal Preorder</h1>
+                <p class="hero-description">
+                    Précommandez vos repas quotidiens du lundi au vendredi. 
+                    Frais, pratiques et prêts à récupérer.
+                </p>
+                <div class="status-strip" id="status-strip" role="status" aria-live="polite">
+                    <span id="status-message">Système actif - Commandes acceptées</span>
                 </div>
             </div>
 
-            <div class="faq-section">
-                <h3>FAQ</h3>
-                <details>
-                    <summary>When do orders reset?</summary>
-                    <p>Orders reset every weeknight at 00:00 CET.</p>
+            <div class="steps-grid" role="region" aria-labelledby="steps-title">
+                <h2 id="steps-title" class="sr-only">Comment ça marche</h2>
+                <div class="card step-card">
+                    <div class="step-number" aria-hidden="true">1</div>
+                    <h3>Se Connecter</h3>
+                    <p>Connectez-vous avec vos identifiants scolaires pour accéder au menu.</p>
+                </div>
+                <div class="card step-card">
+                    <div class="step-number" aria-hidden="true">2</div>
+                    <h3>Commander</h3>
+                    <p>Sélectionnez votre plat principal, entrée et accompagnements avant minuit.</p>
+                </div>
+                <div class="card step-card">
+                    <div class="step-number" aria-hidden="true">3</div>
+                    <h3>Récupérer</h3>
+                    <p>Récupérez votre repas à la cantine le jour suivant.</p>
+                </div>
+            </div>
+
+            <div class="faq-section" role="region" aria-labelledby="faq-title">
+                <h3 id="faq-title">Questions Fréquentes</h3>
+                <details class="faq-item">
+                    <summary>Quand les commandes sont-elles remises à zéro ?</summary>
+                    <p>Les commandes sont remises à zéro chaque soir de semaine à 00:00 CET.</p>
                 </details>
-                <details>
-                    <summary>Can I order on weekends?</summary>
-                    <p>No, the site is closed on Saturday and Sunday.</p>
+                <details class="faq-item">
+                    <summary>Puis-je commander le weekend ?</summary>
+                    <p>Non, le site est fermé le samedi et le dimanche. Retour lundi.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>Jusqu'a quand puis-je modifier ma commande ?</summary>
+                    <p>Vous pouvez modifier votre commande jusqu'à minuit la veille du jour de retrait.</p>
                 </details>
             </div>
         </section>
 
-        <section id="order" class="page">
-            <h2>Daily Order</h2>
+        <!-- Order Section -->
+        <section id="order" class="page" role="tabpanel" aria-labelledby="order-title">
+            <h2 id="order-title">Commande du Jour</h2>
             
-            <div id="weekend-banner" class="banner error hidden">
-                Site is closed on weekends. Returns Monday.
+            <div id="weekend-banner" class="banner error hidden" role="alert">
+                <strong>Site fermé le weekend.</strong> Retour lundi.
             </div>
 
+            <!-- ORDER FORM VIEW -->
             <div id="order-form-container">
-                <form id="order-form">
-                    <div class="form-row">
-                        <div class="input-group">
-                            <label>First Name</label>
-                            <input type="text" id="order-fname" required disabled>
+                <form id="order-form" novalidate>
+                    <fieldset class="form-section card">
+                        <legend>Vos informations</legend>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="order-fname">Prénom *</label>
+                                <input type="text" id="order-fname" name="firstName" maxlength="100" required aria-describedby="fname-error" class="letter-input">
+                                <span id="fname-error" class="error-message" aria-live="polite"></span>
+                            </div>
+                            <div class="input-group">
+                                <label for="order-lname">Nom *</label>
+                                <input type="text" id="order-lname" name="lastName" maxlength="100" required aria-describedby="lname-error" class="letter-input">
+                                <span id="lname-error" class="error-message" aria-live="polite"></span>
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <label>Last Name</label>
-                            <input type="text" id="order-lname" required disabled>
-                        </div>
+                    </fieldset>
+
+                    <div id="menu-container" role="region" aria-labelledby="menu-title">
+                        <h3 id="menu-title">Menu du jour</h3>
                     </div>
 
-                    <div id="menu-container"></div>
+                    <fieldset class="card section-extras">
+                        <legend>Extras</legend>
+                        <div class="checkbox-group" role="group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extra" value="cutlery">
+                                <span class="checkmark" aria-hidden="true"></span>
+                                Couverts
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extra" value="napkin">
+                                <span class="checkmark" aria-hidden="true"></span>
+                                Serviette
+                            </label>
+                        </div>
+                        <div class="input-group" style="margin-top:12px;margin-bottom:0">
+                            <label for="order-sauces">Sauces / Autres</label>
+                            <input type="text" id="order-sauces" name="sauces" placeholder="ex: Ketchup, Mayo" maxlength="200">
+                        </div>
+                    </fieldset>
 
-                    <div class="card section-extras">
-                        <h3>Extras</h3>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" name="extra" value="cutlery"> Cutlery</label>
-                            <label><input type="checkbox" name="extra" value="napkin"> Napkin</label>
+                    <!-- Floating cart bar -->
+                    <div class="cart-bar" id="cart-bar">
+                        <div class="cart-bar-info">
+                            <span id="cart-count-badge">0 article</span>
+                            <span class="cart-bar-total">€<span id="total-price">0.00</span></span>
                         </div>
-                        <div class="input-group">
-                            <label>Sauces / Other</label>
-                            <input type="text" id="order-sauces" placeholder="e.g. Ketchup, Mayo">
-                        </div>
-                        <div class="input-group">
-                            <label>Notes (Max 500 chars)</label>
-                            <textarea id="order-notes" maxlength="500"></textarea>
+                        <div class="form-actions" style="margin:0">
+                            <button type="submit" class="btn-primary" id="submit-order-btn">
+                                Valider la Commande →
+                            </button>
+                            <button type="button" class="btn-danger" id="cancel-order-btn">Annuler</button>
                         </div>
                     </div>
-
-                    <div class="order-summary">
-                        <span>Total Items: <b id="total-count">0</b></span>
-                        <span>Est. Price: €<b id="total-price">0.00</b></span>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-primary">Save Order</button>
-                        <button type="button" class="btn-danger" id="cancel-order-btn">Cancel Order</button>
-                    </div>
+                    <!-- hidden field for total count -->
+                    <span id="total-count" class="hidden">0</span>
                 </form>
             </div>
+
+            <!-- PAYMENT VIEW -->
+            <div id="payment-view" class="hidden">
+                <div class="payment-layout">
+                    <div class="payment-main">
+                        <button class="btn-back" id="back-to-order">← Modifier la commande</button>
+                        <h2>Paiement</h2>
+
+                        <div class="card payment-method-card">
+                            <h3>Moyen de paiement</h3>
+                            <div class="payment-methods">
+                                <label class="payment-option active" data-method="card">
+                                    <input type="radio" name="payment" value="card" checked>
+                                    <div class="payment-option-inner">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                                        <span>Carte bancaire</span>
+                                    </div>
+                                </label>
+                                <label class="payment-option" data-method="cash">
+                                    <input type="radio" name="payment" value="cash">
+                                    <div class="payment-option-inner">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
+                                        <span>Espèces</span>
+                                    </div>
+                                </label>
+                                <label class="payment-option" data-method="badge">
+                                    <input type="radio" name="payment" value="badge">
+                                    <div class="payment-option-inner">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h.01M7 12h6M7 16h10"/></svg>
+                                        <span>Badge école</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Card fields (shown only for card) -->
+                            <div id="card-fields" class="card-fields">
+                                <div class="input-group">
+                                    <label>Numéro de carte</label>
+                                    <input type="text" id="card-number" placeholder="4242 4242 4242 4242" maxlength="19" autocomplete="cc-number">
+                                </div>
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label>Expiration</label>
+                                        <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>CVV</label>
+                                        <input type="text" id="card-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Nom sur la carte</label>
+                                    <input type="text" id="card-name" placeholder="JEAN DUPONT" autocomplete="cc-name">
+                                </div>
+                                <p class="secure-note">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    Paiement sécurisé — données chiffrées SSL
+                                </p>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary full-width" id="confirm-payment-btn" style="margin-top:8px">
+                            Confirmer le paiement
+                        </button>
+                    </div>
+
+                    <!-- Order recap sidebar -->
+                    <div class="payment-sidebar">
+                        <div class="card recap-card">
+                            <h3>Récapitulatif</h3>
+                            <div id="payment-recap-items"></div>
+                            <div class="recap-divider"></div>
+                            <div class="recap-row"><span>Sous-total</span><span id="recap-subtotal">€0.00</span></div>
+                            <div class="recap-row"><span>Extras</span><span id="recap-extras-label">—</span></div>
+                            <div class="recap-row recap-total"><span>Total</span><span id="recap-total">€0.00</span></div>
+                            <div class="recap-row" style="margin-top:8px;font-size:0.82rem;color:var(--text-muted)">
+                                <span>Retrait le :</span>
+                                <span id="recap-date">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT SUCCESS VIEW -->
+            <div id="payment-success-view" class="hidden">
+                <div class="success-card">
+                    <div class="success-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <h2>Commande confirmée !</h2>
+                    <p>Votre repas sera prêt à la cantine demain matin. Un email de confirmation vous a été envoyé.</p>
+                    <div class="success-ref">Réf. <strong id="order-ref">—</strong></div>
+                    <button class="btn-primary" id="success-home-btn">Retour à l'accueil</button>
+                </div>
+            </div>
         </section>
 
+        <!-- Management Section -->
         <section id="management" class="page">
-            <h2>Management Dashboard</h2>
-            <div class="admin-controls">
-                <input type="text" placeholder="Search orders..." id="admin-search">
-                <button class="btn-secondary">Filter by Date</button>
+            <div class="admin-header">
+                <h2>Tableau de Bord Admin</h2>
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="orders-tab">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+                        Commandes
+                    </button>
+                    <button class="admin-tab" data-tab="menu-tab">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                        Gérer le menu
+                    </button>
+                </div>
             </div>
-            
-            <div class="table-wrapper">
-                <table id="orders-table">
-                    <thead>
-                        <tr>
-                            <th>Teacher</th>
-                            <th>Summary</th>
-                            <th>Extras</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="orders-table-body">
-                        </tbody>
-                </table>
+
+            <!-- ORDERS TAB -->
+            <div id="orders-tab" class="admin-tab-content active">
+                <div class="admin-toolbar">
+                    <input type="text" placeholder="Rechercher un professeur…" id="admin-search" class="admin-search-input">
+                    <div class="admin-toolbar-right">
+                        <select id="admin-status-filter">
+                            <option value="">Tous les statuts</option>
+                            <option value="Confirmée">Confirmée</option>
+                            <option value="Modifiée">Modifiée</option>
+                            <option value="Annulée">Annulée</option>
+                        </select>
+                        <button class="btn-secondary" id="export-csv-btn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Exporter CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-stats-strip" id="admin-stats"></div>
+
+                <div class="table-wrapper">
+                    <table id="orders-table" class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Professeur</th>
+                                <th>Heure</th>
+                                <th>Entrée</th>
+                                <th>Plat</th>
+                                <th>Dessert</th>
+                                <th>Extras</th>
+                                <th>Total</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-table-body"></tbody>
+                        <tfoot id="orders-table-foot"></tfoot>
+                    </table>
+                </div>
+                <p class="table-empty hidden" id="table-empty">Aucune commande pour le moment.</p>
+            </div>
+
+            <!-- MENU TAB -->
+            <div id="menu-tab" class="admin-tab-content">
+                <div class="menu-admin-layout">
+
+                    <!-- Add / Edit Form -->
+                    <div class="card menu-form-card">
+                        <h3 id="menu-form-title">Ajouter un plat</h3>
+                        <form id="menu-admin-form" novalidate>
+                            <input type="hidden" id="edit-item-id">
+
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="item-name">Nom du plat *</label>
+                                    <input type="text" id="item-name" placeholder="ex: Poulet Rôti" required maxlength="80">
+                                </div>
+                                <div class="input-group">
+                                    <label for="item-category">Catégorie *</label>
+                                    <select id="item-category" required>
+                                        <option value="">Choisir…</option>
+                                        <option value="starter">Entrée</option>
+                                        <option value="main">Plat principal</option>
+                                        <option value="dessert">Dessert</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="item-price">Prix (€) *</label>
+                                    <input type="number" id="item-price" min="0" max="99" step="0.10" placeholder="0.00" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="item-limit">Stock limité (0 = illimité)</label>
+                                    <input type="number" id="item-limit" min="0" max="999" step="1" placeholder="0">
+                                </div>
+                            </div>
+
+                            <div class="tag-group">
+                                <span class="tag-label">Étiquettes</span>
+                                <div class="tag-options">
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="tag" value="veg"> Végétarien
+                                    </label>
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="tag" value="vegan"> Végétalien
+                                    </label>
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="tag" value="glutenfree"> Sans Gluten
+                                    </label>
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="tag" value="halal"> Halal
+                                    </label>
+                                    <label class="tag-checkbox">
+                                        <input type="checkbox" name="tag" value="spicy"> Épicé
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="checkbox-label" style="font-size:0.9rem">
+                                    <input type="checkbox" id="item-visible" checked>
+                                    <span class="checkmark"></span>
+                                    Visible dans le menu
+                                </label>
+                            </div>
+
+                            <div class="form-actions" style="justify-content:flex-start;gap:8px">
+                                <button type="submit" class="btn-primary" id="menu-submit-btn">Ajouter le plat</button>
+                                <button type="button" class="btn-secondary hidden" id="menu-cancel-edit-btn">Annuler</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Current menu list -->
+                    <div class="menu-list-panel">
+                        <h3>Menu actuel</h3>
+                        <div id="admin-menu-list"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
+        <!-- Contact Section -->
         <section id="contact" class="page">
             <div id="contact-form-view">
                 <h2>Contact Support</h2>
@@ -149,77 +408,209 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    
                     <div class="input-group">
                         <label>Details (20-2000 chars)</label>
                         <textarea id="contact-msg" minlength="20" maxlength="2000" required></textarea>
                     </div>
-
                     <div class="checkbox-group">
-                        <label>
-                            <input type="checkbox" id="contact-anon"> Submit Anonymously
-                        </label>
+                        <label><input type="checkbox" id="contact-anon"> Submit Anonymously</label>
                     </div>
-
                     <button type="submit" class="btn-primary">Submit Feedback</button>
                 </form>
             </div>
-
             <div id="contact-success-view" class="hidden text-center">
                 <h2>Thank you for your feedback</h2>
                 <button class="btn-secondary" id="contact-return-home">Return to Home</button>
             </div>
         </section>
 
+        <!-- Sign In Section — Discord-style -->
         <section id="signin" class="page">
-            <div class="auth-card">
-                <h2>Sign In</h2>
-                <form id="login-form">
-                    <div class="input-group">
-                        <label>Email</label>
-                        <input type="email" id="login-email" required placeholder="name@school.com">
+            <div class="signin-bg">
+                <div class="auth-card">
+                    <div class="auth-logo">
+                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
                     </div>
-                    <div class="input-group">
-                        <label>Password</label>
-                        <input type="password" id="login-password" required>
+                    <h2 id="auth-title">Bon retour !</h2>
+                    <p class="auth-subtitle">Nous sommes heureux de vous revoir.</p>
+                    <form id="auth-form" autocomplete="on">
+                        <div id="register-fields" class="hidden">
+                            <div class="input-group">
+                                <label for="reg-fname">Prénom</label>
+                                <input type="text" id="reg-fname" placeholder="Jean" autocomplete="given-name">
+                            </div>
+                            <div class="input-group">
+                                <label for="reg-lname">Nom</label>
+                                <input type="text" id="reg-lname" placeholder="Dupont" autocomplete="family-name">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="auth-email">Adresse e-mail</label>
+                            <input type="email" id="auth-email" required placeholder="nom@ecole.fr" autocomplete="email">
+                        </div>
+
+                        <div class="input-group">
+                            <div class="label-row">
+                                <label for="auth-password">Mot de passe</label>
+                                <button type="button" class="forgot-link" tabindex="-1">Mot de passe oublié ?</button>
+                            </div>
+                            <div class="password-field-wrapper">
+                                <input type="password" id="auth-password" required autocomplete="current-password">
+                                <button type="button" class="toggle-password" id="togglePassword" tabindex="-1" aria-label="Afficher/Masquer le mot de passe">
+                                    <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="confirm-password-group" class="input-group hidden">
+                            <label for="auth-confirm-password">Confirmer le mot de passe</label>
+                            <input type="password" id="auth-confirm-password" autocomplete="new-password">
+                        </div>
+
+                        <div id="remember-me-group" class="remember-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="remember-me">
+                                <span class="checkmark" aria-hidden="true"></span>
+                                Se souvenir de moi
+                            </label>
+                        </div>
+
+                        <button type="submit" id="auth-submit-btn" class="btn-primary full-width">Se connecter</button>
+
+                        <p class="auth-link">
+                            <span id="auth-switch-text">Nouveau ici ?</span>
+                            <a href="#" id="switch-auth-mode">Créer un compte</a>
+                        </p>
+                    </form>
+
+                    <div class="auth-footer-links">
+                        <a href="#" data-target="privacy" class="page-link">Confidentialité</a>
+                        <span>·</span>
+                        <a href="#" data-target="terms" class="page-link">Conditions</a>
                     </div>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" id="remember-me"> Remember me</label>
-                    </div>
-                    <button type="submit" class="btn-primary full-width">Sign In</button>
-                    <p class="auth-link">New here? <a href="#">Create an account</a></p>
-                </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Page -->
+        <section id="privacy" class="page">
+            <div class="legal-page">
+                <button class="btn-back" data-target="home">← Retour</button>
+                <h1>Politique de Confidentialité</h1>
+                <p class="legal-date">Dernière mise à jour : février 2026</p>
+
+                <div class="card">
+                    <h3>1. Données collectées</h3>
+                    <p>Nous collectons uniquement les informations nécessaires au fonctionnement du service : nom, prénom, adresse e-mail et préférences de commande. Aucune donnée bancaire n'est stockée sur nos serveurs.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Utilisation des données</h3>
+                    <p>Vos données sont utilisées exclusivement pour gérer vos réservations de repas et améliorer le service. Elles ne sont ni vendues ni partagées avec des tiers à des fins commerciales.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Conservation</h3>
+                    <p>Les données de commande sont conservées pendant 12 mois à compter de la dernière activité. Vous pouvez demander la suppression de votre compte à tout moment en contactant le support.</p>
+                </div>
+                <div class="card">
+                    <h3>4. Vos droits</h3>
+                    <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous via la page Contact.</p>
+                </div>
+                <div class="card">
+                    <h3>5. Cookies</h3>
+                    <p>Nous utilisons uniquement des cookies essentiels au fonctionnement du service (session, préférences d'affichage). Aucun cookie publicitaire ou de traçage n'est utilisé.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Terms Page -->
+        <section id="terms" class="page">
+            <div class="legal-page">
+                <button class="btn-back" data-target="home">← Retour</button>
+                <h1>Conditions d'Utilisation</h1>
+                <p class="legal-date">Dernière mise à jour : février 2026</p>
+
+                <div class="card">
+                    <h3>1. Accès au service</h3>
+                    <p>Le service TeacherMeals est réservé au personnel enseignant de l'établissement. L'accès est conditionné à la possession d'identifiants scolaires valides.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Commandes</h3>
+                    <p>Les commandes doivent être passées avant minuit la veille du jour souhaité. Le service est indisponible les weekends et jours fériés. Toute commande validée engage l'utilisateur.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Annulation</h3>
+                    <p>Une commande peut être annulée jusqu'à minuit la veille du repas. Passé ce délai, le repas sera préparé et facturé normalement.</p>
+                </div>
+                <div class="card">
+                    <h3>4. Comportement</h3>
+                    <p>Les utilisateurs s'engagent à utiliser le service de bonne foi et à ne pas tenter d'en perturber le fonctionnement. Tout abus pourra entraîner la suspension du compte.</p>
+                </div>
+                <div class="card">
+                    <h3>5. Responsabilité</h3>
+                    <p>L'établissement ne saurait être tenu responsable des interruptions de service dues à des raisons techniques ou de force majeure. En cas de problème, contactez le support via la page Contact.</p>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <footer>
-        <p>&copy; 2026 Teacher Meal Preorder. <a href="#">Privacy</a> &bull; <a href="#">Terms</a></p>
-    </footer>
+    <!-- Settings FAB -->
+    <div class="settings-container">
+        <div id="settings-popover" class="settings-popover">
+            <div class="popover-header">Paramètres</div>
+            <ul class="settings-list">
+                <li>Profil</li>
 
-    <div id="toast" class="toast hidden">Action Successful</div>
+                <li class="has-submenu" id="pref-link">
+                    <span>Aide</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <ul class="sous-menu">
+                        <li>Centre d'aide</li>
+                        <li data-target="privacy" class="page-link">Confidentialité</li>
+                    </ul>
+                </li>
 
-    <script src="script.js"></script>
-    <div id="settings-wrapper">
-    <div id="settings-popover" class="settings-popover hidden">
-        <ul class="settings-list">
-            <li onclick="navigateTo('profile')">👤 Profile</li>
-            <li onclick="navigateTo('privacy')">🔒 Privacy Settings</li>
-            <li onclick="navigateTo('history')">🕒 Orders Made</li>
-            <li class="settings-toggle">
-                🌙 Dark Mode
-                <label class="switch">
-                    <input type="checkbox" id="dark-mode-toggle">
-                    <span class="slider"></span>
-                </label>
-            </li>
-            <hr>
-            <li onclick="logout()" class="logout-red">🚪 Log Out</li>
-        </ul>
+                <li class="has-submenu" id="lang-menu">
+                    <span id="lang-label">Langue : FR</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <ul class="sous-menu">
+                        <li data-lang="fr" class="lang-option active-lang">🇫🇷 Français</li>
+                        <li data-lang="en" class="lang-option">🇬🇧 English</li>
+                    </ul>
+                </li>
+
+                <li class="darkmode-row">
+                    <span>Mode sombre</span>
+                    <label class="apple-switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </li>
+
+                <li data-target="signin" class="setting-btn" id="settings-signin">Connexion</li>
+                <li class="setting-btn hidden" id="settings-logout">Déconnexion</li>
+            </ul>
+        </div>
+        
+        <button id="settings-fab" class="settings-fab" aria-label="Paramètres">
+            <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.67 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" /></svg>
+        </button>
     </div>
 
-    <button id="settings-btn" class="settings-fab">⚙️</button>
-</div>
+    <footer role="contentinfo">
+        <p>&copy; 2026 Réservation Repas Professeurs. 
+           <a href="#" data-target="privacy" class="page-link" aria-label="Politique de confidentialité">Confidentialité</a> &bull; 
+           <a href="#" data-target="terms" class="page-link" aria-label="Conditions d'utilisation">Conditions</a>
+        </p>
+    </footer>
+
+    <!-- Toast container (stacks toasts) -->
+    <div id="toast-container" aria-live="assertive" aria-atomic="false"></div>
+
+    <script src="script.js"></script>
 </body>
 </html>
