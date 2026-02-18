@@ -560,7 +560,7 @@ body.dark-mode .profile-logout-btn:hover { background:#450a0a !important; }
     padding:6px 10px; border:2px solid var(--border-light);
     border-radius:var(--radius-sm); font-size:0.85rem;
     background:var(--bg-secondary); color:var(--text-primary);
-    cursor:pointer; min-width:100px;
+    cursor:pointer; max-width:100px;
 }
 
 /* ============================================================
