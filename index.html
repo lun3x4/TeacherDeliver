@@ -10,549 +10,635 @@
 <body>
 
     <header class="glass-header" role="banner">
-        <div class="logo" aria-label="Logo TeacherMeals">
-            <span>TeacherMeals</span>
-        </div>
+        <div class="logo" aria-label="Logo TeacherMeals"><span>TeacherMeals</span></div>
         <nav role="navigation" aria-label="Navigation principale">
-            <button class="nav-btn active" data-target="home" aria-current="page">
-                <span>Accueil</span>
+            <button class="nav-btn active" data-target="home">
+                <span data-i18n="navHome">Accueil</span>
             </button>
             <button class="nav-btn" data-target="order" id="nav-order">
-                <span>Commander</span>
+                <span data-i18n="navOrder">Commander</span>
             </button>
             <button class="nav-btn hidden" data-target="management" id="nav-admin">
-                <span>Gestion</span>
+                <span data-i18n="navManagement">Gestion</span>
             </button>
             <button class="nav-btn" data-target="contact">
-                <span>Contact</span>
+                <span data-i18n="navContact">Contact</span>
             </button>
             <button class="nav-btn" data-target="signin" id="nav-signin">
-                <span>Connexion</span>
+                <span data-i18n="navSignin">Connexion</span>
             </button>
-            <button class="nav-btn hidden" id="nav-logout">
-                <span>Déconnexion</span>
+            <!-- Profile avatar button (logged in) -->
+            <button class="nav-btn nav-profile hidden" id="nav-profile" data-target="profile">
+                <div class="avatar-mini" id="header-avatar">?</div>
+                <span id="header-username" data-i18n="navProfile">Profil</span>
             </button>
         </nav>
     </header>
 
     <main id="main-content" role="main">
 
-        <!-- Home Section -->
-        <section id="home" class="page active" role="tabpanel" aria-labelledby="home-title">
+        <!-- ===================== HOME ===================== -->
+        <section id="home" class="page active">
             <div class="hero-section">
-                <h1 id="home-title">Teacher Meal Preorder</h1>
-                <p class="hero-description">
-                    Précommandez vos repas quotidiens du lundi au vendredi. 
-                    Frais, pratiques et prêts à récupérer.
-                </p>
-                <div class="status-strip" id="status-strip" role="status" aria-live="polite">
-                    <span id="status-message">Système actif - Commandes acceptées</span>
-                </div>
+                <h1 data-i18n="homeTitle">Réservation Repas Professeurs</h1>
+                <p class="hero-description" data-i18n="homeDescription">Précommandez vos repas quotidiens du lundi au vendredi. Frais, pratiques et prêts à récupérer.</p>
+                <div class="status-strip" id="status-strip" role="status" aria-live="polite"></div>
             </div>
-
-            <div class="steps-grid" role="region" aria-labelledby="steps-title">
-                <h2 id="steps-title" class="sr-only">Comment ça marche</h2>
-                <div class="card step-card">
-                    <div class="step-number" aria-hidden="true">1</div>
-                    <h3>Se Connecter</h3>
-                    <p>Connectez-vous avec vos identifiants scolaires pour accéder au menu.</p>
-                </div>
-                <div class="card step-card">
-                    <div class="step-number" aria-hidden="true">2</div>
-                    <h3>Commander</h3>
-                    <p>Sélectionnez votre plat principal, entrée et accompagnements avant minuit.</p>
-                </div>
-                <div class="card step-card">
-                    <div class="step-number" aria-hidden="true">3</div>
-                    <h3>Récupérer</h3>
-                    <p>Récupérez votre repas à la cantine le jour suivant.</p>
-                </div>
+            <div class="steps-grid">
+                <div class="card step-card"><div class="step-number">1</div><h3 data-i18n="step1Title">Se Connecter</h3><p data-i18n="step1Desc">Connectez-vous avec vos identifiants scolaires.</p></div>
+                <div class="card step-card"><div class="step-number">2</div><h3 data-i18n="step2Title">Commander</h3><p data-i18n="step2Desc">Sélectionnez entrée, plat et dessert avant minuit.</p></div>
+                <div class="card step-card"><div class="step-number">3</div><h3 data-i18n="step3Title">Récupérer</h3><p data-i18n="step3Desc">Récupérez votre repas à la cantine le jour suivant.</p></div>
             </div>
-
-            <div class="faq-section" role="region" aria-labelledby="faq-title">
-                <h3 id="faq-title">Questions Fréquentes</h3>
-                <details class="faq-item">
-                    <summary>Quand les commandes sont-elles remises à zéro ?</summary>
-                    <p>Les commandes sont remises à zéro chaque soir de semaine à 00:00 CET.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>Puis-je commander le weekend ?</summary>
-                    <p>Non, le site est fermé le samedi et le dimanche. Retour lundi.</p>
-                </details>
-                <details class="faq-item">
-                    <summary>Jusqu'a quand puis-je modifier ma commande ?</summary>
-                    <p>Vous pouvez modifier votre commande jusqu'à minuit la veille du jour de retrait.</p>
-                </details>
+            <div class="faq-section">
+                <h3 data-i18n="faqTitle">Questions Fréquentes</h3>
+                <details class="faq-item"><summary data-i18n="faq1Q">Quand les commandes sont-elles remises à zéro ?</summary><p data-i18n="faq1A">Les commandes sont remises à zéro chaque soir à 00:00 CET.</p></details>
+                <details class="faq-item"><summary data-i18n="faq2Q">Puis-je commander le weekend ?</summary><p data-i18n="faq2A">Non, le site est fermé samedi et dimanche. Retour lundi.</p></details>
+                <details class="faq-item"><summary data-i18n="faq3Q">Jusqu'à quand puis-je modifier ma commande ?</summary><p data-i18n="faq3A">Jusqu'à minuit la veille du jour de retrait.</p></details>
             </div>
         </section>
 
-        <!-- Order Section -->
-        <section id="order" class="page" role="tabpanel" aria-labelledby="order-title">
-            <h2 id="order-title">Commande du Jour</h2>
-            
-            <div id="weekend-banner" class="banner error hidden" role="alert">
-                <strong>Site fermé le weekend.</strong> Retour lundi.
-            </div>
+        <!-- ===================== ORDER ===================== -->
+        <section id="order" class="page">
+            <h2 data-i18n="orderTitle">Commande du Jour</h2>
+            <div id="weekend-banner" class="banner error hidden"><strong data-i18n="weekendBanner">Site fermé le weekend.</strong> <span data-i18n="statusReturnMonday">Retour lundi.</span></div>
 
-            <!-- ORDER FORM VIEW -->
+            <!-- Order Form -->
             <div id="order-form-container">
                 <form id="order-form" novalidate>
                     <fieldset class="form-section card">
-                        <legend>Vos informations</legend>
+                        <legend data-i18n="orderYourInfo">Vos informations</legend>
                         <div class="form-row">
                             <div class="input-group">
-                                <label for="order-fname">Prénom *</label>
-                                <input type="text" id="order-fname" name="firstName" maxlength="100" required aria-describedby="fname-error" class="letter-input">
-                                <span id="fname-error" class="error-message" aria-live="polite"></span>
+                                <label for="order-fname" data-i18n="orderFirstName">Prénom *</label>
+                                <input type="text" id="order-fname" name="firstName" maxlength="100" required>
+                                <span class="error-message" aria-live="polite"></span>
                             </div>
                             <div class="input-group">
-                                <label for="order-lname">Nom *</label>
-                                <input type="text" id="order-lname" name="lastName" maxlength="100" required aria-describedby="lname-error" class="letter-input">
-                                <span id="lname-error" class="error-message" aria-live="polite"></span>
+                                <label for="order-lname" data-i18n="orderLastName">Nom *</label>
+                                <input type="text" id="order-lname" name="lastName" maxlength="100" required>
+                                <span class="error-message" aria-live="polite"></span>
                             </div>
                         </div>
                     </fieldset>
 
-                    <div id="menu-container" role="region" aria-labelledby="menu-title">
-                        <h3 id="menu-title">Menu du jour</h3>
-                    </div>
+                    <div id="menu-container"></div>
 
                     <fieldset class="card section-extras">
-                        <legend>Extras</legend>
-                        <div class="checkbox-group" role="group">
+                        <legend data-i18n="extrasTitle">Extras &amp; Accessoires</legend>
+                        <div class="extras-grid">
                             <label class="checkbox-label">
                                 <input type="checkbox" name="extra" value="cutlery">
-                                <span class="checkmark" aria-hidden="true"></span>
-                                Couverts
+                                <span class="checkmark"></span><span data-i18n="extraCutlery">Couverts</span>
                             </label>
                             <label class="checkbox-label">
                                 <input type="checkbox" name="extra" value="napkin">
-                                <span class="checkmark" aria-hidden="true"></span>
-                                Serviette
+                                <span class="checkmark"></span><span data-i18n="extraNapkin">Serviette</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extra" value="sauces">
+                                <span class="checkmark"></span><span data-i18n="extraSauces">Sauces</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="extra" value="allergies">
+                                <span class="checkmark"></span><span data-i18n="extraAllergies">Allergies</span>
                             </label>
                         </div>
-                        <div class="input-group" style="margin-top:12px;margin-bottom:0">
-                            <label for="order-sauces">Sauces / Autres</label>
-                            <input type="text" id="order-sauces" name="sauces" placeholder="ex: Ketchup, Mayo" maxlength="200">
+                        <div class="input-group" style="margin-top:14px;margin-bottom:0">
+                            <label for="order-notes" data-i18n="orderNotes">Notes / Autres</label>
+                            <textarea id="order-notes" name="notes" data-i18n-placeholder="orderNotesPlaceholder" placeholder="Précisez ici vos allergies, préférences de sauces, ou toute autre demande spéciale…" maxlength="400" rows="2" class="auto-resize"></textarea>
                         </div>
                     </fieldset>
 
-                    <!-- Floating cart bar -->
+                    <!-- Cart bar -->
                     <div class="cart-bar" id="cart-bar">
                         <div class="cart-bar-info">
                             <span id="cart-count-badge">0 article</span>
                             <span class="cart-bar-total">€<span id="total-price">0.00</span></span>
                         </div>
-                        <div class="form-actions" style="margin:0">
-                            <button type="submit" class="btn-primary" id="submit-order-btn">
-                                Valider la Commande →
-                            </button>
-                            <button type="button" class="btn-danger" id="cancel-order-btn">Annuler</button>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <button type="submit" class="btn-primary" id="submit-order-btn" data-i18n="validateOrder">Valider la Commande →</button>
+                            <button type="button" class="btn-danger" id="cancel-order-btn" data-i18n="cancel">Annuler</button>
                         </div>
                     </div>
-                    <!-- hidden field for total count -->
                     <span id="total-count" class="hidden">0</span>
                 </form>
             </div>
 
-            <!-- PAYMENT VIEW -->
+            <!-- Email Confirmation Modal -->
+            <div id="email-confirm-modal" class="modal-overlay hidden">
+                <div class="modal-box">
+                    <div class="modal-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <h3 data-i18n="modalConfirmTitle">Confirmer votre commande</h3>
+                    <p data-i18n="modalConfirmEmailSent">Un email de confirmation va être envoyé à :</p>
+                    <div class="confirm-email-display" id="confirm-email-addr">—</div>
+                    <p class="modal-note" data-i18n="modalConfirmClickLink">Cliquez sur le lien dans l'email pour valider définitivement votre commande.</p>
+                    <div class="modal-actions">
+                        <button class="btn-primary full-width" id="modal-send-btn" data-i18n="modalSendEmail">Envoyer l'email de confirmation</button>
+                        <button class="btn-secondary full-width" id="modal-cancel-btn" data-i18n="modalCancel">Annuler</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment View -->
             <div id="payment-view" class="hidden">
                 <div class="payment-layout">
                     <div class="payment-main">
-                        <button class="btn-back" id="back-to-order">← Modifier la commande</button>
-                        <h2>Paiement</h2>
-
+                        <button class="btn-back" id="back-to-order">← <span data-i18n="backToOrder">Modifier la commande</span></button>
+                        <h2 data-i18n="paymentTitle">Paiement</h2>
                         <div class="card payment-method-card">
-                            <h3>Moyen de paiement</h3>
+                            <h3 data-i18n="paymentMethodTitle">Moyen de paiement</h3>
                             <div class="payment-methods">
                                 <label class="payment-option active" data-method="card">
                                     <input type="radio" name="payment" value="card" checked>
                                     <div class="payment-option-inner">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                                        <span>Carte bancaire</span>
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                                        <span data-i18n="paymentCard">Carte bancaire</span>
                                     </div>
                                 </label>
                                 <label class="payment-option" data-method="cash">
                                     <input type="radio" name="payment" value="cash">
                                     <div class="payment-option-inner">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
-                                        <span>Espèces</span>
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h.01M18 12h.01"/></svg>
+                                        <span data-i18n="paymentCash">Espèces</span>
                                     </div>
                                 </label>
                                 <label class="payment-option" data-method="badge">
                                     <input type="radio" name="payment" value="badge">
                                     <div class="payment-option-inner">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h.01M7 12h6M7 16h10"/></svg>
-                                        <span>Badge école</span>
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h.01M7 12h6M7 16h10"/></svg>
+                                        <span data-i18n="paymentBadge">Badge école</span>
                                     </div>
                                 </label>
                             </div>
-
-                            <!-- Card fields (shown only for card) -->
                             <div id="card-fields" class="card-fields">
                                 <div class="input-group">
-                                    <label>Numéro de carte</label>
+                                    <label data-i18n="cardNumber">Numéro de carte</label>
                                     <input type="text" id="card-number" placeholder="4242 4242 4242 4242" maxlength="19" autocomplete="cc-number">
                                 </div>
                                 <div class="form-row">
-                                    <div class="input-group">
-                                        <label>Expiration</label>
-                                        <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5" autocomplete="cc-exp">
-                                    </div>
-                                    <div class="input-group">
-                                        <label>CVV</label>
-                                        <input type="text" id="card-cvv" placeholder="•••" maxlength="4" autocomplete="cc-csc">
-                                    </div>
+                                    <div class="input-group"><label data-i18n="cardExpiry">Expiration</label><input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5"></div>
+                                    <div class="input-group"><label>CVV</label><input type="text" id="card-cvv" placeholder="•••" maxlength="4"></div>
                                 </div>
-                                <div class="input-group">
-                                    <label>Nom sur la carte</label>
-                                    <input type="text" id="card-name" placeholder="JEAN DUPONT" autocomplete="cc-name">
-                                </div>
+                                <div class="input-group"><label data-i18n="cardName">Nom sur la carte</label><input type="text" id="card-name" placeholder="JEAN DUPONT"></div>
                                 <p class="secure-note">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                    Paiement sécurisé — données chiffrées SSL
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    <span data-i18n="securePayment">Paiement sécurisé — SSL</span>
                                 </p>
                             </div>
                         </div>
-
-                        <button class="btn-primary full-width" id="confirm-payment-btn" style="margin-top:8px">
-                            Confirmer le paiement
-                        </button>
+                        <button class="btn-primary full-width" id="confirm-payment-btn" style="margin-top:8px" data-i18n="confirmPaymentBtn">Confirmer le paiement</button>
                     </div>
-
-                    <!-- Order recap sidebar -->
                     <div class="payment-sidebar">
                         <div class="card recap-card">
-                            <h3>Récapitulatif</h3>
+                            <h3 data-i18n="recapTitle">Récapitulatif</h3>
                             <div id="payment-recap-items"></div>
                             <div class="recap-divider"></div>
-                            <div class="recap-row"><span>Sous-total</span><span id="recap-subtotal">€0.00</span></div>
-                            <div class="recap-row"><span>Extras</span><span id="recap-extras-label">—</span></div>
-                            <div class="recap-row recap-total"><span>Total</span><span id="recap-total">€0.00</span></div>
-                            <div class="recap-row" style="margin-top:8px;font-size:0.82rem;color:var(--text-muted)">
-                                <span>Retrait le :</span>
-                                <span id="recap-date">—</span>
-                            </div>
+                            <div class="recap-row"><span data-i18n="recapSubtotal">Sous-total</span><span id="recap-subtotal">€0.00</span></div>
+                            <div class="recap-row"><span data-i18n="recapExtras">Extras</span><span id="recap-extras-label">—</span></div>
+                            <div class="recap-row recap-total"><span data-i18n="recapTotal">Total</span><span id="recap-total">€0.00</span></div>
+                            <div class="recap-row" style="margin-top:8px;font-size:.82rem;color:var(--text-muted)"><span data-i18n="recapPickupDate">Retrait le :</span><span id="recap-date">—</span></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- PAYMENT SUCCESS VIEW -->
+            <!-- Payment Success -->
             <div id="payment-success-view" class="hidden">
                 <div class="success-card">
                     <div class="success-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
-                    <h2>Commande confirmée !</h2>
-                    <p>Votre repas sera prêt à la cantine demain matin. Un email de confirmation vous a été envoyé.</p>
-                    <div class="success-ref">Réf. <strong id="order-ref">—</strong></div>
-                    <button class="btn-primary" id="success-home-btn">Retour à l'accueil</button>
+                    <h2 data-i18n="successTitle">Commande confirmée !</h2>
+                    <p data-i18n="successMessage">Votre repas sera prêt demain matin. Un email de confirmation a été envoyé.</p>
+                    <div class="success-ref"><span data-i18n="successRef">Réf.</span> <strong id="order-ref">—</strong></div>
+                    <button class="btn-primary" id="success-home-btn" data-i18n="successBackHome">Retour à l'accueil</button>
                 </div>
             </div>
         </section>
 
-        <!-- Management Section -->
+        <!-- ===================== MANAGEMENT ===================== -->
         <section id="management" class="page">
             <div class="admin-header">
-                <h2>Tableau de Bord Admin</h2>
+                <h2 data-i18n="adminTitle">Tableau de Bord Admin</h2>
                 <div class="admin-tabs">
                     <button class="admin-tab active" data-tab="orders-tab">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-                        Commandes
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+                        <span data-i18n="adminTabOrders">Commandes</span>
                     </button>
                     <button class="admin-tab" data-tab="menu-tab">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                        Gérer le menu
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                        <span data-i18n="adminTabMenu">Gérer le menu</span>
                     </button>
                 </div>
             </div>
 
-            <!-- ORDERS TAB -->
+            <!-- Orders Tab -->
             <div id="orders-tab" class="admin-tab-content active">
                 <div class="admin-toolbar">
-                    <input type="text" placeholder="Rechercher un professeur…" id="admin-search" class="admin-search-input">
+                    <input type="text" data-i18n-placeholder="adminSearchPlaceholder" placeholder="Rechercher un professeur…" id="admin-search" class="admin-search-input">
                     <div class="admin-toolbar-right">
                         <select id="admin-status-filter">
-                            <option value="">Tous les statuts</option>
-                            <option value="Confirmée">Confirmée</option>
-                            <option value="Modifiée">Modifiée</option>
-                            <option value="Annulée">Annulée</option>
+                            <option value="" data-i18n="allStatuses">Tous les statuts</option>
+                            <option value="Confirmée" data-i18n="statusConfirmed">Confirmée</option>
+                            <option value="Modifiée" data-i18n="statusModified">Modifiée</option>
+                            <option value="Annulée" data-i18n="statusCancelled">Annulée</option>
                         </select>
                         <button class="btn-secondary" id="export-csv-btn">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                            Exporter CSV
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span data-i18n="exportCSV">Exporter CSV</span>
                         </button>
                     </div>
                 </div>
-
                 <div class="admin-stats-strip" id="admin-stats"></div>
-
                 <div class="table-wrapper">
                     <table id="orders-table" class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Professeur</th>
-                                <th>Heure</th>
-                                <th>Entrée</th>
-                                <th>Plat</th>
-                                <th>Dessert</th>
-                                <th>Extras</th>
-                                <th>Total</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
+                        <thead><tr>
+                            <th data-i18n="thTeacher">Professeur</th><th data-i18n="thTime">Heure</th><th data-i18n="thStarter">Entrée</th>
+                            <th data-i18n="thMain">Plat</th><th data-i18n="thDessert">Dessert</th><th data-i18n="thExtras">Extras</th>
+                            <th data-i18n="thTotal">Total</th><th data-i18n="thStatut">Statut</th><th data-i18n="thActions">Actions</th>
+                        </tr></thead>
                         <tbody id="orders-table-body"></tbody>
                         <tfoot id="orders-table-foot"></tfoot>
                     </table>
                 </div>
-                <p class="table-empty hidden" id="table-empty">Aucune commande pour le moment.</p>
+                <p class="table-empty hidden" id="table-empty" data-i18n="noOrdersAdmin">Aucune commande pour le moment.</p>
             </div>
 
-            <!-- MENU TAB -->
+            <!-- Menu Tab -->
             <div id="menu-tab" class="admin-tab-content">
                 <div class="menu-admin-layout">
-
-                    <!-- Add / Edit Form -->
                     <div class="card menu-form-card">
-                        <h3 id="menu-form-title">Ajouter un plat</h3>
+                        <h3 id="menu-form-title" data-i18n="menuFormTitle">Ajouter un plat</h3>
                         <form id="menu-admin-form" novalidate>
                             <input type="hidden" id="edit-item-id">
-
                             <div class="form-row">
                                 <div class="input-group">
-                                    <label for="item-name">Nom du plat *</label>
+                                    <label for="item-name" data-i18n="dishName">Nom du plat *</label>
                                     <input type="text" id="item-name" placeholder="ex: Poulet Rôti" required maxlength="80">
                                 </div>
                                 <div class="input-group">
-                                    <label for="item-category">Catégorie *</label>
+                                    <label for="item-category" data-i18n="dishCategory">Catégorie *</label>
                                     <select id="item-category" required>
-                                        <option value="">Choisir…</option>
-                                        <option value="starter">Entrée</option>
-                                        <option value="main">Plat principal</option>
-                                        <option value="dessert">Dessert</option>
+                                        <option value="" data-i18n="chooseCategory">Choisir…</option>
+                                        <option value="starter" data-i18n="categoryStarter">Entrée</option>
+                                        <option value="main" data-i18n="categoryMain">Plat principal</option>
+                                        <option value="dessert" data-i18n="categoryDessert">Dessert</option>
                                     </select>
                                 </div>
                             </div>
-
                             <div class="form-row">
                                 <div class="input-group">
-                                    <label for="item-price">Prix (€) *</label>
+                                    <label for="item-price" data-i18n="priceLabel">Prix (€) *</label>
                                     <input type="number" id="item-price" min="0" max="99" step="0.10" placeholder="0.00" required>
                                 </div>
                                 <div class="input-group">
-                                    <label for="item-limit">Stock limité (0 = illimité)</label>
+                                    <label for="item-limit" data-i18n="limitedStock">Stock limité (0 = illimité)</label>
                                     <input type="number" id="item-limit" min="0" max="999" step="1" placeholder="0">
                                 </div>
                             </div>
-
                             <div class="tag-group">
-                                <span class="tag-label">Étiquettes</span>
+                                <span class="tag-label" data-i18n="tagsLabel">Étiquettes</span>
                                 <div class="tag-options">
-                                    <label class="tag-checkbox">
-                                        <input type="checkbox" name="tag" value="veg"> Végétarien
-                                    </label>
-                                    <label class="tag-checkbox">
-                                        <input type="checkbox" name="tag" value="vegan"> Végétalien
-                                    </label>
-                                    <label class="tag-checkbox">
-                                        <input type="checkbox" name="tag" value="glutenfree"> Sans Gluten
-                                    </label>
-                                    <label class="tag-checkbox">
-                                        <input type="checkbox" name="tag" value="halal"> Halal
-                                    </label>
-                                    <label class="tag-checkbox">
-                                        <input type="checkbox" name="tag" value="spicy"> Épicé
-                                    </label>
+                                    <label class="tag-checkbox"><input type="checkbox" name="tag" value="veg"> <span data-i18n="tagVegetarian">Végétarien</span></label>
+                                    <label class="tag-checkbox"><input type="checkbox" name="tag" value="vegan"> <span data-i18n="tagVeganMenu">Végétalien</span></label>
+                                    <label class="tag-checkbox"><input type="checkbox" name="tag" value="glutenfree"> <span data-i18n="tagGlutenFree">Sans Gluten</span></label>
+                                    <label class="tag-checkbox"><input type="checkbox" name="tag" value="halal"> <span data-i18n="tagHalalMenu">Halal</span></label>
+                                    <label class="tag-checkbox"><input type="checkbox" name="tag" value="spicy"> <span data-i18n="tagSpicyMenu">Épicé</span></label>
                                 </div>
                             </div>
-
                             <div class="input-group">
-                                <label class="checkbox-label" style="font-size:0.9rem">
+                                <label class="checkbox-label" style="font-size:.9rem">
                                     <input type="checkbox" id="item-visible" checked>
                                     <span class="checkmark"></span>
-                                    Visible dans le menu
+                                    <span data-i18n="visibleInMenu">Visible dans le menu</span>
                                 </label>
                             </div>
-
                             <div class="form-actions" style="justify-content:flex-start;gap:8px">
-                                <button type="submit" class="btn-primary" id="menu-submit-btn">Ajouter le plat</button>
-                                <button type="button" class="btn-secondary hidden" id="menu-cancel-edit-btn">Annuler</button>
+                                <button type="submit" class="btn-primary" id="menu-submit-btn" data-i18n="addTheDish">Ajouter le plat</button>
+                                <button type="button" class="btn-secondary hidden" id="menu-cancel-edit-btn" data-i18n="cancelBtn">Annuler</button>
                             </div>
                         </form>
                     </div>
-
-                    <!-- Current menu list -->
                     <div class="menu-list-panel">
-                        <h3>Menu actuel</h3>
+                        <h3 data-i18n="currentMenu">Menu actuel</h3>
                         <div id="admin-menu-list"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
+        <!-- ===================== CONTACT ===================== -->
         <section id="contact" class="page">
             <div id="contact-form-view">
-                <h2>Contact Support</h2>
+                <h2 data-i18n="contactTitle">Contact Support</h2>
                 <form id="contact-form">
                     <div class="input-group">
-                        <label>Problem Type</label>
+                        <label data-i18n="problemType">Type de problème</label>
                         <select required id="contact-type">
-                            <option value="">Select...</option>
-                            <option value="Billing">Billing</option>
-                            <option value="Order issue">Order issue</option>
-                            <option value="Menu issue">Menu issue</option>
-                            <option value="Account">Account</option>
-                            <option value="Other">Other</option>
+                            <option value="" data-i18n="selectOption">Sélectionner…</option>
+                            <option value="Facturation" data-i18n="typeBilling">Facturation</option>
+                            <option value="Problème de commande" data-i18n="typeOrderProblem">Problème de commande</option>
+                            <option value="Problème de menu" data-i18n="typeMenuProblem">Problème de menu</option>
+                            <option value="Compte" data-i18n="typeAccount">Compte</option>
+                            <option value="Autre" data-i18n="typeOther">Autre</option>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label>Details (20-2000 chars)</label>
-                        <textarea id="contact-msg" minlength="20" maxlength="2000" required></textarea>
+                        <label data-i18n="detailsLabel">Détails (20-2000 caractères)</label>
+                        <textarea id="contact-msg" data-i18n-placeholder="detailsPlaceholder" minlength="20" maxlength="2000" required class="auto-resize" rows="3" placeholder="Décrivez votre problème en détail…"></textarea>
                     </div>
                     <div class="checkbox-group">
-                        <label><input type="checkbox" id="contact-anon"> Submit Anonymously</label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="contact-anon">
+                            <span class="checkmark"></span>
+                            <span data-i18n="submitAnonymously">Soumettre anonymement</span>
+                        </label>
                     </div>
-                    <button type="submit" class="btn-primary">Submit Feedback</button>
+                    <button type="submit" class="btn-primary" data-i18n="sendBtn">Envoyer</button>
                 </form>
             </div>
-            <div id="contact-success-view" class="hidden text-center">
-                <h2>Thank you for your feedback</h2>
-                <button class="btn-secondary" id="contact-return-home">Return to Home</button>
+            <div id="contact-success-view" class="hidden" style="text-align:center;padding:40px 0">
+                <h2 data-i18n="contactThanks">Merci pour votre retour</h2>
+                <p data-i18n="contactReply">Nous vous répondrons dans les plus brefs délais.</p>
+                <button class="btn-secondary" id="contact-return-home" data-i18n="backToHome">Retour à l'accueil</button>
             </div>
         </section>
 
-        <!-- Sign In Section — Discord-style -->
+        <!-- ===================== SIGN IN ===================== -->
         <section id="signin" class="page">
             <div class="signin-bg">
                 <div class="auth-card">
                     <div class="auth-logo">
-                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                            <polyline points="9 22 9 12 15 12 15 22"/>
-                        </svg>
+                        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     </div>
                     <h2 id="auth-title">Bon retour !</h2>
-                    <p class="auth-subtitle">Nous sommes heureux de vous revoir.</p>
+                    <p class="auth-subtitle" id="auth-subtitle">Nous sommes heureux de vous revoir.</p>
                     <form id="auth-form" autocomplete="on">
                         <div id="register-fields" class="hidden">
-                            <div class="input-group">
-                                <label for="reg-fname">Prénom</label>
-                                <input type="text" id="reg-fname" placeholder="Jean" autocomplete="given-name">
-                            </div>
-                            <div class="input-group">
-                                <label for="reg-lname">Nom</label>
-                                <input type="text" id="reg-lname" placeholder="Dupont" autocomplete="family-name">
-                            </div>
+                            <div class="input-group"><label for="reg-fname" data-i18n="firstName">Prénom</label><input type="text" id="reg-fname" placeholder="Jean" autocomplete="given-name"></div>
+                            <div class="input-group"><label for="reg-lname" data-i18n="lastName">Nom</label><input type="text" id="reg-lname" placeholder="Dupont" autocomplete="family-name"></div>
                         </div>
-
                         <div class="input-group">
-                            <label for="auth-email">Adresse e-mail</label>
+                            <label for="auth-email" data-i18n="emailAddress">Adresse e-mail</label>
                             <input type="email" id="auth-email" required placeholder="nom@ecole.fr" autocomplete="email">
                         </div>
-
                         <div class="input-group">
                             <div class="label-row">
-                                <label for="auth-password">Mot de passe</label>
-                                <button type="button" class="forgot-link" tabindex="-1">Mot de passe oublié ?</button>
+                                <label for="auth-password" data-i18n="passwordSection">Mot de passe</label>
+                                <button type="button" class="forgot-link" tabindex="-1" data-i18n="forgotPassword">Mot de passe oublié ?</button>
                             </div>
                             <div class="password-field-wrapper">
                                 <input type="password" id="auth-password" required autocomplete="current-password">
-                                <button type="button" class="toggle-password" id="togglePassword" tabindex="-1" aria-label="Afficher/Masquer le mot de passe">
-                                    <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <button type="button" class="toggle-password" id="togglePassword" tabindex="-1">
+                                    <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </button>
                             </div>
                         </div>
-
                         <div id="confirm-password-group" class="input-group hidden">
-                            <label for="auth-confirm-password">Confirmer le mot de passe</label>
+                            <label for="auth-confirm-password" data-i18n="confirmPassword">Confirmer le mot de passe</label>
                             <input type="password" id="auth-confirm-password" autocomplete="new-password">
                         </div>
-
                         <div id="remember-me-group" class="remember-row">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="remember-me">
-                                <span class="checkmark" aria-hidden="true"></span>
-                                Se souvenir de moi
+                                <span class="checkmark"></span>
+                                <span data-i18n="rememberMe">Se souvenir de moi</span>
                             </label>
                         </div>
-
                         <button type="submit" id="auth-submit-btn" class="btn-primary full-width">Se connecter</button>
-
                         <p class="auth-link">
                             <span id="auth-switch-text">Nouveau ici ?</span>
                             <a href="#" id="switch-auth-mode">Créer un compte</a>
                         </p>
                     </form>
-
                     <div class="auth-footer-links">
-                        <a href="#" data-target="privacy" class="page-link">Confidentialité</a>
+                        <a href="#" data-target="privacy" class="page-link" data-i18n="privacy">Confidentialité</a>
                         <span>·</span>
-                        <a href="#" data-target="terms" class="page-link">Conditions</a>
+                        <a href="#" data-target="terms" class="page-link" data-i18n="terms">Conditions</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Privacy Page -->
-        <section id="privacy" class="page">
-            <div class="legal-page">
-                <button class="btn-back" data-target="home">← Retour</button>
-                <h1>Politique de Confidentialité</h1>
-                <p class="legal-date">Dernière mise à jour : février 2026</p>
+        <!-- ===================== PROFILE ===================== -->
+        <section id="profile" class="page">
+            <div class="profile-layout">
 
-                <div class="card">
-                    <h3>1. Données collectées</h3>
-                    <p>Nous collectons uniquement les informations nécessaires au fonctionnement du service : nom, prénom, adresse e-mail et préférences de commande. Aucune donnée bancaire n'est stockée sur nos serveurs.</p>
-                </div>
-                <div class="card">
-                    <h3>2. Utilisation des données</h3>
-                    <p>Vos données sont utilisées exclusivement pour gérer vos réservations de repas et améliorer le service. Elles ne sont ni vendues ni partagées avec des tiers à des fins commerciales.</p>
-                </div>
-                <div class="card">
-                    <h3>3. Conservation</h3>
-                    <p>Les données de commande sont conservées pendant 12 mois à compter de la dernière activité. Vous pouvez demander la suppression de votre compte à tout moment en contactant le support.</p>
-                </div>
-                <div class="card">
-                    <h3>4. Vos droits</h3>
-                    <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous via la page Contact.</p>
-                </div>
-                <div class="card">
-                    <h3>5. Cookies</h3>
-                    <p>Nous utilisons uniquement des cookies essentiels au fonctionnement du service (session, préférences d'affichage). Aucun cookie publicitaire ou de traçage n'est utilisé.</p>
+                <!-- Sidebar -->
+                <aside class="profile-sidebar">
+                    <div class="profile-avatar-large" id="profile-avatar-large">?</div>
+                    <div class="profile-name-display" id="profile-name-display">—</div>
+                    <div class="profile-email-display" id="profile-email-display">—</div>
+                    <nav class="profile-nav">
+                        <button class="profile-nav-btn active" data-section="section-account">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                            <span data-i18n="profileNavAccount">Mon compte</span>
+                        </button>
+                        <button class="profile-nav-btn" data-section="section-orders">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+                            <span data-i18n="profileNavHistory">Historique</span>
+                        </button>
+                        <button class="profile-nav-btn" data-section="section-settings">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            <span data-i18n="profileNavSettings">Paramètres</span>
+                        </button>
+                        <button class="profile-nav-btn profile-logout-btn" id="profile-logout-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            <span data-i18n="profileNavLogout">Se déconnecter</span>
+                        </button>
+                    </nav>
+                </aside>
+
+                <!-- Main content -->
+                <div class="profile-main">
+
+                    <!-- Account Section -->
+                    <div id="section-account" class="profile-section active">
+                        <h2 data-i18n="myAccount">Mon Compte</h2>
+
+                        <div class="card">
+                            <h3 data-i18n="personalInfo">Informations personnelles</h3>
+                            <form id="profile-info-form">
+                                <div class="form-row">
+                                    <div class="input-group">
+                                        <label for="profile-fname" data-i18n="firstName">Prénom</label>
+                                        <input type="text" id="profile-fname" maxlength="100">
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="profile-lname" data-i18n="lastName">Nom</label>
+                                        <input type="text" id="profile-lname" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="profile-email" data-i18n="emailAddress">Adresse e-mail</label>
+                                    <input type="email" id="profile-email">
+                                </div>
+                                <div class="form-actions" style="justify-content:flex-start">
+                                    <button type="submit" class="btn-primary" data-i18n="saveChanges">Enregistrer les modifications</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <h3 data-i18n="passwordSection">Mot de passe</h3>
+                            <form id="profile-pwd-form">
+                                <div class="input-group">
+                                    <label for="profile-current-pwd" data-i18n="currentPassword">Mot de passe actuel</label>
+                                    <input type="password" id="profile-current-pwd" placeholder="••••••••">
+                                </div>
+                                <div class="input-group">
+                                    <label for="profile-new-pwd" data-i18n="newPassword">Nouveau mot de passe</label>
+                                    <input type="password" id="profile-new-pwd" placeholder="••••••••">
+                                </div>
+                                <div class="input-group">
+                                    <label for="profile-confirm-pwd" data-i18n="confirmNewPassword">Confirmer le nouveau mot de passe</label>
+                                    <input type="password" id="profile-confirm-pwd" placeholder="••••••••">
+                                </div>
+                                <div class="form-actions" style="justify-content:flex-start">
+                                    <button type="submit" class="btn-primary" data-i18n="changePassword">Changer le mot de passe</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Orders History Section -->
+                    <div id="section-orders" class="profile-section">
+                        <h2 data-i18n="ordersHistory">Historique des commandes</h2>
+                        <p class="section-note" data-i18n="ordersKept10Days">Les commandes sont conservées pendant 10 jours.</p>
+                        <div id="profile-orders-list">
+                            <p style="color:var(--text-muted);text-align:center;padding:32px 0" data-i18n="noRecentOrders">Aucune commande récente.</p>
+                        </div>
+                    </div>
+
+                    <!-- Settings Section -->
+                    <div id="section-settings" class="profile-section">
+                        <h2 data-i18n="profileNavSettings">Paramètres</h2>
+
+                        <div class="card settings-group">
+                            <h3 data-i18n="settingsDisplay">Affichage</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="darkMode">Mode sombre</div>
+                                    <div class="settings-row-desc" data-i18n="darkModeDesc">Basculer entre le thème clair et sombre</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="settings-dark-toggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="interfaceLanguage">Langue de l'interface</div>
+                                    <div class="settings-row-desc" data-i18n="interfaceLanguageDesc">Langue d'affichage du site</div>
+                                </div>
+                                <select id="settings-lang-select" class="settings-select">
+                                    <option value="fr" data-i18n="french">Français</option>
+                                    <option value="en" data-i18n="english">English</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="card settings-group">
+                            <h3 data-i18n="settingsNotifications">Notifications</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="emailConfirm">Confirmation par e-mail</div>
+                                    <div class="settings-row-desc" data-i18n="emailConfirmDesc">Recevoir un email à chaque commande</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="settings-email-confirm" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="dailyReminder">Rappel quotidien</div>
+                                    <div class="settings-row-desc" data-i18n="dailyReminderDesc">Rappel à 10h si aucune commande passée</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="settings-daily-reminder">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="card settings-group">
+                            <h3 data-i18n="settingsOrders">Commandes</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="autoOrders">Commandes automatiques</div>
+                                    <div class="settings-row-desc" data-i18n="autoOrdersDesc">Reconduire la commande précédente si aucune action</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="settings-auto-order">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="saveExtras">Sauvegarde des extras</div>
+                                    <div class="settings-row-desc" data-i18n="saveExtrasDesc">Mémoriser mes accessoires préférés</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="settings-save-extras" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="card settings-group">
+                            <h3 data-i18n="settingsPrivacy">Confidentialité &amp; Sécurité</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="historyVisibleAdmin">Historique visible par l'admin</div>
+                                    <div class="settings-row-desc" data-i18n="historyVisibleAdminDesc">Autoriser les administrateurs à consulter vos commandes</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="settings-admin-visibility" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row settings-row-btn">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="deleteAccount">Supprimer mon compte</div>
+                                    <div class="settings-row-desc" data-i18n="deleteAccountDesc">Action irréversible — toutes vos données seront effacées</div>
+                                </div>
+                                <button class="btn-danger" style="padding:8px 16px;font-size:.85rem" data-i18n="deleteBtn">Supprimer</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- Terms Page -->
+        <!-- ===================== PRIVACY ===================== -->
+        <section id="privacy" class="page">
+            <div class="legal-page">
+                <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
+                <h1 data-i18n="privacyTitle">Politique de Confidentialité</h1>
+                <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : février 2026</p>
+                <div class="card"><h3 data-i18n="privacy1Title">1. Données collectées</h3><p data-i18n="privacy1Content">Nous collectons uniquement les informations nécessaires : nom, prénom, adresse e-mail et préférences de commande. Aucune donnée bancaire n'est stockée sur nos serveurs.</p></div>
+                <div class="card"><h3 data-i18n="privacy2Title">2. Utilisation des données</h3><p data-i18n="privacy2Content">Vos données sont utilisées exclusivement pour gérer vos réservations de repas et améliorer le service. Elles ne sont ni vendues ni partagées avec des tiers à des fins commerciales.</p></div>
+                <div class="card"><h3 data-i18n="privacy3Title">3. Conservation</h3><p data-i18n="privacy3Content">Les données de commande sont conservées pendant 12 mois à compter de la dernière activité. Vous pouvez demander la suppression de votre compte à tout moment en contactant le support.</p></div>
+                <div class="card"><h3 data-i18n="privacy4Title">4. Vos droits</h3><p data-i18n="privacy4Content">Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous via la page Contact.</p></div>
+                <div class="card"><h3 data-i18n="privacy5Title">5. Cookies</h3><p data-i18n="privacy5Content">Nous utilisons uniquement des cookies essentiels au fonctionnement du service (session, préférences d'affichage). Aucun cookie publicitaire ou de traçage n'est utilisé.</p></div>
+            </div>
+        </section>
+
+        <!-- ===================== TERMS ===================== -->
         <section id="terms" class="page">
             <div class="legal-page">
-                <button class="btn-back" data-target="home">← Retour</button>
-                <h1>Conditions d'Utilisation</h1>
-                <p class="legal-date">Dernière mise à jour : février 2026</p>
-
-                <div class="card">
-                    <h3>1. Accès au service</h3>
-                    <p>Le service TeacherMeals est réservé au personnel enseignant de l'établissement. L'accès est conditionné à la possession d'identifiants scolaires valides.</p>
-                </div>
-                <div class="card">
-                    <h3>2. Commandes</h3>
-                    <p>Les commandes doivent être passées avant minuit la veille du jour souhaité. Le service est indisponible les weekends et jours fériés. Toute commande validée engage l'utilisateur.</p>
-                </div>
-                <div class="card">
-                    <h3>3. Annulation</h3>
-                    <p>Une commande peut être annulée jusqu'à minuit la veille du repas. Passé ce délai, le repas sera préparé et facturé normalement.</p>
-                </div>
-                <div class="card">
-                    <h3>4. Comportement</h3>
-                    <p>Les utilisateurs s'engagent à utiliser le service de bonne foi et à ne pas tenter d'en perturber le fonctionnement. Tout abus pourra entraîner la suspension du compte.</p>
-                </div>
-                <div class="card">
-                    <h3>5. Responsabilité</h3>
-                    <p>L'établissement ne saurait être tenu responsable des interruptions de service dues à des raisons techniques ou de force majeure. En cas de problème, contactez le support via la page Contact.</p>
-                </div>
+                <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
+                <h1 data-i18n="termsTitle">Conditions d'Utilisation</h1>
+                <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : février 2026</p>
+                <div class="card"><h3 data-i18n="terms1Title">1. Accès au service</h3><p data-i18n="terms1Content">Le service TeacherMeals est réservé au personnel enseignant de l'établissement. L'accès est conditionné à la possession d'identifiants scolaires valides.</p></div>
+                <div class="card"><h3 data-i18n="terms2Title">2. Commandes</h3><p data-i18n="terms2Content">Les commandes doivent être passées avant minuit la veille du jour souhaité. Maximum 3 articles par catégorie. Le service est indisponible les weekends et jours fériés. Toute commande validée engage l'utilisateur.</p></div>
+                <div class="card"><h3 data-i18n="terms3Title">3. Annulation</h3><p data-i18n="terms3Content">Une commande peut être annulée jusqu'à minuit la veille du repas. Passé ce délai, le repas sera préparé et facturé normalement.</p></div>
+                <div class="card"><h3 data-i18n="terms4Title">4. Comportement</h3><p data-i18n="terms4Content">Les utilisateurs s'engagent à utiliser le service de bonne foi et à ne pas tenter d'en perturber le fonctionnement. Tout abus pourra entraîner la suspension du compte.</p></div>
+                <div class="card"><h3 data-i18n="terms5Title">5. Responsabilité</h3><p data-i18n="terms5Content">L'établissement ne saurait être tenu responsable des interruptions de service dues à des raisons techniques ou de force majeure. En cas de problème, contactez le support via la page Contact.</p></div>
             </div>
         </section>
 
@@ -561,56 +647,68 @@
     <!-- Settings FAB -->
     <div class="settings-container">
         <div id="settings-popover" class="settings-popover">
-            <div class="popover-header">Paramètres</div>
+            <div class="popover-header" data-i18n="quickSettings">Paramètres rapides</div>
             <ul class="settings-list">
-                <li>Profil</li>
+                <li class="setting-btn" data-target="profile" id="settings-profile-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                    <span data-i18n="navProfile">Profil</span>
+                </li>
+
+                <li class="setting-btn" id="settings-prefs-btn" data-target="profile" data-section="section-settings">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span data-i18n="profileNavSettings">Paramètres</span>
+                </li>
 
                 <li class="has-submenu" id="pref-link">
-                    <span>Aide</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span data-i18n="help">Aide</span>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                     <ul class="sous-menu">
-                        <li>Centre d'aide</li>
-                        <li data-target="privacy" class="page-link">Confidentialité</li>
+                        <li data-i18n="helpCenter">Centre d'aide</li>
+                        <li data-target="privacy" class="page-link" data-i18n="privacy">Confidentialité</li>
                     </ul>
                 </li>
 
                 <li class="has-submenu" id="lang-menu">
                     <span id="lang-label">Langue : FR</span>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                     <ul class="sous-menu">
-                        <li data-lang="fr" class="lang-option active-lang">🇫🇷 Français</li>
-                        <li data-lang="en" class="lang-option">🇬🇧 English</li>
+                        <li data-lang="fr" class="lang-option active-lang">FR — Français</li>
+                        <li data-lang="en" class="lang-option">EN — English</li>
                     </ul>
                 </li>
 
                 <li class="darkmode-row">
-                    <span>Mode sombre</span>
+                    <span data-i18n="darkMode">Mode sombre</span>
                     <label class="apple-switch">
                         <input type="checkbox" id="dark-mode-toggle">
                         <span class="slider"></span>
                     </label>
                 </li>
 
-                <li data-target="signin" class="setting-btn" id="settings-signin">Connexion</li>
-                <li class="setting-btn hidden" id="settings-logout">Déconnexion</li>
+                <li data-target="signin" class="setting-btn" id="settings-signin">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    <span data-i18n="signIn">Connexion</span>
+                </li>
+                <li class="setting-btn hidden" id="settings-logout">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    <span data-i18n="signOut">Déconnexion</span>
+                </li>
             </ul>
         </div>
-        
-        <button id="settings-fab" class="settings-fab" aria-label="Paramètres">
-            <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.67 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" /></svg>
+        <button id="settings-fab" class="settings-fab" data-i18n-aria="settingsAria" aria-label="Paramètres">
+            <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11.03L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.47,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.53,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11.03C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.53,18.67 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.47,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/></svg>
         </button>
     </div>
 
     <footer role="contentinfo">
-        <p>&copy; 2026 Réservation Repas Professeurs. 
-           <a href="#" data-target="privacy" class="page-link" aria-label="Politique de confidentialité">Confidentialité</a> &bull; 
-           <a href="#" data-target="terms" class="page-link" aria-label="Conditions d'utilisation">Conditions</a>
+        <p>&copy; 2026 TeacherMeals.
+           <a href="#" data-target="privacy" class="page-link" data-i18n="privacy">Confidentialité</a> &bull;
+           <a href="#" data-target="terms" class="page-link" data-i18n="terms">Conditions</a>
         </p>
     </footer>
 
-    <!-- Toast container (stacks toasts) -->
     <div id="toast-container" aria-live="assertive" aria-atomic="false"></div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
