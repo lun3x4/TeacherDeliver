@@ -9,6 +9,15 @@
 </head>
 <body>
 
+<!-- Site Closed Overlay (19h-6h) -->
+<div id="site-closed-overlay" class="hidden">
+    <div class="closed-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10 L8 6 C8 2 16 2 16 6 L16 10"/></svg></div>
+    <h2>Site fermé</h2>
+    <p>TeacherMeals est disponible du lundi au vendredi de <strong>6h00 à 19h00</strong>.</p>
+    <div class="closed-time" id="closed-clock">--:--:--</div>
+    <div class="closed-next" id="closed-next-open">Prochaine ouverture à 6h00</div>
+</div>
+
     <header class="glass-header" role="banner">
         <div class="logo" aria-label="Logo TeacherMeals"><span>TeacherMeals</span></div>
         <nav role="navigation" aria-label="Navigation principale">
@@ -86,22 +95,32 @@
                     <fieldset class="card section-extras">
                         <legend data-i18n="extrasTitle">Extras &amp; Accessoires</legend>
                         <div class="extras-grid">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="extra" value="cutlery">
-                                <span class="checkmark"></span><span data-i18n="extraCutlery">Couverts</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="extra" value="napkin">
-                                <span class="checkmark"></span><span data-i18n="extraNapkin">Serviette</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="extra" value="sauces">
-                                <span class="checkmark"></span><span data-i18n="extraSauces">Sauces</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="extra" value="allergies">
-                                <span class="checkmark"></span><span data-i18n="extraAllergies">Allergies</span>
-                            </label>
+                            <div class="extra-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="extra" value="cutlery">
+                                    <span class="checkmark"></span><span data-i18n="extraCutlery">Couverts</span>
+                                </label>
+                            </div>
+                            <div class="extra-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="extra" value="napkin">
+                                    <span class="checkmark"></span><span data-i18n="extraNapkin">Serviette</span>
+                                </label>
+                            </div>
+                            <div class="extra-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="extra" value="sauces" id="extra-sauces-cb">
+                                    <span class="checkmark"></span><span data-i18n="extraSauces">Sauces</span>
+                                </label>
+                                <input type="text" class="extra-inline-input" id="extra-sauces-input" placeholder="Précisez…" maxlength="120">
+                            </div>
+                            <div class="extra-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="extra" value="allergies" id="extra-allergies-cb">
+                                    <span class="checkmark"></span><span data-i18n="extraAllergies">Allergies</span>
+                                </label>
+                                <input type="text" class="extra-inline-input" id="extra-allergies-input" placeholder="Précisez…" maxlength="120">
+                            </div>
                         </div>
                         <div class="input-group" style="margin-top:14px;margin-bottom:0">
                             <label for="order-notes" data-i18n="orderNotes">Notes / Autres</label>
@@ -387,7 +406,7 @@
                         <div class="input-group">
                             <div class="label-row">
                                 <label for="auth-password" data-i18n="passwordSection">Mot de passe</label>
-                                <button type="button" class="forgot-link" tabindex="-1" data-i18n="forgotPassword">Mot de passe oublié ?</button>
+                                <button type="button" class="forgot-link" id="forgot-pw-btn" tabindex="-1" data-i18n="forgotPassword">Mot de passe oublié ?</button>
                             </div>
                             <div class="password-field-wrapper">
                                 <input type="password" id="auth-password" required autocomplete="current-password">
@@ -605,7 +624,7 @@
                                     <div class="settings-row-label" data-i18n="deleteAccount">Supprimer mon compte</div>
                                     <div class="settings-row-desc" data-i18n="deleteAccountDesc">Action irréversible — toutes vos données seront effacées</div>
                                 </div>
-                                <button class="btn-danger" style="padding:8px 16px;font-size:.85rem" data-i18n="deleteBtn">Supprimer</button>
+                                <button class="btn-danger" id="delete-account-btn" style="padding:8px 16px;font-size:.85rem" data-i18n="deleteBtn">Supprimer</button>
                             </div>
                         </div>
                     </div>
@@ -635,26 +654,115 @@
                 <h1 data-i18n="termsTitle">Conditions d'Utilisation</h1>
                 <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : février 2026</p>
                 <div class="card"><h3 data-i18n="terms1Title">1. Accès au service</h3><p data-i18n="terms1Content">Le service TeacherMeals est réservé au personnel enseignant de l'établissement. L'accès est conditionné à la possession d'identifiants scolaires valides.</p></div>
-                <div class="card"><h3 data-i18n="terms2Title">2. Commandes</h3><p data-i18n="terms2Content">Les commandes doivent être passées avant minuit la veille du jour souhaité. Maximum 3 articles par catégorie. Le service est indisponible les weekends et jours fériés. Toute commande validée engage l'utilisateur.</p></div>
-                <div class="card"><h3 data-i18n="terms3Title">3. Annulation</h3><p data-i18n="terms3Content">Une commande peut être annulée jusqu'à minuit la veille du repas. Passé ce délai, le repas sera préparé et facturé normalement.</p></div>
+                <div class="card"><h3 data-i18n="terms2Title">2. Commandes</h3><p data-i18n="terms2Content">Les commandes doivent être passées entre 6h et 19h, du lundi au vendredi. Maximum 3 articles par catégorie. Le service est indisponible les weekends, jours fériés, et en dehors des horaires d'ouverture. Toute commande validée engage l'utilisateur.</p></div>
+                <div class="card"><h3 data-i18n="terms3Title">3. Annulation</h3><p data-i18n="terms3Content">Une commande peut être modifiée ou annulée dans les <strong>24 heures</strong> suivant sa validation, depuis l'onglet <strong>Historique</strong> de votre profil. Passé ce délai, le repas sera préparé et facturé normalement.</p></div>
                 <div class="card"><h3 data-i18n="terms4Title">4. Comportement</h3><p data-i18n="terms4Content">Les utilisateurs s'engagent à utiliser le service de bonne foi et à ne pas tenter d'en perturber le fonctionnement. Tout abus pourra entraîner la suspension du compte.</p></div>
                 <div class="card"><h3 data-i18n="terms5Title">5. Responsabilité</h3><p data-i18n="terms5Content">L'établissement ne saurait être tenu responsable des interruptions de service dues à des raisons techniques ou de force majeure. En cas de problème, contactez le support via la page Contact.</p></div>
             </div>
         </section>
 
+        <!-- ===================== FORGOT PASSWORD ===================== -->
+        <section id="forgot-password" class="page">
+            <div class="forgot-card">
+                <div class="forgot-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <!-- Formulaire -->
+                <div id="forgot-form-view" class="forgot-form">
+                    <h2>Mot de passe oublié ?</h2>
+                    <p>Entrez votre adresse e-mail. Si un compte existe, vous recevrez un lien de réinitialisation.</p>
+                    <form id="forgot-form" autocomplete="off">
+                        <div class="input-group" style="text-align:left">
+                            <label for="forgot-email">Adresse e-mail</label>
+                            <input type="email" id="forgot-email" placeholder="nom@ecole.fr" required>
+                        </div>
+                        <button type="submit" class="btn-primary full-width" id="forgot-submit-btn">Envoyer le lien</button>
+                    </form>
+                    <p style="margin-top:16px;font-size:0.83rem;color:var(--text-muted)">
+                        <a href="#" id="back-to-signin-forgot" style="color:#5865f2;font-weight:600;text-decoration:none">← Retour à la connexion</a>
+                    </p>
+                </div>
+                <!-- Succès simulé -->
+                <div id="forgot-success-view" class="hidden" style="text-align:center">
+                    <div style="font-size:2.5rem;margin-bottom:12px"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7-10-7"/></svg></div>
+                    <h2 style="margin-bottom:10px">Email envoyé !</h2>
+                    <p>Si l'adresse <strong id="forgot-email-shown">—</strong> est associée à un compte, vous recevrez un lien dans quelques instants.</p>
+                    <p style="font-size:0.82rem;color:var(--text-muted);margin-top:8px">Pensez à vérifier vos spams.</p>
+                    <button class="btn-secondary" style="margin-top:20px" id="forgot-back-btn">Retour à la connexion</button>
+                </div>
+            </div>
+        </section>
+
     </main>
+
+    <!-- ===================== RESET PASSWORD PAGE ===================== -->
+    <div id="reset-pw-page" class="hidden">
+        <div class="reset-pw-card">
+            <div class="reset-pw-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div id="reset-pw-form-view">
+                <h2>Mot de passe oublié</h2>
+                <p style="font-size:.9rem;margin-bottom:20px">Entrez votre adresse e-mail. Nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+                <form id="reset-pw-form">
+                    <div class="input-group" style="text-align:left">
+                        <label for="reset-pw-email">Adresse e-mail</label>
+                        <input type="email" id="reset-pw-email" placeholder="nom@ecole.fr" required>
+                    </div>
+                    <button type="submit" class="btn-primary full-width" id="reset-pw-submit-btn">Envoyer le lien</button>
+                </form>
+                <button class="btn-back" id="reset-pw-back" style="margin-top:16px">← Retour à la connexion</button>
+            </div>
+            <div id="reset-pw-success-view" class="hidden">
+                <div style="font-size:2.5rem;margin-bottom:12px">📬</div>
+                <h2>Email envoyé !</h2>
+                <p id="reset-pw-sent-addr" style="font-size:.9rem;color:var(--text-muted);margin-bottom:20px">—</p>
+                <p style="font-size:.88rem">Consultez votre boîte mail et cliquez sur le lien pour réinitialiser votre mot de passe. Vérifiez aussi vos spams.</p>
+                <button class="btn-secondary full-width" id="reset-pw-done-btn" style="margin-top:20px">Retour à la connexion</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== SITE CLOSED OVERLAY ===================== -->
+    <div id="site-closed-overlay" class="site-closed-overlay hidden">
+        <div class="site-closed-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10 L8 6 C8 2 16 2 16 6 L16 10"/></svg></div>
+        <h2 id="closed-title">Site fermé</h2>
+        <p id="closed-subtitle">Le service est disponible de 6h à 19h.</p>
+        <p id="closed-next" style="margin-top:8px;font-size:.88rem;color:var(--text-muted)"></p>
+    </div>
+
+    <!-- Modal modification / annulation de commande -->
+    <div id="edit-order-modal" class="modal-overlay hidden">
+        <div class="modal-box" style="max-width:480px;text-align:left">
+            <h3 id="edit-order-modal-title">Modifier la commande</h3>
+            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:16px">Réf. <span id="edit-order-ref-display" style="font-family:monospace;font-weight:700">—</span></p>
+
+            <div id="edit-order-menu-container" style="max-height:300px;overflow-y:auto;margin-bottom:14px"></div>
+
+            <div class="input-group">
+                <label>Notes</label>
+                <textarea id="edit-order-notes" rows="2" class="auto-resize" maxlength="400" placeholder="Notes, allergies…"></textarea>
+            </div>
+
+            <div class="modal-actions" style="flex-direction:row;gap:8px;justify-content:flex-end;margin-top:16px">
+                <button class="btn-secondary" id="edit-order-cancel-btn">Annuler</button>
+                <button class="btn-danger" id="edit-order-delete-btn">Annuler la commande</button>
+                <button class="btn-primary" id="edit-order-save-btn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Settings FAB -->
     <div class="settings-container">
         <div id="settings-popover" class="settings-popover">
             <div class="popover-header" data-i18n="quickSettings">Paramètres rapides</div>
             <ul class="settings-list">
-                <li class="setting-btn" data-target="profile" id="settings-profile-btn">
+                <li class="setting-btn hidden" data-target="profile" id="settings-profile-btn">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                     <span data-i18n="navProfile">Profil</span>
                 </li>
 
-                <li class="setting-btn" id="settings-prefs-btn" data-target="profile" data-section="section-settings">
+                <li class="setting-btn hidden" id="settings-prefs-btn" data-target="profile" data-section="section-settings">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                     <span data-i18n="profileNavSettings">Paramètres</span>
                 </li>
