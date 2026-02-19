@@ -225,6 +225,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     initTime();
     setLanguage(state.lang);
+
+    // Rafraîchir l'état de fermeture toutes les 30 secondes (navigation + status strip)
+    setInterval(() => {
+        const { closed } = isSiteClosed();
+        updateNavigationForClosure(closed);
+        updateStatusStrip(); // je vais créer cette fonction
+    }, 30000);
 });
 
 /* ============================================================
@@ -284,8 +291,16 @@ async function loadUserHistory() {
         snapshot.forEach(d => myOrders.push({ firebaseId: d.id, ...d.data() }));
         renderProfileOrders(myOrders);
     } catch (e) {
-        // Firebase donne un lien dans la console pour créer l'index composite nécessaire
-        console.error("Erreur historique (index manquant ?):", e);
+        console.error("Erreur chargement historique:", e);
+        // Afficher un message d'erreur à l'utilisateur
+        const list = document.getElementById('profile-orders-list');
+        if (list) {
+            list.innerHTML = `<p style="color:var(--danger-color);text-align:center;padding:32px 0">
+                ${t('toastError')} Chargement impossible.<br>
+                <small style="color:var(--text-muted)">Voir console pour détails.</small>
+            </p>`;
+        }
+        showToast(t('toastOrdersLoadError'));
     }
 }
 
@@ -336,6 +351,12 @@ async function handleAuthSubmit(e) {
 
 function handleLogout() {
     signOut(auth).then(() => showToast(t('toastLoggedOut')));
+}
+
+function showSigninPage() {
+    document.getElementById('reset-pw-page').classList.add('hidden');
+    document.getElementById('main-content').style.display = '';
+    navigateTo('signin');
 }
 
 /* ============================================================
@@ -543,6 +564,51 @@ function setupEventListeners() {
         });
     });
 
+    // Mot de passe oublié
+    document.getElementById('forgot-pw-btn')?.addEventListener('click', () => {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('reset-pw-page').classList.remove('hidden');
+        document.getElementById('reset-pw-form-view').classList.remove('hidden');
+        document.getElementById('reset-pw-success-view').classList.add('hidden');
+        document.getElementById('reset-pw-email').value = document.getElementById('auth-email').value || '';
+    });
+    document.getElementById('reset-pw-back')?.addEventListener('click', showSigninPage);
+    document.getElementById('reset-pw-done-btn')?.addEventListener('click', showSigninPage);
+    document.getElementById('reset-pw-form')?.addEventListener('submit', async e => {
+        e.preventDefault();
+        const email = document.getElementById('reset-pw-email').value.trim();
+        const btn   = document.getElementById('reset-pw-submit-btn');
+        btn.disabled = true; btn.textContent = 'Envoi…';
+        try {
+            const { sendPasswordResetEmail } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
+            await sendPasswordResetEmail(auth, email);
+            document.getElementById('reset-pw-form-view').classList.add('hidden');
+            document.getElementById('reset-pw-success-view').classList.remove('hidden');
+            const addrEl = document.getElementById('reset-pw-sent-addr');
+            if (addrEl) addrEl.textContent = email;
+        } catch (err) {
+            let msg = "Erreur envoi e-mail.";
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') msg = "Adresse e-mail introuvable.";
+            showToast(msg);
+            btn.disabled = false; btn.textContent = 'Envoyer le lien';
+        }
+    });
+
+    // Extras inline (Sauces / Allergies) - afficher champ texte quand coché
+    ['sauces','allergies'].forEach(val => {
+        const cb  = document.querySelector(`input[name="extra"][value="${val}"]`);
+        const inp = document.getElementById(`extra-${val}-input`);
+        if (cb && inp) {
+            cb.addEventListener('change', () => {
+                inp.classList.toggle('visible', cb.checked);
+                if (!cb.checked) inp.value = '';
+            });
+        }
+    });
+
+    // Supprimer le compte
+    document.querySelector('.settings-row-btn .btn-danger')?.addEventListener('click', handleDeleteAccount);
+
     // Admin – recherche & filtre
     document.getElementById('admin-search')?.addEventListener('input', renderAdminOrders);
     document.getElementById('admin-status-filter')?.addEventListener('change', renderAdminOrders);
@@ -563,6 +629,8 @@ function setupEventListeners() {
    NAVIGATION & UI
    ============================================================ */
 function navigateTo(pageId) {
+    // Si le site est fermé, n'autoriser que les pages essentielles
+
     if (['order', 'profile'].includes(pageId) && !state.currentUser) {
         showToast(t('toastPleaseSignIn')); pageId = 'signin';
     }
@@ -586,6 +654,9 @@ function updateAuthUI() {
     if (state.currentUser) {
         hide('nav-signin');  show('nav-profile');
         show('settings-logout'); hide('settings-signin');
+        // Montrer Profil et Paramètres dans le FAB
+        document.getElementById('settings-profile-btn')?.classList.remove('hidden');
+        document.getElementById('settings-prefs-btn')?.classList.remove('hidden');
         if (state.currentUser.role === 'admin') show('nav-admin');
         const av = document.getElementById('header-avatar');
         const nm = document.getElementById('header-username');
@@ -595,6 +666,9 @@ function updateAuthUI() {
         show('nav-signin'); hide('nav-profile');
         hide('settings-logout'); show('settings-signin');
         hide('nav-admin');
+        // Cacher Profil et Paramètres dans le FAB si non connecté
+        document.getElementById('settings-profile-btn')?.classList.add('hidden');
+        document.getElementById('settings-prefs-btn')?.classList.add('hidden');
     }
 }
 
@@ -696,19 +770,110 @@ function applyAuthMode() {
     $('register-fields')?.classList.toggle('hidden', isLoginMode);
     $('confirm-password-group')?.classList.toggle('hidden', isLoginMode);
     $('remember-me-group')?.classList.toggle('hidden', !isLoginMode);
+    // Masquer "Mot de passe oublié ?" en mode inscription
+    $('forgot-pw-btn')?.classList.toggle('hidden', !isLoginMode);
 }
 
 /* ============================================================
-   TEMPS & STATUS
+   TEMPS & STATUS — Fermeture 19h–6h
    ============================================================ */
-function initTime() {
-    const day = new Date().getDay();
-    const isWeekend = day === 0 || day === 6;
+const OPEN_HOUR  = 6;   // 6h
+const CLOSE_HOUR = 19;  // 19h
+
+function isSiteClosed() {
+    const now  = new Date();
+    const day  = now.getDay();
+    const hour = now.getHours();
+    if (day === 0 || day === 6) return { closed: true, reason: 'weekend' };
+    if (hour < OPEN_HOUR || hour >= CLOSE_HOUR) return { closed: true, reason: 'night' };
+    return { closed: false };
+}
+
+/* ============================================================
+   CONTRÔLE D'ACCÈS PENDANT LA FERMETURE
+   ============================================================ */
+function updateNavigationForClosure(isClosed) {
+    const body = document.body;
+    // Pages autorisées pendant la fermeture
+    const allowedPages = ['home', 'management', 'profile', 'signin', 'privacy', 'terms'];
+
+    // Ajouter/enlever la classe pour le style CSS
+    body.classList.toggle('site-closed', isClosed);
+
+    // Désactiver les boutons de navigation vers les pages non autorisées
+    document.querySelectorAll('[data-target]').forEach(el => {
+        const target = el.dataset.target;
+        if (!target) return;
+        if (isClosed && !allowedPages.includes(target)) {
+            el.classList.add('nav-disabled');
+        } else {
+            el.classList.remove('nav-disabled');
+        }
+    });
+}
+
+
+function updateStatusStrip() {
+    const now = new Date();
+    const day = now.getDay();
+    const hour = now.getHours();
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const isWE = day === 0 || day === 6;
+    const isOpen = !isWE && hour >= OPEN_HOUR && hour < CLOSE_HOUR;
+
     const strip = document.getElementById('status-strip');
-    if (strip) strip.innerHTML = isWeekend
-        ? `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; ${t('statusReturnMonday')}`
-        : `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; ${t('statusOrdersOpen')}`;
-    if (isWeekend) document.getElementById('weekend-banner')?.classList.remove('hidden');
+    if (strip) {
+        if (isOpen) {
+            const closeStr = `${CLOSE_HOUR}:00h`;
+            strip.innerHTML = `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; Fermeture à ${closeStr}`;
+        } else if (isWE) {
+            const openMonday = 'Lundi à ' + OPEN_HOUR + 'h';
+            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${openMonday}`;
+        } else {
+            const nextOpenHour = hour >= CLOSE_HOUR ? 'demain à ' + OPEN_HOUR + 'h' : 'à ' + OPEN_HOUR + 'h';
+            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${nextOpenHour}`;
+        }
+    }
+
+    const banner = document.getElementById('weekend-banner');
+    if (banner) {
+        if (isWE) {
+            banner.classList.remove('hidden');
+        } else {
+            banner.classList.add('hidden');
+        }
+    }
+}
+
+function initTime() {
+    const now    = new Date();
+    const day    = now.getDay();
+    const hour   = now.getHours();
+    const min    = String(now.getMinutes()).padStart(2, '0');
+    const isWE   = day === 0 || day === 6;
+    const isOpen = !isWE && hour >= OPEN_HOUR && hour < CLOSE_HOUR;
+
+    const strip  = document.getElementById('status-strip');
+    if (strip) {
+        if (isOpen) {
+            const closeStr = `${CLOSE_HOUR}:00h`;
+            strip.innerHTML = `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; Fermeture à ${closeStr}`;
+        } else if (isWE) {
+            const openMonday = 'Lundi à ' + OPEN_HOUR + 'h';
+            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${openMonday}`;
+        } else {
+            // Nuit
+            const nextOpenHour = hour >= CLOSE_HOUR ? 'demain à ' + OPEN_HOUR + 'h' : 'à ' + OPEN_HOUR + 'h';
+            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${nextOpenHour}`;
+        }
+    }
+
+    if (isWE) document.getElementById('weekend-banner')?.classList.remove('hidden');
+
+
+    // Contrôle d'accès selon horaires : désactiver les sections non essentielles
+    const { closed } = isSiteClosed();
+    updateNavigationForClosure(closed);
 }
 
 /* ============================================================
@@ -836,7 +1001,11 @@ function buildPaymentRecap() {
             container.innerHTML += `<div class="recap-item-row"><span>${qty}× ${item.name}</span><span>€${(qty * Number(item.price)).toFixed(2)}</span></div>`;
         }
     });
-    const extras = Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => c.value).join(', ');
+    const extras = Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => {
+        const preciser = document.getElementById(`extra-${c.value}-input`);
+        const note = preciser?.value?.trim();
+        return note ? `${c.value} (${note})` : c.value;
+    }).join(', ');
     const sub = document.getElementById('recap-subtotal');
     const ext = document.getElementById('recap-extras-label');
     const tot = document.getElementById('recap-total');
@@ -861,6 +1030,7 @@ async function confirmPayment() {
         if (num.length < 16) { showToast(t('toastInvalidCard')); btn.disabled = false; btn.textContent = t('confirmPaymentBtn'); return; }
         if (!/^\d{2}\/\d{2}$/.test(exp)) { showToast(t('toastInvalidExpiry')); btn.disabled = false; btn.textContent = t('confirmPaymentBtn'); return; }
     }
+    const isModification = !!state.editingOrderId;
     const ref   = 'TM-' + Date.now().toString(36).toUpperCase().slice(-6);
     const items = [];
     document.querySelectorAll('.qty-stepper').forEach(s => {
@@ -874,13 +1044,24 @@ async function confirmPayment() {
         timestamp: new Date().toISOString(),
         time: new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }),
         items, payment: method,
-        extras: Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => c.value).join(', '),
+        extras: Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => {
+            const preciser = document.getElementById(`extra-${c.value}-input`);
+            const note = preciser?.value?.trim();
+            return note ? `${c.value} (${note})` : c.value;
+        }).join(', '),
         notes: document.getElementById('order-notes')?.value || '',
         total: document.getElementById('recap-total').textContent,
-        status: 'Confirmée'
+        status: isModification ? 'Modifiée' : 'Confirmée'
     };
     const newId = await submitOrderToFirebase(orderData);
     if (newId) {
+        // Si on modifiait une commande existante, l'annuler
+        if (state.editingOrderId) {
+            try {
+                await updateDoc(doc(db, "orders", state.editingOrderId), { status: 'Annulée' });
+            } catch (e) { console.warn("Impossible d'annuler l'ancienne commande:", e); }
+            state.editingOrderId = null;
+        }
         document.getElementById('order-ref').textContent = ref;
         document.getElementById('payment-view').classList.add('hidden');
         document.getElementById('payment-success-view').classList.remove('hidden');
@@ -901,7 +1082,8 @@ function renderAdminOrders() {
     const statusFilter = document.getElementById('admin-status-filter')?.value || '';
     const filtered = state.orders.filter(o =>
         (!searchVal    || (o.user || '').toLowerCase().includes(searchVal)) &&
-        (!statusFilter || o.status === statusFilter)
+        (!statusFilter || o.status === statusFilter) &&
+        o.status !== 'Annulée'
     );
     tbody.innerHTML = '';
     const tw = document.querySelector('.table-wrapper');
@@ -987,7 +1169,7 @@ function renderAdminMenuList() {
         items.forEach(item => {
             const row = document.createElement('div');
             row.className = 'admin-menu-row' + (item.visible ? '' : ' menu-hidden-row');
-            const tags = (item.tags||[]).map(tag => `<span class="mini-tag">${tagLabel(tag)}</span>`).join('');
+            const tags = (item.tags||[]).map(tag => `<span class="mini-tag mini-tag-${tag}">${tagLabel(tag)}</span>`).join('');
             const limitText = item.limit > 0 ? `<span class="mini-tag mini-tag-limit">${t('limitedLabel')}${item.limit}</span>` : '';
             row.innerHTML = `
                 <div class="admin-menu-info">
@@ -1003,7 +1185,7 @@ function renderAdminMenuList() {
                         }
                     </button>
                     <button class="btn-icon" title="${t('editBtn')}" onclick="window.editMenuItemFirebase('${item.id}')">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                     <button class="btn-icon btn-icon-danger" title="${t('deleteBtn')}" onclick="window.deleteMenuFirebase('${item.id}')">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
@@ -1109,7 +1291,7 @@ function exportCSV() {
 }
 
 /* ============================================================
-   HISTORIQUE PROFIL
+   HISTORIQUE PROFIL — avec boutons Modifier / Annuler
    ============================================================ */
 function renderProfileOrders(orders) {
     const list = document.getElementById('profile-orders-list');
@@ -1120,31 +1302,165 @@ function renderProfileOrders(orders) {
     }
     list.innerHTML = '';
     orders.forEach(o => {
-        const sc    = o.status==='Confirmée'?'status-ok':(o.status==='Annulée'?'status-cancelled':'status-modified');
-        const items = (o.items||[]).map(i=>`${i.qty}× ${i.name}`).join(', ');
+        const sc    = o.status === 'Confirmée' ? 'status-ok' : (o.status === 'Annulée' ? 'status-cancelled' : 'status-modified');
+        const items = (o.items || []).map(i => `${i.qty}× ${i.name}`).join(', ');
+        const isCancelled = o.status === 'Annulée';
         const card  = document.createElement('div');
         card.className = 'card order-history-card';
+
+        // Calcul : si plus de 24h, on ne peut plus modifier/annuler
+        const orderDate = new Date(o.timestamp);
+        const now = new Date();
+        const hoursDiff = (now - orderDate) / (1000 * 60 * 60);
+        const canModify = !isCancelled && hoursDiff < 24;
+
         card.innerHTML = `
             <div class="order-history-header">
                 <div>
-                    <strong class="order-history-ref">${o.ref||'—'}</strong>
-                    <span class="order-history-date">${o.time||''}</span>
+                    <strong class="order-history-ref">${o.ref || '—'}</strong>
+                    <span class="order-history-date">${o.time || ''}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
-                    <span class="order-history-total">${o.total||'—'}</span>
+                    <span class="order-history-total">${o.total || '—'}</span>
                     <span class="status-badge ${sc}">${o.status}</span>
                 </div>
             </div>
-            <div class="order-history-items">${items||'—'}</div>
-            ${o.extras?`<div class="order-history-extras">${t('extrasLabel')}${o.extras}</div>`:''}
+            <div class="order-history-items">${items || '—'}</div>
+            ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${o.extras}</div>` : ''}
+            ${canModify ? `
+            <div class="order-history-actions">
+                <button class="btn-secondary" data-action="modify" data-id="${o.firebaseId}"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Modifier</button>
+                <button class="btn-danger"    data-action="cancel" data-id="${o.firebaseId}">✖ Annuler</button>
+            </div>` : ''}
+            ${isCancelled ? `<p style="font-size:.78rem;color:var(--text-muted);margin-top:6px;margin-bottom:0">Commande annulée.</p>` : ''}
+            ${!canModify && !isCancelled && hoursDiff >= 24 ? `<p style="font-size:.78rem;color:var(--text-muted);margin-top:6px;margin-bottom:0">Délai de modification dépassé (24h).</p>` : ''}
         `;
+
+        // Listeners
+        card.querySelector('[data-action="cancel"]')?.addEventListener('click', async () => {
+            if (!confirm('Annuler cette commande ?')) return;
+            try {
+                await updateDoc(doc(db, "orders", o.firebaseId), { status: 'Annulée' });
+                showToast('Commande annulée.');
+                loadUserHistory();
+            } catch (e) { showToast('Erreur annulation.'); }
+        });
+
+        card.querySelector('[data-action="modify"]')?.addEventListener('click', () => {
+            // Pré-remplir le formulaire de commande avec les infos existantes et naviguer
+            showToast('Modifiez votre commande ci-dessous et revalidez.');
+            navigateTo('order');
+            // Remettre les quantités
+            renderMenu();
+            setTimeout(() => {
+                (o.items || []).forEach(item => {
+                    const stepper = document.querySelector(`.qty-stepper[data-id="${item.id}"]`);
+                    if (stepper) {
+                        const display = stepper.querySelector('.qty-display');
+                        if (display) {
+                            display.textContent = item.qty;
+                            if (item.qty > 0) stepper.classList.add('has-qty');
+                        }
+                    }
+                });
+                calculateTotal();
+                // Restaurer les extras (couverts, sauces, allergies...)
+                restoreExtras(o.extras);
+                // Mémoriser l'ID de la commande à remplacer
+                state.editingOrderId = o.firebaseId;
+            }, 200);
+        });
+
         list.appendChild(card);
     });
 }
 
+function restoreExtras(extrasStr) {
+    // Réinitialiser tous les extras d'abord
+    document.querySelectorAll('input[name="extra"]:checked').forEach(cb => cb.checked = false);
+    const saucesInput = document.getElementById('extra-sauces-input');
+    const allergiesInput = document.getElementById('extra-allergies-input');
+    if (saucesInput) { saucesInput.value = ''; saucesInput.classList.remove('visible'); }
+    if (allergiesInput) { allergiesInput.value = ''; allergiesInput.classList.remove('visible'); }
+
+    if (!extrasStr) return;
+    const extras = extrasStr.split(',').map(e => e.trim()).filter(e => e);
+    const extraConfig = {
+        'cutlery': { checkbox: document.querySelector('input[name="extra"][value="cutlery"]'), input: null },
+        'napkin': { checkbox: document.querySelector('input[name="extra"][value="napkin"]'), input: null },
+        'sauces': { checkbox: document.querySelector('input[name="extra"][value="sauces"]'), input: saucesInput },
+        'allergies': { checkbox: document.querySelector('input[name="extra"][value="allergies"]'), input: allergiesInput }
+    };
+    extras.forEach(extra => {
+        let val = extra;
+        let note = '';
+        const match = extra.match(/^([^()]+)\s*\(([^)]+)\)$/);
+        if (match) {
+            val = match[1].trim();
+            note = match[2].trim();
+        }
+        const key = val.toLowerCase();
+        const conf = extraConfig[key];
+        if (conf && conf.checkbox) {
+            conf.checkbox.checked = true;
+            if (conf.input) {
+                conf.input.classList.add('visible');
+                if (note) {
+                    conf.input.value = note;
+                }
+            }
+        }
+    });
+}
+
 /* ============================================================
-   TOASTS
+   SUPPRIMER LE COMPTE
    ============================================================ */
+async function handleDeleteAccount() {
+    if (!state.currentUser) return;
+    const confirmed = confirm(
+        '⚠️ Supprimer définitivement votre compte ?\n\n' +
+        'Cette action est irréversible. Toutes vos commandes et données seront effacées.\n\n' +
+        'Cliquez OK pour confirmer.'
+    );
+    if (!confirmed) return;
+
+    // Demander le mot de passe actuel pour ré-authentification
+    const password = prompt('Entrez votre mot de passe pour confirmer :');
+    if (!password) return;
+
+    try {
+        // Ré-authentification requise par Firebase avant suppression
+        const credential = EmailAuthProvider.credential(state.currentUser.email, password);
+        await reauthenticateWithCredential(auth.currentUser, credential);
+
+        const uid = state.currentUser.uid;
+
+        // 1. Supprimer les commandes de l'utilisateur
+        const ordersQ = query(collection(db, "orders"), where("userId", "==", uid));
+        const ordersSnap = await getDocs(ordersQ);
+        const delPromises = [];
+        ordersSnap.forEach(d => delPromises.push(deleteDoc(doc(db, "orders", d.id))));
+        await Promise.all(delPromises);
+
+        // 2. Supprimer le document Firestore user
+        await deleteDoc(doc(db, "users", uid));
+
+        // 3. Supprimer le compte Firebase Auth
+        await auth.currentUser.delete();
+
+        showToast('Compte supprimé.');
+        // onAuthStateChanged gérera la déconnexion et la redirection
+    } catch (err) {
+        console.error("Erreur suppression compte:", err);
+        let msg = "Erreur suppression compte.";
+        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') msg = "Mot de passe incorrect.";
+        if (err.code === 'auth/requires-recent-login') msg = "Reconnectez-vous d'abord pour supprimer votre compte.";
+        showToast(msg);
+    }
+}
+
+
 function showToast(msg) {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -1162,3 +1478,14 @@ function dismissToast(toast) {
     toast.classList.add('toast-exit');
     toast.addEventListener('transitionend', () => toast.remove(), { once: true });
 }
+
+// Added: Global click handler for all [data-target] elements (including footer)
+document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-target]');
+    if (!el) return;
+    e.preventDefault();
+    const pageId = el.dataset.target;
+    if (pageId && typeof navigateTo === 'function') {
+        navigateTo(pageId);
+    }
+});
