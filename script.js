@@ -64,7 +64,7 @@ const i18n = {
         successTitle: 'Commande confirmée !', successMessage: 'Votre repas sera prêt demain matin. Un email de confirmation a été envoyé.', successRef: 'Réf.', successBackHome: "Retour à l'accueil",
         loading: 'Chargement…', validating: 'Validation…', saving: 'Sauvegarde…', saveChanges: 'Enregistrer les modifications',
         catStarter: 'Entrées', catMain: 'Plats principaux', catDessert: 'Desserts', catMaxPerCategory: 'max', catMaxPerCategorySuffix: 'par catégorie', stockLabel: 'Stock :',
-        tagVeg: 'Végé', tagVegan: 'Vegan', tagGlutenfree: 'S.Gluten', tagHalal: 'Halal', tagSpicy: 'Épicé',
+        tagVeg: 'Végétarien', tagVegan: 'Végétalien', tagGlutenfree: 'Sans Gluten', tagHalal: 'Halal', tagSpicy: 'Épicé',
         adminTitle: 'Tableau de Bord Admin', adminTabOrders: 'Commandes', adminTabMenu: 'Gérer le menu',
         adminSearchPlaceholder: 'Rechercher un professeur…', allStatuses: 'Tous les statuts', statusConfirmed: 'Confirmée', statusModified: 'Modifiée', statusCancelled: 'Annulée', exportCSV: 'Exporter CSV',
         thTeacher: 'Professeur', thTime: 'Heure', thStarter: 'Entrée', thMain: 'Plat', thDessert: 'Dessert', thExtras: 'Extras', thTotal: 'Total', thStatut: 'Statut', thActions: 'Actions',
@@ -137,7 +137,7 @@ const i18n = {
         successTitle: 'Order confirmed!', successMessage: 'Your meal will be ready tomorrow morning. A confirmation email has been sent.', successRef: 'Ref.', successBackHome: 'Back to home',
         loading: 'Loading…', validating: 'Validating…', saving: 'Saving…', saveChanges: 'Save changes',
         catStarter: 'Starters', catMain: 'Main courses', catDessert: 'Desserts', catMaxPerCategory: 'max', catMaxPerCategorySuffix: 'per category', stockLabel: 'Stock:',
-        tagVeg: 'Veg', tagVegan: 'Vegan', tagGlutenfree: 'GF', tagHalal: 'Halal', tagSpicy: 'Spicy',
+        tagVeg: 'Végétarien', tagVegan: 'Vegan', tagGlutenfree: 'Gluten Free', tagHalal: 'Halal', tagSpicy: 'Spicy',
         adminTitle: 'Admin Dashboard', adminTabOrders: 'Orders', adminTabMenu: 'Manage menu',
         adminSearchPlaceholder: 'Search for a teacher…', allStatuses: 'All statuses', statusConfirmed: 'Confirmed', statusModified: 'Modified', statusCancelled: 'Cancelled', exportCSV: 'Export CSV',
         thTeacher: 'Teacher', thTime: 'Time', thStarter: 'Starter', thMain: 'Main', thDessert: 'Dessert', thExtras: 'Extras', thTotal: 'Total', thStatut: 'Status', thActions: 'Actions',
@@ -266,7 +266,11 @@ async function submitOrderToFirebase(orderData) {
 
 function subscribeToAllOrders() {
     if (unsubscribeOrders) unsubscribeOrders();
-    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+    const q = query(
+        collection(db, "orders"),
+        where("status", "!=", "Livrée"), // Add this line to filter by status
+        orderBy("timestamp", "desc")
+    );
     unsubscribeOrders = onSnapshot(q, snapshot => {
         state.orders = [];
         snapshot.forEach(d => state.orders.push({ firebaseId: d.id, ...d.data() }));
@@ -277,6 +281,7 @@ function subscribeToAllOrders() {
         showToast(t('toastOrdersLoadError'));
     });
 }
+
 
 async function loadUserHistory() {
     if (!state.currentUser) return;
@@ -289,10 +294,15 @@ async function loadUserHistory() {
         const snapshot = await getDocs(q);
         const myOrders = [];
         snapshot.forEach(d => myOrders.push({ firebaseId: d.id, ...d.data() }));
-        renderProfileOrders(myOrders);
+
+        // Séparer commandes en cours et historique
+        const activeOrders  = myOrders.filter(o => o.status !== 'Livrée' && o.status !== 'Annulée');
+        const historyOrders = myOrders.filter(o => o.status === 'Livrée' || o.status === 'Annulée');
+
+        renderActiveOrders(activeOrders);
+        renderProfileOrders(historyOrders);
     } catch (e) {
         console.error("Erreur chargement historique:", e);
-        // Afficher un message d'erreur à l'utilisateur
         const list = document.getElementById('profile-orders-list');
         if (list) {
             list.innerHTML = `<p style="color:var(--danger-color);text-align:center;padding:32px 0">
@@ -641,6 +651,9 @@ function navigateTo(pageId) {
     document.getElementById(pageId)?.classList.add('active');
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.nav-btn[data-target="${pageId}"]`)?.classList.add('active');
+    // Sync mobile nav
+    document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.mobile-nav-btn[data-target="${pageId}"]`)?.classList.add('active');
     document.getElementById('settings-popover')?.classList.remove('show');
 
     if (pageId === 'management') { renderAdminOrders(); renderAdminMenuList(); }
@@ -653,19 +666,24 @@ function updateAuthUI() {
     const hide = id => document.getElementById(id)?.classList.add('hidden');
     if (state.currentUser) {
         hide('nav-signin');  show('nav-profile');
+        hide('mob-nav-signin'); show('mob-nav-profile');
         show('settings-logout'); hide('settings-signin');
         // Montrer Profil et Paramètres dans le FAB
         document.getElementById('settings-profile-btn')?.classList.remove('hidden');
         document.getElementById('settings-prefs-btn')?.classList.remove('hidden');
-        if (state.currentUser.role === 'admin') show('nav-admin');
-        const av = document.getElementById('header-avatar');
-        const nm = document.getElementById('header-username');
-        if (av) av.textContent = (state.currentUser.firstName || 'U').charAt(0).toUpperCase();
-        if (nm) nm.textContent = state.currentUser.firstName || state.currentUser.firstName;
+        if (state.currentUser.role === 'admin') { show('nav-admin'); show('mob-nav-admin'); }
+        const av  = document.getElementById('header-avatar');
+        const av2 = document.getElementById('mob-header-avatar');
+        const nm  = document.getElementById('header-username');
+        const initial = (state.currentUser.firstName || 'U').charAt(0).toUpperCase();
+        if (av)  av.textContent  = initial;
+        if (av2) av2.textContent = initial;
+        if (nm)  nm.textContent  = state.currentUser.firstName || state.currentUser.firstName;
     } else {
         show('nav-signin'); hide('nav-profile');
+        show('mob-nav-signin'); hide('mob-nav-profile');
         hide('settings-logout'); show('settings-signin');
-        hide('nav-admin');
+        hide('nav-admin'); hide('mob-nav-admin');
         // Cacher Profil et Paramètres dans le FAB si non connecté
         document.getElementById('settings-profile-btn')?.classList.add('hidden');
         document.getElementById('settings-prefs-btn')?.classList.add('hidden');
@@ -795,7 +813,7 @@ function isSiteClosed() {
 function updateNavigationForClosure(isClosed) {
     const body = document.body;
     // Pages autorisées pendant la fermeture
-    const allowedPages = ['home', 'management', 'profile', 'signin', 'privacy', 'terms'];
+    const allowedPages = ['home', 'management', 'profile', 'signin', 'privacy', 'terms', 'help', 'contact'];
 
     // Ajouter/enlever la classe pour le style CSS
     body.classList.toggle('site-closed', isClosed);
@@ -810,6 +828,57 @@ function updateNavigationForClosure(isClosed) {
             el.classList.remove('nav-disabled');
         }
     });
+
+    // Bloquer le formulaire de commande
+    updateOrderFormForClosure(isClosed);
+}
+
+function updateOrderFormForClosure(isClosed) {
+    const { reason } = isSiteClosed();
+    const weekendBanner = document.getElementById('weekend-banner');
+    const nightBanner   = document.getElementById('night-closed-banner');
+    const submitBtn     = document.getElementById('submit-order-btn');
+    const cancelBtn     = document.getElementById('cancel-order-btn');
+    const form          = document.getElementById('order-form');
+
+    if (isClosed) {
+        // Afficher la bonne bannière
+        if (reason === 'weekend') {
+            weekendBanner?.classList.remove('hidden');
+            nightBanner?.classList.add('hidden');
+        } else {
+            nightBanner?.classList.remove('hidden');
+            weekendBanner?.classList.add('hidden');
+        }
+
+        // Désactiver tous les champs et boutons du formulaire
+        if (form) {
+            form.querySelectorAll('input, select, textarea').forEach(el => {
+                el.disabled = true;
+            });
+        }
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.title = reason === 'weekend'
+                ? 'Commandes indisponibles le weekend'
+                : 'Commandes disponibles de 6h à 19h';
+        }
+        if (cancelBtn) cancelBtn.disabled = true;
+
+    } else {
+        // Masquer les bannières de fermeture
+        weekendBanner?.classList.add('hidden');
+        nightBanner?.classList.add('hidden');
+
+        // Réactiver les champs
+        if (form) {
+            form.querySelectorAll('input, select, textarea').forEach(el => {
+                el.disabled = false;
+            });
+        }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.title = ''; }
+        if (cancelBtn) cancelBtn.disabled = false;
+    }
 }
 
 
@@ -973,6 +1042,15 @@ function calculateTotal() {
    ============================================================ */
 function showEmailConfirmModal(e) {
     e.preventDefault();
+    // Vérification côté client : bloquer si le site est fermé
+    const { closed, reason } = isSiteClosed();
+    if (closed) {
+        const msg = reason === 'weekend'
+            ? 'Les commandes ne sont pas disponibles le weekend.'
+            : 'Les commandes sont disponibles du lundi au vendredi de 6h à 19h.';
+        showToast(msg);
+        return;
+    }
     const total = parseInt(document.getElementById('total-count').textContent);
     if (total === 0) { showToast(t('toastEmptyCart')); return; }
     const emailEl = document.getElementById('confirm-email-addr');
@@ -1081,9 +1159,9 @@ function renderAdminOrders() {
     const searchVal    = (document.getElementById('admin-search')?.value || '').toLowerCase();
     const statusFilter = document.getElementById('admin-status-filter')?.value || '';
     const filtered = state.orders.filter(o =>
+        o.status !== 'Livrée' &&  // Les commandes livrées disparaissent de la gestion
         (!searchVal    || (o.user || '').toLowerCase().includes(searchVal)) &&
-        (!statusFilter || o.status === statusFilter) &&
-        o.status !== 'Annulée'
+        (!statusFilter || o.status === statusFilter)
     );
     tbody.innerHTML = '';
     const tw = document.querySelector('.table-wrapper');
@@ -1135,11 +1213,13 @@ function renderAdminOrders() {
 function renderAdminStats(orders, total = 0) {
     const statsEl = document.getElementById('admin-stats');
     if (!statsEl) return;
-    const confirmed = orders.filter(o => o.status === 'Confirmée').length;
-    const modified  = orders.filter(o => o.status === 'Modifiée').length;
+    const confirmed  = orders.filter(o => o.status === 'Confirmée').length;
+    const modified   = orders.filter(o => o.status === 'Modifiée').length;
+    const cancelled  = orders.filter(o => o.status === 'Annulée').length;
     statsEl.innerHTML = `
         <div class="stat-pill stat-green">${confirmed} ${confirmed>1 ? t('confirmedCountPlural') : t('confirmedCount')}</div>
         <div class="stat-pill stat-orange">${modified} ${modified>1 ? t('modifiedCountPlural') : t('modifiedCount')}</div>
+        ${cancelled > 0 ? `<div class="stat-pill stat-red">${cancelled} annulée${cancelled>1?'s':''}</div>` : ''}
         <div class="stat-pill">${t('totalLabel')}€${total.toFixed(2)}</div>
     `;
 }
@@ -1291,29 +1371,26 @@ function exportCSV() {
 }
 
 /* ============================================================
-   HISTORIQUE PROFIL — avec boutons Modifier / Annuler
+   COMMANDES EN COURS (avec slider de livraison)
    ============================================================ */
-function renderProfileOrders(orders) {
-    const list = document.getElementById('profile-orders-list');
+function renderActiveOrders(orders) {
+    const list = document.getElementById('profile-active-orders-list');
     if (!list) return;
     if (!orders || orders.length === 0) {
-        list.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:32px 0">${t('noRecentOrders')}</p>`;
+        list.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:32px 0">Aucune commande en cours.</p>`;
         return;
     }
     list.innerHTML = '';
     orders.forEach(o => {
-        const sc    = o.status === 'Confirmée' ? 'status-ok' : (o.status === 'Annulée' ? 'status-cancelled' : 'status-modified');
+        const sc    = o.status === 'Confirmée' ? 'status-ok' : 'status-modified';
         const items = (o.items || []).map(i => `${i.qty}× ${i.name}`).join(', ');
-        const isCancelled = o.status === 'Annulée';
-        const card  = document.createElement('div');
-        card.className = 'card order-history-card';
+        const orderDate  = new Date(o.timestamp);
+        const now        = new Date();
+        const hoursDiff  = (now - orderDate) / (1000 * 60 * 60);
+        const canModify  = hoursDiff < 24;
 
-        // Calcul : si plus de 24h, on ne peut plus modifier/annuler
-        const orderDate = new Date(o.timestamp);
-        const now = new Date();
-        const hoursDiff = (now - orderDate) / (1000 * 60 * 60);
-        const canModify = !isCancelled && hoursDiff < 24;
-
+        const card = document.createElement('div');
+        card.className = 'card order-history-card order-active-card';
         card.innerHTML = `
             <div class="order-history-header">
                 <div>
@@ -1327,16 +1404,25 @@ function renderProfileOrders(orders) {
             </div>
             <div class="order-history-items">${items || '—'}</div>
             ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${o.extras}</div>` : ''}
-            ${canModify ? `
-            <div class="order-history-actions">
-                <button class="btn-secondary" data-action="modify" data-id="${o.firebaseId}"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Modifier</button>
-                <button class="btn-danger"    data-action="cancel" data-id="${o.firebaseId}">✖ Annuler</button>
-            </div>` : ''}
-            ${isCancelled ? `<p style="font-size:.78rem;color:var(--text-muted);margin-top:6px;margin-bottom:0">Commande annulée.</p>` : ''}
-            ${!canModify && !isCancelled && hoursDiff >= 24 ? `<p style="font-size:.78rem;color:var(--text-muted);margin-top:6px;margin-bottom:0">Délai de modification dépassé (24h).</p>` : ''}
+            <div class="order-active-footer">
+                ${canModify ? `
+                <div class="order-history-actions" style="margin-top:0">
+                    <button class="btn-secondary" data-action="modify" data-id="${o.firebaseId}">
+                        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Modifier
+                    </button>
+                    <button class="btn-danger" data-action="cancel" data-id="${o.firebaseId}">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        Annuler
+                    </button>
+                </div>` : `<p style="font-size:.78rem;color:var(--text-muted);margin:0">Délai de modification dépassé (24h).</p>`}
+                <button class="btn-deliver" data-action="deliver" data-id="${o.firebaseId}" data-ref="${o.ref || '—'}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                    Récupérer
+                </button>
+            </div>
         `;
 
-        // Listeners
         card.querySelector('[data-action="cancel"]')?.addEventListener('click', async () => {
             if (!confirm('Annuler cette commande ?')) return;
             try {
@@ -1347,10 +1433,8 @@ function renderProfileOrders(orders) {
         });
 
         card.querySelector('[data-action="modify"]')?.addEventListener('click', () => {
-            // Pré-remplir le formulaire de commande avec les infos existantes et naviguer
             showToast('Modifiez votre commande ci-dessous et revalidez.');
             navigateTo('order');
-            // Remettre les quantités
             renderMenu();
             setTimeout(() => {
                 (o.items || []).forEach(item => {
@@ -1364,16 +1448,202 @@ function renderProfileOrders(orders) {
                     }
                 });
                 calculateTotal();
-                // Restaurer les extras (couverts, sauces, allergies...)
                 restoreExtras(o.extras);
-                // Mémoriser l'ID de la commande à remplacer
                 state.editingOrderId = o.firebaseId;
             }, 200);
+        });
+
+        card.querySelector('[data-action="deliver"]')?.addEventListener('click', () => {
+            openDeliveryModal(o.firebaseId, o.ref || '—');
         });
 
         list.appendChild(card);
     });
 }
+
+/* ============================================================
+   HISTORIQUE (livrées + annulées, sans boutons d'action)
+   ============================================================ */
+function renderProfileOrders(orders) {
+    const list = document.getElementById('profile-orders-list');
+    if (!list) return;
+    if (!orders || orders.length === 0) {
+        list.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:32px 0">${t('noRecentOrders')}</p>`;
+        return;
+    }
+    list.innerHTML = '';
+    orders.forEach(o => {
+        const isDelivered = o.status === 'Livrée';
+        const sc    = isDelivered ? 'status-delivered' : 'status-cancelled';
+        const items = (o.items || []).map(i => `${i.qty}× ${i.name}`).join(', ');
+        const card  = document.createElement('div');
+        card.className = 'card order-history-card';
+        card.innerHTML = `
+            <div class="order-history-header">
+                <div>
+                    <strong class="order-history-ref">${o.ref || '—'}</strong>
+                    <span class="order-history-date">${o.time || ''}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <span class="order-history-total">${o.total || '—'}</span>
+                    <span class="status-badge ${sc}">${isDelivered ? 'Livrée' : o.status}</span>
+                </div>
+            </div>
+            <div class="order-history-items">${items || '—'}</div>
+            ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${o.extras}</div>` : ''}
+            <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px;margin-bottom:0">
+                ${isDelivered ? 'Repas récupéré avec succès.' : 'Commande annulée.'}
+            </p>
+        `;
+        list.appendChild(card);
+    });
+}
+
+/* ============================================================
+   MODAL SLIDER DE LIVRAISON (style TGTG)
+   ============================================================ */
+function openDeliveryModal(orderId, ref) {
+    const modal   = document.getElementById('delivery-modal');
+    const refEl   = document.getElementById('delivery-modal-order-ref');
+    const success = document.getElementById('delivery-success');
+    const track   = document.getElementById('delivery-slider-track');
+    const fill    = document.getElementById('delivery-slider-fill');
+    const thumb   = document.getElementById('delivery-slider-thumb');
+    const label   = document.getElementById('delivery-slider-label');
+
+    if (!modal) return;
+
+    // Reset
+    success?.classList.add('hidden');
+    track?.classList.remove('hidden');
+    if (fill)  fill.style.width = '0%';
+    if (label) label.style.opacity = '1';
+    if (thumb) { thumb.style.left = '4px'; thumb.classList.remove('completed'); }
+    if (refEl) refEl.textContent = 'Réf. ' + ref;
+
+    modal.classList.remove('hidden');
+    initDeliverySlider(orderId);
+}
+
+function initDeliverySlider(orderId) {
+    const track = document.getElementById('delivery-slider-track');
+    const fill  = document.getElementById('delivery-slider-fill');
+    const thumb = document.getElementById('delivery-slider-thumb');
+    const label = document.getElementById('delivery-slider-label');
+    if (!track || !thumb) return;
+
+    let isDragging = false;
+    let startX     = 0;
+    let currentX   = 0;
+    let rafId      = null;
+    let completed  = false;
+    const THUMB_SIZE = 56;
+
+    function getMaxX() { return track.offsetWidth - THUMB_SIZE - 8; }
+
+    function applyPosition(x) {
+        thumb.style.transform = `translateX(${x}px)`;
+        const progress = x / Math.max(getMaxX(), 1);
+        fill.style.width = Math.min(progress * 100, 100) + '%';
+        if (label) label.style.opacity = Math.max(0, 1 - progress * 2);
+    }
+
+    function onStart(e) {
+        if (completed) return;
+        isDragging = true;
+        startX = (e.touches ? e.touches[0].clientX : e.clientX) - currentX;
+        thumb.style.transition = 'none';
+        fill.style.transition  = 'none';
+    }
+
+    function onMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const raw     = clientX - startX;
+        const maxX    = getMaxX();
+        const newX    = Math.max(0, Math.min(raw, maxX));
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+            currentX = newX;
+            applyPosition(currentX);
+            if (currentX / maxX >= 0.98) onComplete();
+        });
+    }
+
+    function onEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        const maxX = getMaxX();
+        if (currentX / maxX < 0.98) {
+            thumb.style.transition = 'transform 0.3s ease';
+            fill.style.transition  = 'width 0.3s ease';
+            currentX = 0;
+            applyPosition(0);
+            if (label) label.style.opacity = '1';
+        }
+    }
+
+    async function onComplete() {
+        if (completed) return;
+        completed  = true;
+        isDragging = false;
+        cleanup();
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+        thumb.classList.add('completed');
+        thumb.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+        if (label) label.style.opacity = '0';
+        fill.style.width = '100%';
+
+        setTimeout(async () => {
+            track?.classList.add('hidden');
+            document.getElementById('delivery-success')?.classList.remove('hidden');
+            try {
+                await updateDoc(doc(db, "orders", orderId), { status: 'Livrée' });
+                showToast('Bon appétit !');
+                setTimeout(() => {
+                    document.getElementById('delivery-modal')?.classList.add('hidden');
+                    loadUserHistory();
+                }, 2000);
+            } catch (err) {
+                showToast('Erreur lors de la confirmation.');
+            }
+        }, 500);
+    }
+
+    function cleanup() {
+        document.removeEventListener('mousemove',  onMove);
+        document.removeEventListener('touchmove',  onMove);
+        document.removeEventListener('mouseup',    onEnd);
+        document.removeEventListener('touchend',   onEnd);
+    }
+
+    // Cloner le thumb pour supprimer tout ancien listener
+    const newThumb = thumb.cloneNode(true);
+    thumb.parentNode.replaceChild(newThumb, thumb);
+    const t2 = document.getElementById('delivery-slider-thumb');
+    t2.style.transform  = 'translateX(0)';
+    t2.style.transition = 'none';
+
+    t2.addEventListener('mousedown',  onStart);
+    t2.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('mousemove',  onMove, { passive: false });
+    document.addEventListener('touchmove',  onMove, { passive: false });
+    document.addEventListener('mouseup',    onEnd);
+    document.addEventListener('touchend',   onEnd);
+}
+
+// Fermeture du modal livraison
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('delivery-modal-close')?.addEventListener('click', () => {
+        document.getElementById('delivery-modal')?.classList.add('hidden');
+    });
+    document.getElementById('delivery-modal')?.addEventListener('click', e => {
+        if (e.target === document.getElementById('delivery-modal'))
+            document.getElementById('delivery-modal').classList.add('hidden');
+    });
+});
 
 function restoreExtras(extrasStr) {
     // Réinitialiser tous les extras d'abord
@@ -1419,7 +1689,7 @@ function restoreExtras(extrasStr) {
 async function handleDeleteAccount() {
     if (!state.currentUser) return;
     const confirmed = confirm(
-        '⚠️ Supprimer définitivement votre compte ?\n\n' +
+        'Supprimer définitivement votre compte ?\n\n' +
         'Cette action est irréversible. Toutes vos commandes et données seront effacées.\n\n' +
         'Cliquez OK pour confirmer.'
     );
