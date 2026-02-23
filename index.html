@@ -30,9 +30,6 @@
             <button class="nav-btn hidden" data-target="management" id="nav-admin">
                 <span data-i18n="navManagement">Gestion</span>
             </button>
-            <button class="nav-btn" data-target="contact">
-                <span data-i18n="navContact">Contact</span>
-            </button>
             <button class="nav-btn" data-target="signin" id="nav-signin">
                 <span data-i18n="navSignin">Connexion</span>
             </button>
@@ -70,6 +67,9 @@
         <section id="order" class="page">
             <h2 data-i18n="orderTitle">Commande du Jour</h2>
             <div id="weekend-banner" class="banner error hidden"><strong data-i18n="weekendBanner">Site fermé le weekend.</strong> <span data-i18n="statusReturnMonday">Retour lundi.</span></div>
+            <div id="night-closed-banner" class="banner error hidden">
+                <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Commandes fermées.</strong> Les commandes sont disponibles du lundi au vendredi de <strong>6h00 à 19h00</strong>. Revenez demain !
+            </div>
 
             <!-- Order Form -->
             <div id="order-form-container">
@@ -131,12 +131,12 @@
                     <!-- Cart bar -->
                     <div class="cart-bar" id="cart-bar">
                         <div class="cart-bar-info">
-                            <span id="cart-count-badge">0 article</span>
                             <span class="cart-bar-total">€<span id="total-price">0.00</span></span>
+                            <span id="cart-count-badge">0 article</span>
                         </div>
                         <div style="display:flex;gap:8px;flex-wrap:wrap">
-                            <button type="submit" class="btn-primary" id="submit-order-btn" data-i18n="validateOrder">Valider la Commande →</button>
                             <button type="button" class="btn-danger" id="cancel-order-btn" data-i18n="cancel">Annuler</button>
+                            <button type="submit" class="btn-primary" id="submit-order-btn" data-i18n="validateOrder">Valider la Commande →</button>
                         </div>
                     </div>
                     <span id="total-count" class="hidden">0</span>
@@ -455,6 +455,10 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                             <span data-i18n="profileNavAccount">Mon compte</span>
                         </button>
+                        <button class="profile-nav-btn" data-section="section-active-orders">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>En cours</span>
+                        </button>
                         <button class="profile-nav-btn" data-section="section-orders">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
                             <span data-i18n="profileNavHistory">Historique</span>
@@ -522,10 +526,19 @@
                         </div>
                     </div>
 
+                    <!-- Active Orders Section -->
+                    <div id="section-active-orders" class="profile-section">
+                        <h2>Commandes en cours</h2>
+                        <p class="section-note">Vos commandes en attente de livraison. Cliquez sur une commande pour confirmer la réception.</p>
+                        <div id="profile-active-orders-list">
+                            <p style="color:var(--text-muted);text-align:center;padding:32px 0">Aucune commande en cours.</p>
+                        </div>
+                    </div>
+
                     <!-- Orders History Section -->
                     <div id="section-orders" class="profile-section">
                         <h2 data-i18n="ordersHistory">Historique des commandes</h2>
-                        <p class="section-note" data-i18n="ordersKept10Days">Les commandes sont conservées pendant 10 jours.</p>
+                        <p class="section-note" data-i18n="ordersKept10Days">Les commandes livrées et annulées apparaissent ici.</p>
                         <div id="profile-orders-list">
                             <p style="color:var(--text-muted);text-align:center;padding:32px 0" data-i18n="noRecentOrders">Aucune commande récente.</p>
                         </div>
@@ -633,6 +646,46 @@
             </div>
         </section>
 
+        <!-- ===================== HELP ===================== -->
+        <section id="help" class="page">
+            <div class="legal-page">
+                <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
+                <h1>Centre d'aide</h1>
+                <p class="legal-date">Trouvez rapidement des réponses à vos questions</p>
+
+                <div class="help-contact-banner card">
+                    <div>
+                        <strong>Vous n'avez pas trouvé votre réponse ?</strong>
+                        <p style="margin:4px 0 0;font-size:.88rem;color:var(--text-muted)">Notre équipe est disponible du lundi au vendredi.</p>
+                    </div>
+                    <button class="btn-primary" data-target="contact" style="white-space:nowrap">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Nous contacter
+                    </button>
+                </div>
+
+                <h3 style="margin:28px 0 12px" >Questions fréquentes</h3>
+
+                <details class="faq-item card"><summary>Comment passer une commande ?</summary><p>Connectez-vous à votre compte, rendez-vous sur la page <strong>Commander</strong>, sélectionnez vos plats (entrée, plat, dessert), puis cliquez sur <em>Valider la commande</em>. Vous recevrez un email de confirmation.</p></details>
+
+                <details class="faq-item card"><summary>Quels sont les horaires du service ?</summary><p>Le service est disponible du <strong>lundi au vendredi de 6h00 à 19h00</strong>. Les commandes passées avant 19h sont préparées pour le lendemain. Le site est fermé le weekend.</p></details>
+
+                <details class="faq-item card"><summary>Puis-je modifier ou annuler ma commande ?</summary><p>Oui, depuis la section <strong>Profil → En cours</strong>, vous pouvez modifier ou annuler une commande jusqu'à 24h après sa validation. Passé ce délai, la commande est en préparation.</p></details>
+
+                <details class="faq-item card"><summary>Comment confirmer la réception de ma commande ?</summary><p>Lorsque vous récupérez votre repas à la cantine, ouvrez l'application, allez dans <strong>Profil → En cours</strong>, cliquez sur votre commande et utilisez le <em>slider de confirmation</em>. Montrez l'écran à la personne qui vous remet le repas.</p></details>
+
+                <details class="faq-item card"><summary>Je n'ai pas reçu l'email de confirmation</summary><p>Vérifiez votre dossier spam. Si l'email n'y est pas, votre commande est quand même enregistrée — vous pouvez la retrouver dans <strong>Profil → En cours</strong>. En cas de doute, contactez le support.</p></details>
+
+                <details class="faq-item card"><summary>J'ai oublié mon mot de passe</summary><p>Sur la page de connexion, cliquez sur <em>Mot de passe oublié ?</em> et entrez votre adresse email. Vous recevrez un lien de réinitialisation dans les minutes qui suivent.</p></details>
+
+                <details class="faq-item card"><summary>Quels moyens de paiement sont acceptés ?</summary><p>Trois moyens de paiement sont disponibles : <strong>Carte bancaire</strong>, <strong>Espèces</strong> (à remettre à la cantine), et <strong>Badge école</strong> (débit sur votre compte établissement).</p></details>
+
+                <details class="faq-item card"><summary>Les commandes annulées sont-elles remboursées ?</summary><p>Si vous payez par badge école, le montant est simplement non débité. Pour les autres moyens de paiement, contactez l'administration via la page Contact.</p></details>
+
+                <details class="faq-item card"><summary>Comment supprimer mon compte ?</summary><p>Rendez-vous dans <strong>Profil → Paramètres</strong>, section <em>Confidentialité & Sécurité</em>, puis cliquez sur <em>Supprimer mon compte</em>. Cette action est irréversible.</p></details>
+            </div>
+        </section>
+
         <!-- ===================== PRIVACY ===================== -->
         <section id="privacy" class="page">
             <div class="legal-page">
@@ -714,7 +767,7 @@
                 <button class="btn-back" id="reset-pw-back" style="margin-top:16px">← Retour à la connexion</button>
             </div>
             <div id="reset-pw-success-view" class="hidden">
-                <div style="font-size:2.5rem;margin-bottom:12px">📬</div>
+                <div style="display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7-10-7"/></svg></div>
                 <h2>Email envoyé !</h2>
                 <p id="reset-pw-sent-addr" style="font-size:.9rem;color:var(--text-muted);margin-bottom:20px">—</p>
                 <p style="font-size:.88rem">Consultez votre boîte mail et cliquez sur le lien pour réinitialiser votre mot de passe. Vérifiez aussi vos spams.</p>
@@ -752,6 +805,36 @@
         </div>
     </div>
 
+    <!-- Modal slider de livraison (style TGTG) -->
+    <div id="delivery-modal" class="modal-overlay hidden">
+        <div class="modal-box delivery-modal-box">
+            <button class="delivery-modal-close" id="delivery-modal-close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="delivery-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M6 11h.01M18 11h.01"/></svg>
+            </div>
+            <h3 class="delivery-modal-title">Confirmer la réception</h3>
+            <p class="delivery-modal-subtitle" id="delivery-modal-order-ref">Réf. —</p>
+
+            <!-- Slider TGTG -->
+            <div class="delivery-slider-track" id="delivery-slider-track">
+                <div class="delivery-slider-fill" id="delivery-slider-fill"></div>
+                <div class="delivery-slider-label" id="delivery-slider-label">Glissez pour confirmer →</div>
+                <div class="delivery-slider-thumb" id="delivery-slider-thumb">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </div>
+
+            <div id="delivery-success" class="delivery-success hidden">
+                <div class="delivery-success-icon">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <p>Commande livrée ! Bon appétit</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings FAB -->
     <div class="settings-container">
         <div id="settings-popover" class="settings-popover">
@@ -771,7 +854,8 @@
                     <span data-i18n="help">Aide</span>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                     <ul class="sous-menu">
-                        <li data-i18n="helpCenter">Centre d'aide</li>
+                        <li data-target="help" class="page-link" data-i18n="helpCenter">Centre d'aide</li>
+                        <li data-target="contact" class="page-link" data-i18n="navContact">Contact</li>
                         <li data-target="privacy" class="page-link" data-i18n="privacy">Confidentialité</li>
                     </ul>
                 </li>
@@ -816,6 +900,30 @@
     </footer>
 
     <div id="toast-container" aria-live="assertive" aria-atomic="false"></div>
+
+    <!-- Mobile bottom navigation bar -->
+    <nav class="mobile-nav" aria-label="Navigation mobile">
+        <button class="mobile-nav-btn active" data-target="home" id="mob-nav-home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Accueil
+        </button>
+        <button class="mobile-nav-btn" data-target="order" id="mob-nav-order">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Commander
+        </button>
+        <button class="mobile-nav-btn hidden" data-target="management" id="mob-nav-admin">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Gestion
+        </button>
+        <button class="mobile-nav-btn" data-target="signin" id="mob-nav-signin">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Connexion
+        </button>
+        <button class="mobile-nav-btn hidden" data-target="profile" id="mob-nav-profile">
+            <div class="avatar-mini" id="mob-header-avatar" style="width:22px;height:22px;font-size:0.65rem">?</div>
+            Profil
+        </button>
+    </nav>
 
     <script type="module" src="script.js"></script>
 </body>
