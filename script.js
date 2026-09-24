@@ -9,6 +9,7 @@ import {
 import {
     getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
     onAuthStateChanged, signOut, updatePassword,
+    setPersistence, browserLocalPersistence, browserSessionPersistence,
     EmailAuthProvider, reauthenticateWithCredential
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -185,6 +186,110 @@ const i18n = {
     }
 };
 
+Object.assign(i18n.fr, {
+    "homeTitle": "TeacherMeals",
+    "homeDescription": "Précommandez vos repas du lundi au vendredi. Frais, pratiques et prêts à récupérer.",
+    "step1Title": "Se connecter",
+    "step1Desc": "Créez votre compte avec votre e-mail, puis connectez-vous.",
+    "step2Desc": "Choisissez entrée, plat et dessert entre 5h et minuit.",
+    "step3Desc": "Récupérez votre repas à la cantine le prochain jour ouvré.",
+    "faq1Q": "Quand puis-je commander ?",
+    "faq1A": "Du lundi au vendredi, de 5h00 à minuit (heure de Paris). Les commandes sont fermées la nuit et le weekend.",
+    "faq2A": "Non, les commandes sont fermées le samedi et le dimanche. Retour lundi à 5h00.",
+    "faq3A": "Jusqu'à minuit la veille du jour de retrait. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit.",
+    "orderTitle": "Nouvelle commande",
+    "orderPickupNote": "Retrait à la cantine le",
+    "pageTitle": "TeacherMeals – Précommande de repas",
+    "metaDescription": "TeacherMeals : précommandez vos repas à la cantine, du lundi au vendredi.",
+    "successMessage": "Commande enregistrée. Retrait à la cantine le",
+    "successCutoff": "Modifiable ou annulable jusqu'à minuit le",
+    "recapEditUntil": "Modifiable jusqu'à minuit le :",
+    "pickupOn": "Retrait le",
+    "editableUntil": "Modifiable jusqu'à minuit le",
+    "editDeadlinePassed": "Délai de modification dépassé.",
+    "closedWeekendMsg": "Les commandes ne sont pas disponibles le weekend.",
+    "closedNightMsg": "Les commandes sont disponibles du lundi au vendredi de 5h à minuit.",
+    "statusClosesAt": "Fermeture à",
+    "midnight": "minuit",
+    "statusOpensMonday": "Ouverture lundi à",
+    "statusOpensToday": "Ouverture à",
+    "paymentHintBadge": "Le montant sera débité sur votre compte établissement.",
+    "paymentHintCash": "À régler en espèces à la cantine lors du retrait.",
+    "ordersKept10Days": "Les commandes livrées et annulées apparaissent ici.",
+    "submitAnonymously": "Soumettre anonymement (sans réponse possible)",
+    "contactReplyAnon": "Votre message est anonyme : nous ne pourrons pas vous répondre.",
+    "lastUpdate": "Dernière mise à jour : septembre 2026",
+    "privacy1Content": "Nous collectons : nom, prénom, adresse e-mail et le contenu de vos commandes (plats, extras, notes). Les allergies que vous indiquez sont des données de santé, utilisées uniquement pour préparer votre repas. Aucun paiement en ligne n'a lieu sur ce site : aucune donnée bancaire n'est collectée.",
+    "privacy2Content": "Vos données servent à gérer vos réservations de repas. Elles sont visibles par les administrateurs de la cantine, qui en ont besoin pour préparer les commandes, et hébergées par Google (Firebase). Elles ne sont ni vendues ni partagées à des fins commerciales.",
+    "privacy3Content": "Vos données de commande sont conservées tant que votre compte existe. Vous pouvez supprimer votre compte à tout moment dans Profil → Paramètres : votre compte et vos commandes sont alors effacés.",
+    "privacy4Content": "Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Vous pouvez corriger vos informations dans Profil → Mon compte, supprimer votre compte vous-même, ou contacter l'établissement (responsable du traitement) via la page Contact.",
+    "privacy5Content": "Nous utilisons uniquement des cookies et du stockage local essentiels au fonctionnement du service (connexion, langue, thème). Aucun cookie publicitaire ou de traçage n'est utilisé.",
+    "terms1Content": "Le service TeacherMeals est réservé au personnel enseignant de l'établissement. Vous créez votre propre compte avec une adresse e-mail et un mot de passe. Un compte utilisé de manière abusive peut être suspendu.",
+    "terms2Content": "Les commandes se passent du lundi au vendredi, de 5h à minuit, pour un retrait le prochain jour ouvré. Maximum 3 articles par catégorie. Les commandes sont fermées la nuit et le weekend, et peuvent l'être les jours fériés. Toute commande validée engage l'utilisateur.",
+    "terms3Content": "Une commande peut être modifiée ou annulée jusqu'à minuit la veille du jour de retrait, depuis Profil → En cours. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, le repas est préparé et facturé normalement."
+});
+Object.assign(i18n.en, {
+    "homeTitle": "TeacherMeals",
+    "homeDescription": "Pre-order your meals Monday to Friday. Fresh, convenient and ready to pick up.",
+    "step1Title": "Sign in",
+    "step1Desc": "Create your account with your email, then sign in.",
+    "step2Desc": "Choose starter, main and dessert between 5am and midnight.",
+    "step3Desc": "Pick up your meal at the canteen on the next working day.",
+    "faq1Q": "When can I order?",
+    "faq1A": "Monday to Friday, from 5:00am to midnight (Paris time). Orders are closed at night and on weekends.",
+    "faq2A": "No, orders are closed on Saturday and Sunday. Back Monday at 5:00am.",
+    "faq3A": "Until midnight the day before pickup. Weekends are closed, so for a Monday pickup the limit is Friday midnight.",
+    "orderTitle": "New order",
+    "orderPickupNote": "Canteen pickup on",
+    "pageTitle": "TeacherMeals – Meal pre-orders",
+    "metaDescription": "TeacherMeals: pre-order your canteen meals, Monday to Friday.",
+    "successMessage": "Order saved. Canteen pickup on",
+    "successCutoff": "You can edit or cancel it until midnight on",
+    "recapEditUntil": "Editable until midnight on:",
+    "pickupOn": "Pickup on",
+    "editableUntil": "Editable until midnight on",
+    "editDeadlinePassed": "Modification deadline has passed.",
+    "closedWeekendMsg": "Orders are not available on weekends.",
+    "closedNightMsg": "Orders are available Monday to Friday from 5am to midnight.",
+    "statusClosesAt": "Closes at",
+    "midnight": "midnight",
+    "statusOpensMonday": "Opens Monday at",
+    "statusOpensToday": "Opens at",
+    "paymentHintBadge": "The amount will be debited from your school account.",
+    "paymentHintCash": "Pay in cash at the canteen when you pick up.",
+    "ordersKept10Days": "Delivered and cancelled orders appear here.",
+    "tagVeg": "Vegetarian",
+    "submitAnonymously": "Submit anonymously (no reply possible)",
+    "contactReplyAnon": "Your message is anonymous: we will not be able to reply.",
+    "lastUpdate": "Last updated: September 2026",
+    "privacy1Content": "We collect: first name, last name, email address and the content of your orders (dishes, extras, notes). Allergies you enter are health data, used only to prepare your meal. No online payment takes place on this site: no bank data is collected.",
+    "privacy2Content": "Your data is used to manage your meal reservations. It is visible to canteen administrators, who need it to prepare orders, and hosted by Google (Firebase). It is not sold or shared for commercial purposes.",
+    "privacy3Content": "Order data is kept as long as your account exists. You can delete your account at any time in Profile → Settings: your account and orders are then erased.",
+    "privacy4Content": "Under GDPR you have the right to access, rectify and delete your data. You can correct your details in Profile → My account, delete your account yourself, or contact the institution (data controller) via the Contact page.",
+    "privacy5Content": "We only use cookies and local storage essential to the service (sign-in, language, theme). No advertising or tracking cookies are used.",
+    "terms1Content": "TeacherMeals is reserved for the institution's teaching staff. You create your own account with an email address and a password. An account used abusively may be suspended.",
+    "terms2Content": "Orders are placed Monday to Friday, from 5am to midnight, for pickup on the next working day. Maximum 3 items per category. Orders are closed at night and on weekends, and may be closed on public holidays. Any validated order is binding.",
+    "terms3Content": "An order can be edited or cancelled until midnight the day before pickup, from Profile → In progress. Weekends are closed, so for a Monday pickup the limit is Friday midnight. After that, the meal is prepared and charged as usual."
+});
+
+/* ---------- Helpers : échappement HTML & dates de retrait ---------- */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toDay    = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const parseDay = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const fmtDay   = d => d.toLocaleDateString(state.lang === 'en' ? 'en-GB' : 'fr-FR', { weekday:'long', day:'numeric', month:'long' });
+// Retrait = prochain jour ouvré (lun-ven)
+function getPickupDate(from = new Date()) {
+    const d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+    do { d.setDate(d.getDate() + 1); } while (d.getDay() === 0 || d.getDay() === 6);
+    return d;
+}
+// Limite de modification/annulation : minuit la veille du retrait.
+// Site fermé le weekend => pour un retrait le lundi, la limite est le vendredi à minuit (= samedi 00:00).
+function getEditDeadline(pickup) { const d = new Date(pickup); if (d.getDay() === 1) d.setDate(d.getDate() - 2); return d; }
+function lastEditDay(pickup)     { const d = getEditDeadline(pickup); d.setDate(d.getDate() - 1); return d; }
+function orderPickup(o)          { return o.pickupDate ? parseDay(o.pickupDate) : getPickupDate(new Date(o.timestamp)); }
+function canEditOrder(o)         { return new Date() < getEditDeadline(orderPickup(o)); }
+
 let isLoginMode = true;
 let unsubscribeOrders = null;
 
@@ -325,6 +430,8 @@ async function handleAuthSubmit(e) {
     btn.disabled = true; btn.textContent = t('loading');
 
     try {
+        const remember = !isLoginMode || document.getElementById('remember-me')?.checked !== false;
+        await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
         if (!isLoginMode) {
             const fName = document.getElementById('reg-fname').value.trim();
             const lName = document.getElementById('reg-lname').value.trim();
@@ -333,7 +440,7 @@ async function handleAuthSubmit(e) {
             const cred = await createUserWithEmailAndPassword(auth, email, pass);
             await setDoc(doc(db, "users", cred.user.uid), {
                 firstName: fName, lastName: lName, email,
-                role: email.startsWith('admin') ? 'admin' : 'user',
+                role: 'user', // les admins sont promus à la main dans la console Firebase (voir firestore.rules)
                 createdAt: new Date().toISOString()
             });
             showToast(t('toastWelcome') + fName + ' !');
@@ -454,20 +561,16 @@ function setupEventListeners() {
     });
 
     // Commande
-    document.getElementById('order-form')?.addEventListener('submit', showEmailConfirmModal);
+    document.getElementById('order-form')?.addEventListener('submit', startCheckout);
     document.getElementById('cancel-order-btn')?.addEventListener('click', () => {
         if (confirm(t('toastCancelOrderConfirm'))) {
             document.getElementById('order-form').reset();
             renderMenu();
+            state.editingOrderId = null;
             showToast(t('toastOrderCancelled'));
         }
     });
 
-    // Modal confirmation email
-    document.getElementById('modal-send-btn')?.addEventListener('click', proceedToPayment);
-    document.getElementById('modal-cancel-btn')?.addEventListener('click', () => {
-        document.getElementById('email-confirm-modal').classList.add('hidden');
-    });
 
     // Paiement
     document.getElementById('back-to-order')?.addEventListener('click', () => {
@@ -478,22 +581,10 @@ function setupEventListeners() {
         opt.addEventListener('click', () => {
             document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
             opt.classList.add('active');
-            const cf = document.getElementById('card-fields');
-            if (cf) cf.style.display = opt.dataset.method === 'card' ? 'block' : 'none';
+            setTimeout(updatePaymentHint, 0);
         });
     });
     document.getElementById('confirm-payment-btn')?.addEventListener('click', confirmPayment);
-
-    // Formatage carte bancaire
-    document.getElementById('card-number')?.addEventListener('input', e => {
-        let v = e.target.value.replace(/\D/g, '').substring(0, 16);
-        e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
-    });
-    document.getElementById('card-expiry')?.addEventListener('input', e => {
-        let v = e.target.value.replace(/\D/g, '').substring(0, 4);
-        if (v.length >= 3) v = v.substring(0, 2) + '/' + v.substring(2);
-        e.target.value = v;
-    });
 
     // Succès paiement → retour accueil
     document.getElementById('success-home-btn')?.addEventListener('click', () => {
@@ -505,8 +596,21 @@ function setupEventListeners() {
     });
 
     // Contact
-    document.getElementById('contact-form')?.addEventListener('submit', e => {
+    document.getElementById('contact-form')?.addEventListener('submit', async e => {
         e.preventDefault();
+        if (!state.currentUser) { showToast(t('toastPleaseSignIn')); navigateTo('signin'); return; }
+        const anon = !!document.getElementById('contact-anon')?.checked;
+        const u = state.currentUser;
+        try {
+            await addDoc(collection(db, 'supportMessages'), {
+                type: document.getElementById('contact-type').value,
+                message: document.getElementById('contact-msg').value.trim(),
+                anonymous: anon, createdAt: new Date().toISOString(),
+                ...(anon ? {} : { userId: u.uid, email: u.email, name: `${u.firstName || ''} ${u.lastName || ''}`.trim() })
+            });
+        } catch (err) { showToast(t('toastError') + err.message); return; }
+        const reply = document.querySelector('#contact-success-view p');
+        if (reply) { const k = anon ? 'contactReplyAnon' : 'contactReply'; reply.setAttribute('data-i18n', k); reply.textContent = t(k); }
         document.getElementById('contact-form-view').classList.add('hidden');
         document.getElementById('contact-success-view').classList.remove('hidden');
         showToast(t('toastMessageSent'));
@@ -597,9 +701,13 @@ function setupEventListeners() {
             const addrEl = document.getElementById('reset-pw-sent-addr');
             if (addrEl) addrEl.textContent = email;
         } catch (err) {
-            let msg = "Erreur envoi e-mail.";
-            if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-email') msg = "Adresse e-mail introuvable.";
-            showToast(msg);
+            if (err.code === 'auth/user-not-found') {
+                document.getElementById('reset-pw-form-view').classList.add('hidden');
+                document.getElementById('reset-pw-success-view').classList.remove('hidden');
+                const a = document.getElementById('reset-pw-sent-addr'); if (a) a.textContent = email;
+                return;
+            }
+            showToast(err.code === 'auth/invalid-email' ? "Adresse e-mail invalide." : "Erreur envoi e-mail.");
             btn.disabled = false; btn.textContent = 'Envoyer le lien';
         }
     });
@@ -774,6 +882,8 @@ function setLanguage(lang) {
     const activePage = document.querySelector('.page.active')?.id;
     if (activePage === 'order') renderMenu();
     if (activePage === 'management') { renderAdminOrders(); renderAdminMenuList(); }
+    updateStatusStrip();
+    updateOrderFormForClosure(isSiteClosed().closed);
     calculateTotal();
 }
 
@@ -793,10 +903,10 @@ function applyAuthMode() {
 }
 
 /* ============================================================
-   TEMPS & STATUS — Fermeture 19h–6h
+   TEMPS & STATUS — Ouvert 5h–minuit, lun–ven
    ============================================================ */
-const OPEN_HOUR  = 6;   // 6h
-const CLOSE_HOUR = 19;  // 19h
+const OPEN_HOUR  = 5;   // 5h
+const CLOSE_HOUR = 24;  // minuit
 
 function isSiteClosed() {
     const now  = new Date();
@@ -813,7 +923,7 @@ function isSiteClosed() {
 function updateNavigationForClosure(isClosed) {
     const body = document.body;
     // Pages autorisées pendant la fermeture
-    const allowedPages = ['home', 'management', 'profile', 'signin', 'privacy', 'terms', 'help', 'contact'];
+    const allowedPages = ['home', 'order', 'management', 'profile', 'signin', 'privacy', 'terms', 'help', 'contact'];
 
     // Ajouter/enlever la classe pour le style CSS
     body.classList.toggle('site-closed', isClosed);
@@ -835,6 +945,9 @@ function updateNavigationForClosure(isClosed) {
 
 function updateOrderFormForClosure(isClosed) {
     const { reason } = isSiteClosed();
+    document.querySelectorAll('#menu-container .qty-btn').forEach(b => b.disabled = isClosed);
+    const pn = document.getElementById('order-pickup-note');
+    if (pn) { pn.textContent = `${t('orderPickupNote')} ${fmtDay(getPickupDate())}`; pn.classList.toggle('hidden', isClosed); }
     const weekendBanner = document.getElementById('weekend-banner');
     const nightBanner   = document.getElementById('night-closed-banner');
     const submitBtn     = document.getElementById('submit-order-btn');
@@ -859,9 +972,7 @@ function updateOrderFormForClosure(isClosed) {
         }
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.title = reason === 'weekend'
-                ? 'Commandes indisponibles le weekend'
-                : 'Commandes disponibles de 6h à 19h';
+            submitBtn.title = t(reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg');
         }
         if (cancelBtn) cancelBtn.disabled = true;
 
@@ -883,66 +994,22 @@ function updateOrderFormForClosure(isClosed) {
 
 
 function updateStatusStrip() {
-    const now = new Date();
-    const day = now.getDay();
-    const hour = now.getHours();
-    const min = String(now.getMinutes()).padStart(2, '0');
+    const now = new Date(), hour = now.getHours(), day = now.getDay();
     const isWE = day === 0 || day === 6;
     const isOpen = !isWE && hour >= OPEN_HOUR && hour < CLOSE_HOUR;
-
     const strip = document.getElementById('status-strip');
     if (strip) {
-        if (isOpen) {
-            const closeStr = `${CLOSE_HOUR}:00h`;
-            strip.innerHTML = `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; Fermeture à ${closeStr}`;
-        } else if (isWE) {
-            const openMonday = 'Lundi à ' + OPEN_HOUR + 'h';
-            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${openMonday}`;
-        } else {
-            const nextOpenHour = hour >= CLOSE_HOUR ? 'demain à ' + OPEN_HOUR + 'h' : 'à ' + OPEN_HOUR + 'h';
-            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${nextOpenHour}`;
-        }
+        const closeStr = CLOSE_HOUR >= 24 ? t('midnight') : `${CLOSE_HOUR}h`;
+        strip.innerHTML = isOpen
+            ? `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; ${t('statusClosesAt')} ${closeStr}`
+            : `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; ${t(isWE ? 'statusOpensMonday' : 'statusOpensToday')} ${OPEN_HOUR}h`;
     }
-
-    const banner = document.getElementById('weekend-banner');
-    if (banner) {
-        if (isWE) {
-            banner.classList.remove('hidden');
-        } else {
-            banner.classList.add('hidden');
-        }
-    }
+    document.getElementById('weekend-banner')?.classList.toggle('hidden', !isWE);
 }
 
 function initTime() {
-    const now    = new Date();
-    const day    = now.getDay();
-    const hour   = now.getHours();
-    const min    = String(now.getMinutes()).padStart(2, '0');
-    const isWE   = day === 0 || day === 6;
-    const isOpen = !isWE && hour >= OPEN_HOUR && hour < CLOSE_HOUR;
-
-    const strip  = document.getElementById('status-strip');
-    if (strip) {
-        if (isOpen) {
-            const closeStr = `${CLOSE_HOUR}:00h`;
-            strip.innerHTML = `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; Fermeture à ${closeStr}`;
-        } else if (isWE) {
-            const openMonday = 'Lundi à ' + OPEN_HOUR + 'h';
-            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${openMonday}`;
-        } else {
-            // Nuit
-            const nextOpenHour = hour >= CLOSE_HOUR ? 'demain à ' + OPEN_HOUR + 'h' : 'à ' + OPEN_HOUR + 'h';
-            strip.innerHTML = `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; Ouverture ${nextOpenHour}`;
-        }
-    }
-
-    if (isWE) document.getElementById('weekend-banner')?.classList.remove('hidden');
-
-
-    // Contrôle d'accès selon horaires : désactiver les sections non essentielles
-    const { closed } = isSiteClosed();
-    updateNavigationForClosure(closed);
+    updateStatusStrip();
+    updateNavigationForClosure(isSiteClosed().closed);
 }
 
 /* ============================================================
@@ -965,11 +1032,11 @@ function renderMenu() {
         items.forEach(item => {
             const div = document.createElement('div');
             div.className = 'menu-item-row';
-            const tags = (item.tags || []).map(t => `<span class="menu-tag menu-tag-${t}">${tagLabel(t)}</span>`).join('');
+            const tags = (item.tags || []).map(t => `<span class="menu-tag menu-tag-${esc(t)}">${esc(tagLabel(t))}</span>`).join('');
             const limitHTML = item.limit > 0 ? `<span class="menu-limit">${t('stockLabel')} ${item.limit}</span>` : '';
             div.innerHTML = `
                 <div class="menu-item-info">
-                    <div class="menu-item-name">${item.name}</div>
+                    <div class="menu-item-name">${esc(item.name)}</div>
                     <div class="menu-item-tags">${tags}${limitHTML}</div>
                 </div>
                 <div class="menu-item-right">
@@ -1005,6 +1072,7 @@ function renderMenu() {
         container.appendChild(section);
     });
     calculateTotal();
+    updateOrderFormForClosure(isSiteClosed().closed);
 }
 
 function getCatTotal(cat) {
@@ -1040,31 +1108,30 @@ function calculateTotal() {
 /* ============================================================
    FLOW COMMANDE : Modal → Paiement → Succès
    ============================================================ */
-function showEmailConfirmModal(e) {
+function startCheckout(e) {
     e.preventDefault();
-    // Vérification côté client : bloquer si le site est fermé
     const { closed, reason } = isSiteClosed();
-    if (closed) {
-        const msg = reason === 'weekend'
-            ? 'Les commandes ne sont pas disponibles le weekend.'
-            : 'Les commandes sont disponibles du lundi au vendredi de 6h à 19h.';
-        showToast(msg);
-        return;
-    }
-    const total = parseInt(document.getElementById('total-count').textContent);
-    if (total === 0) { showToast(t('toastEmptyCart')); return; }
-    const emailEl = document.getElementById('confirm-email-addr');
-    if (emailEl) emailEl.textContent = state.currentUser?.email || '—';
-    document.getElementById('email-confirm-modal').classList.remove('hidden');
-}
-
-function proceedToPayment() {
-    document.getElementById('email-confirm-modal').classList.add('hidden');
-    showToast(t('toastConfirmEmailSent'));
+    if (closed) { showToast(t(reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); return; }
+    if (parseInt(document.getElementById('total-count').textContent) === 0) { showToast(t('toastEmptyCart')); return; }
     buildPaymentRecap();
     document.getElementById('order-form-container').classList.add('hidden');
     document.getElementById('payment-view').classList.remove('hidden');
+    updatePaymentHint();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updatePaymentHint() {
+    const el = document.getElementById('payment-hint');
+    if (!el) return;
+    const m = document.querySelector('input[name="payment"]:checked')?.value || 'badge';
+    el.textContent = t(m === 'cash' ? 'paymentHintCash' : 'paymentHintBadge');
+}
+
+function extrasString() {
+    return Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => {
+        const note = document.getElementById(`extra-${c.value}-input`)?.value?.trim();
+        return note ? `${c.value} (${note})` : c.value;
+    }).join(', ');
 }
 
 function buildPaymentRecap() {
@@ -1076,38 +1143,26 @@ function buildPaymentRecap() {
         const item = state.menu.find(i => i.id === s.dataset.id);
         if (qty > 0 && item) {
             total += qty * Number(item.price);
-            container.innerHTML += `<div class="recap-item-row"><span>${qty}× ${item.name}</span><span>€${(qty * Number(item.price)).toFixed(2)}</span></div>`;
+            container.innerHTML += `<div class="recap-item-row"><span>${qty}× ${esc(item.name)}</span><span>€${(qty * Number(item.price)).toFixed(2)}</span></div>`;
         }
     });
-    const extras = Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => {
-        const preciser = document.getElementById(`extra-${c.value}-input`);
-        const note = preciser?.value?.trim();
-        return note ? `${c.value} (${note})` : c.value;
-    }).join(', ');
-    const sub = document.getElementById('recap-subtotal');
-    const ext = document.getElementById('recap-extras-label');
-    const tot = document.getElementById('recap-total');
-    const dat = document.getElementById('recap-date');
-    if (sub) sub.textContent = `€${total.toFixed(2)}`;
-    if (ext) ext.textContent = extras || t('recapNone');
-    if (tot) tot.textContent = `€${total.toFixed(2)}`;
-    if (dat) {
-        const d = new Date();
-        do { d.setDate(d.getDate() + 1); } while (d.getDay() === 0 || d.getDay() === 6);
-        dat.textContent = d.toLocaleDateString(state.lang === 'en' ? 'en-GB' : 'fr-FR', { weekday:'long', day:'numeric', month:'long' });
-    }
+    const pickup = getPickupDate();
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('recap-subtotal', `€${total.toFixed(2)}`);
+    set('recap-extras-label', extrasString() || t('recapNone'));
+    set('recap-total', `€${total.toFixed(2)}`);
+    set('recap-date', fmtDay(pickup));
+    set('recap-cutoff', fmtDay(lastEditDay(pickup)));
 }
 
 async function confirmPayment() {
     const btn = document.getElementById('confirm-payment-btn');
     btn.disabled = true; btn.textContent = t('validating');
-    const method = document.querySelector('input[name="payment"]:checked')?.value || 'card';
-    if (method === 'card') {
-        const num = (document.getElementById('card-number')?.value || '').replace(/\s/g, '');
-        const exp = document.getElementById('card-expiry')?.value || '';
-        if (num.length < 16) { showToast(t('toastInvalidCard')); btn.disabled = false; btn.textContent = t('confirmPaymentBtn'); return; }
-        if (!/^\d{2}\/\d{2}$/.test(exp)) { showToast(t('toastInvalidExpiry')); btn.disabled = false; btn.textContent = t('confirmPaymentBtn'); return; }
-    }
+    const reset = () => { btn.disabled = false; btn.textContent = t('confirmPaymentBtn'); };
+    const { closed, reason } = isSiteClosed();
+    if (closed) { showToast(t(reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); reset(); return; }
+    const method = document.querySelector('input[name="payment"]:checked')?.value || 'badge';
+    const pickup = getPickupDate();
     const isModification = !!state.editingOrderId;
     const ref   = 'TM-' + Date.now().toString(36).toUpperCase().slice(-6);
     const items = [];
@@ -1121,31 +1176,27 @@ async function confirmPayment() {
         user: `${document.getElementById('order-fname').value} ${document.getElementById('order-lname').value}`.trim(),
         timestamp: new Date().toISOString(),
         time: new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' }),
-        items, payment: method,
-        extras: Array.from(document.querySelectorAll('input[name="extra"]:checked')).map(c => {
-            const preciser = document.getElementById(`extra-${c.value}-input`);
-            const note = preciser?.value?.trim();
-            return note ? `${c.value} (${note})` : c.value;
-        }).join(', '),
+        pickupDate: toDay(pickup),
+        items, payment: method, extras: extrasString(),
         notes: document.getElementById('order-notes')?.value || '',
         total: document.getElementById('recap-total').textContent,
         status: isModification ? 'Modifiée' : 'Confirmée'
     };
     const newId = await submitOrderToFirebase(orderData);
     if (newId) {
-        // Si on modifiait une commande existante, l'annuler
         if (state.editingOrderId) {
-            try {
-                await updateDoc(doc(db, "orders", state.editingOrderId), { status: 'Annulée' });
-            } catch (e) { console.warn("Impossible d'annuler l'ancienne commande:", e); }
+            try { await updateDoc(doc(db, "orders", state.editingOrderId), { status: 'Annulée' }); }
+            catch (e) { console.warn("Impossible d'annuler l'ancienne commande:", e); }
             state.editingOrderId = null;
         }
         document.getElementById('order-ref').textContent = ref;
+        document.getElementById('success-details').textContent =
+            `${t('successMessage')} ${fmtDay(pickup)}. ${t('successCutoff')} ${fmtDay(lastEditDay(pickup))}.`;
         document.getElementById('payment-view').classList.add('hidden');
         document.getElementById('payment-success-view').classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    btn.disabled = false; btn.textContent = t('confirmPaymentBtn');
+    reset();
 }
 
 /* ============================================================
@@ -1176,20 +1227,20 @@ function renderAdminOrders() {
     if (tw) tw.style.display = '';
     let grandTotal = 0;
     filtered.forEach(o => {
-        const starter = (o.items||[]).filter(i=>i.category==='starter').map(i=>`${i.qty}× ${i.name}`).join(', ') || '—';
-        const main    = (o.items||[]).filter(i=>i.category==='main').map(i    =>`${i.qty}× ${i.name}`).join(', ') || '—';
-        const dessert = (o.items||[]).filter(i=>i.category==='dessert').map(i =>`${i.qty}× ${i.name}`).join(', ') || '—';
+        const starter = (o.items||[]).filter(i=>i.category==='starter').map(i=>`${i.qty}× ${esc(i.name)}`).join(', ') || '—';
+        const main    = (o.items||[]).filter(i=>i.category==='main').map(i    =>`${i.qty}× ${esc(i.name)}`).join(', ') || '—';
+        const dessert = (o.items||[]).filter(i=>i.category==='dessert').map(i =>`${i.qty}× ${esc(i.name)}`).join(', ') || '—';
         const statusLabel = o.status==='Confirmée' ? t('statusConfirmed') : (o.status==='Annulée' ? t('statusCancelled') : t('statusModified'));
         const sc = o.status==='Confirmée'?'status-ok':(o.status==='Annulée'?'status-cancelled':'status-modified');
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><div class="cell-user"><strong>${o.user||'—'}</strong><small class="ref-label">${o.ref||''}</small></div></td>
-            <td>${o.time||'—'}</td>
+            <td><div class="cell-user"><strong>${esc(o.user||'—')}</strong><small class="ref-label">${esc(o.ref||'')}</small></div></td>
+            <td>${esc(o.time||'—')}</td>
             <td class="cell-dish">${starter}</td>
             <td class="cell-dish">${main}</td>
             <td class="cell-dish">${dessert}</td>
-            <td>${o.extras||'—'}</td>
-            <td><strong>${o.total||'—'}</strong></td>
+            <td>${esc(o.extras||'—')}</td>
+            <td><strong>${esc(o.total||'—')}</strong></td>
             <td><span class="status-badge ${sc}">${statusLabel}</span></td>
             <td class="cell-actions">
                 <button class="btn-icon" title="${t('confirmBtn')}" onclick="window.updateOrderStatus('${o.firebaseId}','Confirmée')">
@@ -1253,7 +1304,7 @@ function renderAdminMenuList() {
             const limitText = item.limit > 0 ? `<span class="mini-tag mini-tag-limit">${t('limitedLabel')}${item.limit}</span>` : '';
             row.innerHTML = `
                 <div class="admin-menu-info">
-                    <span class="admin-menu-name">${item.name}</span>
+                    <span class="admin-menu-name">${esc(item.name)}</span>
                     <span class="admin-menu-meta">${tags}${limitText}</span>
                 </div>
                 <span class="admin-menu-price">€${Number(item.price).toFixed(2)}</span>
@@ -1358,7 +1409,7 @@ function exportCSV() {
         const dessert = (o.items||[]).filter(i=>i.category==='dessert').map(i =>`${i.qty}x${i.name}`).join(' / ') || '—';
         return [o.ref||'',o.user||'',o.userEmail||'',o.time||'',starter,main,dessert,
                 o.extras||'',o.notes||'',o.payment||'',o.total||'',o.status||'']
-            .map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',');
+            .map(v=>{ let s = String(v); if (/^[=+\-@]/.test(s)) s = "'" + s; return `"${s.replace(/"/g,'""')}"`; }).join(',');
     });
     const csv  = [headers.join(','), ...rows].join('\n');
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -1383,27 +1434,27 @@ function renderActiveOrders(orders) {
     list.innerHTML = '';
     orders.forEach(o => {
         const sc    = o.status === 'Confirmée' ? 'status-ok' : 'status-modified';
-        const items = (o.items || []).map(i => `${i.qty}× ${i.name}`).join(', ');
-        const orderDate  = new Date(o.timestamp);
-        const now        = new Date();
-        const hoursDiff  = (now - orderDate) / (1000 * 60 * 60);
-        const canModify  = hoursDiff < 24;
+        const items = (o.items || []).map(i => `${i.qty}× ${esc(i.name)}`).join(', ');
+        const canModify  = canEditOrder(o);
+        const pickup     = orderPickup(o);
+        const pickupLine = `${t('pickupOn')} ${fmtDay(pickup)}` + (canModify ? ` · ${t('editableUntil')} ${fmtDay(lastEditDay(pickup))}` : '');
 
         const card = document.createElement('div');
         card.className = 'card order-history-card order-active-card';
         card.innerHTML = `
             <div class="order-history-header">
                 <div>
-                    <strong class="order-history-ref">${o.ref || '—'}</strong>
-                    <span class="order-history-date">${o.time || ''}</span>
+                    <strong class="order-history-ref">${esc(o.ref || '—')}</strong>
+                    <span class="order-history-date">${esc(o.time || '')}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
-                    <span class="order-history-total">${o.total || '—'}</span>
-                    <span class="status-badge ${sc}">${o.status}</span>
+                    <span class="order-history-total">${esc(o.total || '—')}</span>
+                    <span class="status-badge ${sc}">${esc(o.status)}</span>
                 </div>
             </div>
             <div class="order-history-items">${items || '—'}</div>
-            ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${o.extras}</div>` : ''}
+            ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${esc(o.extras)}</div>` : ''}
+            <p class="section-note" style="margin:8px 0">${esc(pickupLine)}</p>
             <div class="order-active-footer">
                 ${canModify ? `
                 <div class="order-history-actions" style="margin-top:0">
@@ -1415,8 +1466,8 @@ function renderActiveOrders(orders) {
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                         Annuler
                     </button>
-                </div>` : `<p style="font-size:.78rem;color:var(--text-muted);margin:0">Délai de modification dépassé (24h).</p>`}
-                <button class="btn-deliver" data-action="deliver" data-id="${o.firebaseId}" data-ref="${o.ref || '—'}">
+                </div>` : `<p style="font-size:.78rem;color:var(--text-muted);margin:0">${t('editDeadlinePassed')}</p>`}
+                <button class="btn-deliver" data-action="deliver" data-id="${o.firebaseId}" data-ref="${esc(o.ref || '—')}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                     Récupérer
                 </button>
@@ -1424,6 +1475,7 @@ function renderActiveOrders(orders) {
         `;
 
         card.querySelector('[data-action="cancel"]')?.addEventListener('click', async () => {
+            if (!canEditOrder(o)) { showToast(t('editDeadlinePassed')); loadUserHistory(); return; }
             if (!confirm('Annuler cette commande ?')) return;
             try {
                 await updateDoc(doc(db, "orders", o.firebaseId), { status: 'Annulée' });
@@ -1433,6 +1485,8 @@ function renderActiveOrders(orders) {
         });
 
         card.querySelector('[data-action="modify"]')?.addEventListener('click', () => {
+            const cl = isSiteClosed();
+            if (cl.closed) { showToast(t(cl.reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); return; }
             showToast('Modifiez votre commande ci-dessous et revalidez.');
             navigateTo('order');
             renderMenu();
@@ -1475,22 +1529,22 @@ function renderProfileOrders(orders) {
     orders.forEach(o => {
         const isDelivered = o.status === 'Livrée';
         const sc    = isDelivered ? 'status-delivered' : 'status-cancelled';
-        const items = (o.items || []).map(i => `${i.qty}× ${i.name}`).join(', ');
+        const items = (o.items || []).map(i => `${i.qty}× ${esc(i.name)}`).join(', ');
         const card  = document.createElement('div');
         card.className = 'card order-history-card';
         card.innerHTML = `
             <div class="order-history-header">
                 <div>
-                    <strong class="order-history-ref">${o.ref || '—'}</strong>
-                    <span class="order-history-date">${o.time || ''}</span>
+                    <strong class="order-history-ref">${esc(o.ref || '—')}</strong>
+                    <span class="order-history-date">${esc(o.time || '')}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
-                    <span class="order-history-total">${o.total || '—'}</span>
-                    <span class="status-badge ${sc}">${isDelivered ? 'Livrée' : o.status}</span>
+                    <span class="order-history-total">${esc(o.total || '—')}</span>
+                    <span class="status-badge ${sc}">${isDelivered ? 'Livrée' : esc(o.status)}</span>
                 </div>
             </div>
             <div class="order-history-items">${items || '—'}</div>
-            ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${o.extras}</div>` : ''}
+            ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${esc(o.extras)}</div>` : ''}
             <p style="font-size:.78rem;color:var(--text-muted);margin-top:8px;margin-bottom:0">
                 ${isDelivered ? 'Repas récupéré avec succès.' : 'Commande annulée.'}
             </p>
@@ -1528,9 +1582,14 @@ function openDeliveryModal(orderId, ref) {
 function initDeliverySlider(orderId) {
     const track = document.getElementById('delivery-slider-track');
     const fill  = document.getElementById('delivery-slider-fill');
-    const thumb = document.getElementById('delivery-slider-thumb');
+    const oldThumb = document.getElementById('delivery-slider-thumb');
     const label = document.getElementById('delivery-slider-label');
-    if (!track || !thumb) return;
+    if (!track || !oldThumb) return;
+    const thumb = oldThumb.cloneNode(true);   // supprime les anciens listeners
+    oldThumb.parentNode.replaceChild(thumb, oldThumb);
+    thumb.classList.remove('completed');
+    thumb.style.transform = 'translateX(0)';
+    thumb.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>';
 
     let isDragging = false;
     let startX     = 0;
@@ -1619,15 +1678,15 @@ function initDeliverySlider(orderId) {
         document.removeEventListener('touchend',   onEnd);
     }
 
-    // Cloner le thumb pour supprimer tout ancien listener
-    const newThumb = thumb.cloneNode(true);
-    thumb.parentNode.replaceChild(newThumb, thumb);
-    const t2 = document.getElementById('delivery-slider-thumb');
-    t2.style.transform  = 'translateX(0)';
-    t2.style.transition = 'none';
-
-    t2.addEventListener('mousedown',  onStart);
-    t2.addEventListener('touchstart', onStart, { passive: false });
+    thumb.style.transition = 'none';
+    thumb.addEventListener('mousedown',  onStart);
+    thumb.addEventListener('touchstart', onStart, { passive: false });
+    thumb.addEventListener('keydown', e => {   // accès clavier : Entrée / Espace / →
+        if (['Enter', ' ', 'ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+            currentX = getMaxX(); applyPosition(currentX); onComplete();
+        }
+    });
     document.addEventListener('mousemove',  onMove, { passive: false });
     document.addEventListener('touchmove',  onMove, { passive: false });
     document.addEventListener('mouseup',    onEnd);
