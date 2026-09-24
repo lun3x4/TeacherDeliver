@@ -3,20 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Système de précommande de repas pour les professeurs">
-    <title>Réservation Repas Professeurs</title>
+    <meta name="description" content="TeacherMeals : précommandez vos repas à la cantine, du lundi au vendredi.">
+    <meta name="robots" content="noindex, nofollow">
+    <title>TeacherMeals – Précommande de repas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Site Closed Overlay (19h-6h) -->
-<div id="site-closed-overlay" class="hidden">
-    <div class="closed-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10 L8 6 C8 2 16 2 16 6 L16 10"/></svg></div>
-    <h2>Site fermé</h2>
-    <p>TeacherMeals est disponible du lundi au vendredi de <strong>6h00 à 19h00</strong>.</p>
-    <div class="closed-time" id="closed-clock">--:--:--</div>
-    <div class="closed-next" id="closed-next-open">Prochaine ouverture à 6h00</div>
-</div>
 
     <header class="glass-header" role="banner">
         <div class="logo" aria-label="Logo TeacherMeals"><span>TeacherMeals</span></div>
@@ -46,29 +39,30 @@
         <!-- ===================== HOME ===================== -->
         <section id="home" class="page active">
             <div class="hero-section">
-                <h1 data-i18n="homeTitle">Réservation Repas Professeurs</h1>
-                <p class="hero-description" data-i18n="homeDescription">Précommandez vos repas quotidiens du lundi au vendredi. Frais, pratiques et prêts à récupérer.</p>
+                <h1 data-i18n="homeTitle">TeacherMeals</h1>
+                <p class="hero-description" data-i18n="homeDescription">Précommandez vos repas du lundi au vendredi. Frais, pratiques et prêts à récupérer.</p>
                 <div class="status-strip" id="status-strip" role="status" aria-live="polite"></div>
             </div>
             <div class="steps-grid">
-                <div class="card step-card"><div class="step-number">1</div><h3 data-i18n="step1Title">Se Connecter</h3><p data-i18n="step1Desc">Connectez-vous avec vos identifiants scolaires.</p></div>
-                <div class="card step-card"><div class="step-number">2</div><h3 data-i18n="step2Title">Commander</h3><p data-i18n="step2Desc">Sélectionnez entrée, plat et dessert avant minuit.</p></div>
-                <div class="card step-card"><div class="step-number">3</div><h3 data-i18n="step3Title">Récupérer</h3><p data-i18n="step3Desc">Récupérez votre repas à la cantine le jour suivant.</p></div>
+                <div class="card step-card"><div class="step-number">1</div><h3 data-i18n="step1Title">Se connecter</h3><p data-i18n="step1Desc">Créez votre compte avec votre e-mail, puis connectez-vous.</p></div>
+                <div class="card step-card"><div class="step-number">2</div><h3 data-i18n="step2Title">Commander</h3><p data-i18n="step2Desc">Choisissez entrée, plat et dessert entre 5h et minuit.</p></div>
+                <div class="card step-card"><div class="step-number">3</div><h3 data-i18n="step3Title">Récupérer</h3><p data-i18n="step3Desc">Récupérez votre repas à la cantine le prochain jour ouvré.</p></div>
             </div>
             <div class="faq-section">
                 <h3 data-i18n="faqTitle">Questions Fréquentes</h3>
-                <details class="faq-item"><summary data-i18n="faq1Q">Quand les commandes sont-elles remises à zéro ?</summary><p data-i18n="faq1A">Les commandes sont remises à zéro chaque soir à 00:00 CET.</p></details>
-                <details class="faq-item"><summary data-i18n="faq2Q">Puis-je commander le weekend ?</summary><p data-i18n="faq2A">Non, le site est fermé samedi et dimanche. Retour lundi.</p></details>
-                <details class="faq-item"><summary data-i18n="faq3Q">Jusqu'à quand puis-je modifier ma commande ?</summary><p data-i18n="faq3A">Jusqu'à minuit la veille du jour de retrait.</p></details>
+                <details class="faq-item"><summary data-i18n="faq1Q">Quand puis-je commander ?</summary><p data-i18n="faq1A">Du lundi au vendredi, de 5h00 à minuit (heure de Paris). Les commandes sont fermées la nuit et le weekend.</p></details>
+                <details class="faq-item"><summary data-i18n="faq2Q">Puis-je commander le weekend ?</summary><p data-i18n="faq2A">Non, les commandes sont fermées le samedi et le dimanche. Retour lundi à 5h00.</p></details>
+                <details class="faq-item"><summary data-i18n="faq3Q">Jusqu'à quand puis-je modifier ma commande ?</summary><p data-i18n="faq3A">Jusqu'à minuit la veille du jour de retrait. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit.</p></details>
             </div>
         </section>
 
         <!-- ===================== ORDER ===================== -->
         <section id="order" class="page">
-            <h2 data-i18n="orderTitle">Commande du Jour</h2>
+            <h2 data-i18n="orderTitle">Nouvelle commande</h2>
+            <p class="section-note" id="order-pickup-note"></p>
             <div id="weekend-banner" class="banner error hidden"><strong data-i18n="weekendBanner">Site fermé le weekend.</strong> <span data-i18n="statusReturnMonday">Retour lundi.</span></div>
             <div id="night-closed-banner" class="banner error hidden">
-                <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Commandes fermées.</strong> Les commandes sont disponibles du lundi au vendredi de <strong>6h00 à 19h00</strong>. Revenez demain !
+                <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Commandes fermées.</strong> Les commandes sont disponibles du lundi au vendredi de <strong>5h00 à minuit</strong>. Revenez à 5h00 !
             </div>
 
             <!-- Order Form -->
@@ -143,23 +137,6 @@
                 </form>
             </div>
 
-            <!-- Email Confirmation Modal -->
-            <div id="email-confirm-modal" class="modal-overlay hidden">
-                <div class="modal-box">
-                    <div class="modal-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </div>
-                    <h3 data-i18n="modalConfirmTitle">Confirmer votre commande</h3>
-                    <p data-i18n="modalConfirmEmailSent">Un email de confirmation va être envoyé à :</p>
-                    <div class="confirm-email-display" id="confirm-email-addr">—</div>
-                    <p class="modal-note" data-i18n="modalConfirmClickLink">Cliquez sur le lien dans l'email pour valider définitivement votre commande.</p>
-                    <div class="modal-actions">
-                        <button class="btn-primary full-width" id="modal-send-btn" data-i18n="modalSendEmail">Envoyer l'email de confirmation</button>
-                        <button class="btn-secondary full-width" id="modal-cancel-btn" data-i18n="modalCancel">Annuler</button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Payment View -->
             <div id="payment-view" class="hidden">
                 <div class="payment-layout">
@@ -169,13 +146,6 @@
                         <div class="card payment-method-card">
                             <h3 data-i18n="paymentMethodTitle">Moyen de paiement</h3>
                             <div class="payment-methods">
-                                <label class="payment-option active" data-method="card">
-                                    <input type="radio" name="payment" value="card" checked>
-                                    <div class="payment-option-inner">
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                                        <span data-i18n="paymentCard">Carte bancaire</span>
-                                    </div>
-                                </label>
                                 <label class="payment-option" data-method="cash">
                                     <input type="radio" name="payment" value="cash">
                                     <div class="payment-option-inner">
@@ -183,29 +153,15 @@
                                         <span data-i18n="paymentCash">Espèces</span>
                                     </div>
                                 </label>
-                                <label class="payment-option" data-method="badge">
-                                    <input type="radio" name="payment" value="badge">
+                                <label class="payment-option active" data-method="badge">
+                                    <input type="radio" name="payment" value="badge" checked>
                                     <div class="payment-option-inner">
                                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h.01M7 12h6M7 16h10"/></svg>
                                         <span data-i18n="paymentBadge">Badge école</span>
                                     </div>
                                 </label>
                             </div>
-                            <div id="card-fields" class="card-fields">
-                                <div class="input-group">
-                                    <label data-i18n="cardNumber">Numéro de carte</label>
-                                    <input type="text" id="card-number" placeholder="4242 4242 4242 4242" maxlength="19" autocomplete="cc-number">
-                                </div>
-                                <div class="form-row">
-                                    <div class="input-group"><label data-i18n="cardExpiry">Expiration</label><input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5"></div>
-                                    <div class="input-group"><label>CVV</label><input type="text" id="card-cvv" placeholder="•••" maxlength="4"></div>
-                                </div>
-                                <div class="input-group"><label data-i18n="cardName">Nom sur la carte</label><input type="text" id="card-name" placeholder="JEAN DUPONT"></div>
-                                <p class="secure-note">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                                    <span data-i18n="securePayment">Paiement sécurisé — SSL</span>
-                                </p>
-                            </div>
+                            <p class="payment-hint" id="payment-hint"></p>
                         </div>
                         <button class="btn-primary full-width" id="confirm-payment-btn" style="margin-top:8px" data-i18n="confirmPaymentBtn">Confirmer le paiement</button>
                     </div>
@@ -218,6 +174,7 @@
                             <div class="recap-row"><span data-i18n="recapExtras">Extras</span><span id="recap-extras-label">—</span></div>
                             <div class="recap-row recap-total"><span data-i18n="recapTotal">Total</span><span id="recap-total">€0.00</span></div>
                             <div class="recap-row" style="margin-top:8px;font-size:.82rem;color:var(--text-muted)"><span data-i18n="recapPickupDate">Retrait le :</span><span id="recap-date">—</span></div>
+                            <div class="recap-row" style="font-size:.82rem;color:var(--text-muted)"><span data-i18n="recapEditUntil">Modifiable jusqu'à minuit le :</span><span id="recap-cutoff">—</span></div>
                         </div>
                     </div>
                 </div>
@@ -230,7 +187,7 @@
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <h2 data-i18n="successTitle">Commande confirmée !</h2>
-                    <p data-i18n="successMessage">Votre repas sera prêt demain matin. Un email de confirmation a été envoyé.</p>
+                    <p id="success-details"></p>
                     <div class="success-ref"><span data-i18n="successRef">Réf.</span> <strong id="order-ref">—</strong></div>
                     <button class="btn-primary" id="success-home-btn" data-i18n="successBackHome">Retour à l'accueil</button>
                 </div>
@@ -372,7 +329,7 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="contact-anon">
                             <span class="checkmark"></span>
-                            <span data-i18n="submitAnonymously">Soumettre anonymement</span>
+                            <span data-i18n="submitAnonymously">Soumettre anonymement (sans réponse possible)</span>
                         </label>
                     </div>
                     <button type="submit" class="btn-primary" data-i18n="sendBtn">Envoyer</button>
@@ -401,12 +358,12 @@
                         </div>
                         <div class="input-group">
                             <label for="auth-email" data-i18n="emailAddress">Adresse e-mail</label>
-                            <input type="email" id="auth-email" required placeholder="nom@ecole.fr" autocomplete="email">
+                            <input type="email" id="auth-email" required placeholder="nom@exemple.fr" autocomplete="email">
                         </div>
                         <div class="input-group">
                             <div class="label-row">
                                 <label for="auth-password" data-i18n="passwordSection">Mot de passe</label>
-                                <button type="button" class="forgot-link" id="forgot-pw-btn" tabindex="-1" data-i18n="forgotPassword">Mot de passe oublié ?</button>
+                                <button type="button" class="forgot-link" id="forgot-pw-btn" data-i18n="forgotPassword">Mot de passe oublié ?</button>
                             </div>
                             <div class="password-field-wrapper">
                                 <input type="password" id="auth-password" required autocomplete="current-password">
@@ -421,7 +378,7 @@
                         </div>
                         <div id="remember-me-group" class="remember-row">
                             <label class="checkbox-label">
-                                <input type="checkbox" id="remember-me">
+                                <input type="checkbox" id="remember-me" checked>
                                 <span class="checkmark"></span>
                                 <span data-i18n="rememberMe">Se souvenir de moi</span>
                             </label>
@@ -573,65 +530,7 @@
                         </div>
 
                         <div class="card settings-group">
-                            <h3 data-i18n="settingsNotifications">Notifications</h3>
-                            <div class="settings-row">
-                                <div>
-                                    <div class="settings-row-label" data-i18n="emailConfirm">Confirmation par e-mail</div>
-                                    <div class="settings-row-desc" data-i18n="emailConfirmDesc">Recevoir un email à chaque commande</div>
-                                </div>
-                                <label class="apple-switch">
-                                    <input type="checkbox" id="settings-email-confirm" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="settings-row">
-                                <div>
-                                    <div class="settings-row-label" data-i18n="dailyReminder">Rappel quotidien</div>
-                                    <div class="settings-row-desc" data-i18n="dailyReminderDesc">Rappel à 10h si aucune commande passée</div>
-                                </div>
-                                <label class="apple-switch">
-                                    <input type="checkbox" id="settings-daily-reminder">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="card settings-group">
-                            <h3 data-i18n="settingsOrders">Commandes</h3>
-                            <div class="settings-row">
-                                <div>
-                                    <div class="settings-row-label" data-i18n="autoOrders">Commandes automatiques</div>
-                                    <div class="settings-row-desc" data-i18n="autoOrdersDesc">Reconduire la commande précédente si aucune action</div>
-                                </div>
-                                <label class="apple-switch">
-                                    <input type="checkbox" id="settings-auto-order">
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                            <div class="settings-row">
-                                <div>
-                                    <div class="settings-row-label" data-i18n="saveExtras">Sauvegarde des extras</div>
-                                    <div class="settings-row-desc" data-i18n="saveExtrasDesc">Mémoriser mes accessoires préférés</div>
-                                </div>
-                                <label class="apple-switch">
-                                    <input type="checkbox" id="settings-save-extras" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="card settings-group">
                             <h3 data-i18n="settingsPrivacy">Confidentialité &amp; Sécurité</h3>
-                            <div class="settings-row">
-                                <div>
-                                    <div class="settings-row-label" data-i18n="historyVisibleAdmin">Historique visible par l'admin</div>
-                                    <div class="settings-row-desc" data-i18n="historyVisibleAdminDesc">Autoriser les administrateurs à consulter vos commandes</div>
-                                </div>
-                                <label class="apple-switch">
-                                    <input type="checkbox" id="settings-admin-visibility" checked>
-                                    <span class="slider"></span>
-                                </label>
-                            </div>
                             <div class="settings-row settings-row-btn">
                                 <div>
                                     <div class="settings-row-label" data-i18n="deleteAccount">Supprimer mon compte</div>
@@ -666,23 +565,23 @@
 
                 <h3 style="margin:28px 0 12px" >Questions fréquentes</h3>
 
-                <details class="faq-item card"><summary>Comment passer une commande ?</summary><p>Connectez-vous à votre compte, rendez-vous sur la page <strong>Commander</strong>, sélectionnez vos plats (entrée, plat, dessert), puis cliquez sur <em>Valider la commande</em>. Vous recevrez un email de confirmation.</p></details>
+                <details class="faq-item card"><summary>Comment passer une commande ?</summary><p>Créez un compte ou connectez-vous, ouvrez <strong>Commander</strong>, choisissez vos plats, cliquez sur <em>Valider la commande</em>, puis choisissez votre moyen de paiement et confirmez. Votre commande apparaît ensuite dans <strong>Profil → En cours</strong>.</p></details>
 
-                <details class="faq-item card"><summary>Quels sont les horaires du service ?</summary><p>Le service est disponible du <strong>lundi au vendredi de 6h00 à 19h00</strong>. Les commandes passées avant 19h sont préparées pour le lendemain. Le site est fermé le weekend.</p></details>
+                <details class="faq-item card"><summary>Quels sont les horaires du service ?</summary><p>Vous pouvez commander du <strong>lundi au vendredi de 5h00 à minuit</strong> (heure de Paris), pour un retrait à la cantine le prochain jour ouvré. Les commandes sont fermées la nuit et le weekend.</p></details>
 
-                <details class="faq-item card"><summary>Puis-je modifier ou annuler ma commande ?</summary><p>Oui, depuis la section <strong>Profil → En cours</strong>, vous pouvez modifier ou annuler une commande jusqu'à 24h après sa validation. Passé ce délai, la commande est en préparation.</p></details>
+                <details class="faq-item card"><summary>Puis-je modifier ou annuler ma commande ?</summary><p>Oui, depuis <strong>Profil → En cours</strong>, jusqu'à minuit la veille du jour de retrait. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, la commande est en préparation.</p></details>
 
-                <details class="faq-item card"><summary>Comment confirmer la réception de ma commande ?</summary><p>Lorsque vous récupérez votre repas à la cantine, ouvrez l'application, allez dans <strong>Profil → En cours</strong>, cliquez sur votre commande et utilisez le <em>slider de confirmation</em>. Montrez l'écran à la personne qui vous remet le repas.</p></details>
+                <details class="faq-item card"><summary>Comment confirmer la réception de ma commande ?</summary><p>Lorsque vous récupérez votre repas à la cantine, ouvrez <strong>Profil → En cours</strong>, cliquez sur <em>Récupérer</em> et faites glisser le curseur (ou appuyez sur Entrée quand il est sélectionné au clavier). Montrez l'écran à la personne qui vous remet le repas.</p></details>
 
-                <details class="faq-item card"><summary>Je n'ai pas reçu l'email de confirmation</summary><p>Vérifiez votre dossier spam. Si l'email n'y est pas, votre commande est quand même enregistrée — vous pouvez la retrouver dans <strong>Profil → En cours</strong>. En cas de doute, contactez le support.</p></details>
+                <details class="faq-item card"><summary>Vais-je recevoir un e-mail de confirmation ?</summary><p>Non, aucun e-mail de confirmation n'est envoyé. Votre commande est bien enregistrée dès qu'elle apparaît dans <strong>Profil → En cours</strong>, avec sa référence.</p></details>
 
-                <details class="faq-item card"><summary>J'ai oublié mon mot de passe</summary><p>Sur la page de connexion, cliquez sur <em>Mot de passe oublié ?</em> et entrez votre adresse email. Vous recevrez un lien de réinitialisation dans les minutes qui suivent.</p></details>
+                <details class="faq-item card"><summary>J'ai oublié mon mot de passe</summary><p>Sur la page de connexion, cliquez sur <em>Mot de passe oublié ?</em> et entrez votre adresse email. Si un compte existe, vous recevrez un lien de réinitialisation dans les minutes qui suivent.</p></details>
 
-                <details class="faq-item card"><summary>Quels moyens de paiement sont acceptés ?</summary><p>Trois moyens de paiement sont disponibles : <strong>Carte bancaire</strong>, <strong>Espèces</strong> (à remettre à la cantine), et <strong>Badge école</strong> (débit sur votre compte établissement).</p></details>
+                <details class="faq-item card"><summary>Quels moyens de paiement sont acceptés ?</summary><p>Deux moyens : <strong>Badge école</strong> (débit sur votre compte établissement) et <strong>Espèces</strong> (à remettre à la cantine au retrait). Aucun paiement en ligne.</p></details>
 
-                <details class="faq-item card"><summary>Les commandes annulées sont-elles remboursées ?</summary><p>Si vous payez par badge école, le montant est simplement non débité. Pour les autres moyens de paiement, contactez l'administration via la page Contact.</p></details>
+                <details class="faq-item card"><summary>Les commandes annulées sont-elles remboursées ?</summary><p>Avec le badge école, le montant n'est pas débité si vous annulez dans les délais. En espèces, vous payez au retrait : il n'y a donc rien à rembourser.</p></details>
 
-                <details class="faq-item card"><summary>Comment supprimer mon compte ?</summary><p>Rendez-vous dans <strong>Profil → Paramètres</strong>, section <em>Confidentialité & Sécurité</em>, puis cliquez sur <em>Supprimer mon compte</em>. Cette action est irréversible.</p></details>
+                <details class="faq-item card"><summary>Comment supprimer mon compte ?</summary><p>Rendez-vous dans <strong>Profil → Paramètres</strong>, section <em>Confidentialité &amp; Sécurité</em>, puis cliquez sur <em>Supprimer mon compte</em>. Cette action est irréversible.</p></details>
             </div>
         </section>
 
@@ -691,12 +590,12 @@
             <div class="legal-page">
                 <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
                 <h1 data-i18n="privacyTitle">Politique de Confidentialité</h1>
-                <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : février 2026</p>
-                <div class="card"><h3 data-i18n="privacy1Title">1. Données collectées</h3><p data-i18n="privacy1Content">Nous collectons uniquement les informations nécessaires : nom, prénom, adresse e-mail et préférences de commande. Aucune donnée bancaire n'est stockée sur nos serveurs.</p></div>
-                <div class="card"><h3 data-i18n="privacy2Title">2. Utilisation des données</h3><p data-i18n="privacy2Content">Vos données sont utilisées exclusivement pour gérer vos réservations de repas et améliorer le service. Elles ne sont ni vendues ni partagées avec des tiers à des fins commerciales.</p></div>
-                <div class="card"><h3 data-i18n="privacy3Title">3. Conservation</h3><p data-i18n="privacy3Content">Les données de commande sont conservées pendant 12 mois à compter de la dernière activité. Vous pouvez demander la suppression de votre compte à tout moment en contactant le support.</p></div>
-                <div class="card"><h3 data-i18n="privacy4Title">4. Vos droits</h3><p data-i18n="privacy4Content">Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits, contactez-nous via la page Contact.</p></div>
-                <div class="card"><h3 data-i18n="privacy5Title">5. Cookies</h3><p data-i18n="privacy5Content">Nous utilisons uniquement des cookies essentiels au fonctionnement du service (session, préférences d'affichage). Aucun cookie publicitaire ou de traçage n'est utilisé.</p></div>
+                <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : septembre 2026</p>
+                <div class="card"><h3 data-i18n="privacy1Title">1. Données collectées</h3><p data-i18n="privacy1Content">Nous collectons : nom, prénom, adresse e-mail et le contenu de vos commandes (plats, extras, notes). Les allergies que vous indiquez sont des données de santé, utilisées uniquement pour préparer votre repas. Aucun paiement en ligne n'a lieu sur ce site : aucune donnée bancaire n'est collectée.</p></div>
+                <div class="card"><h3 data-i18n="privacy2Title">2. Utilisation des données</h3><p data-i18n="privacy2Content">Vos données servent à gérer vos réservations de repas. Elles sont visibles par les administrateurs de la cantine, qui en ont besoin pour préparer les commandes, et hébergées par Google (Firebase). Elles ne sont ni vendues ni partagées à des fins commerciales.</p></div>
+                <div class="card"><h3 data-i18n="privacy3Title">3. Conservation</h3><p data-i18n="privacy3Content">Vos données de commande sont conservées tant que votre compte existe. Vous pouvez supprimer votre compte à tout moment dans Profil → Paramètres : votre compte et vos commandes sont alors effacés.</p></div>
+                <div class="card"><h3 data-i18n="privacy4Title">4. Vos droits</h3><p data-i18n="privacy4Content">Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Vous pouvez corriger vos informations dans Profil → Mon compte, supprimer votre compte vous-même, ou contacter l'établissement (responsable du traitement) via la page Contact.</p></div>
+                <div class="card"><h3 data-i18n="privacy5Title">5. Cookies</h3><p data-i18n="privacy5Content">Nous utilisons uniquement des cookies et du stockage local essentiels au fonctionnement du service (connexion, langue, thème). Aucun cookie publicitaire ou de traçage n'est utilisé.</p></div>
             </div>
         </section>
 
@@ -705,46 +604,15 @@
             <div class="legal-page">
                 <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
                 <h1 data-i18n="termsTitle">Conditions d'Utilisation</h1>
-                <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : février 2026</p>
-                <div class="card"><h3 data-i18n="terms1Title">1. Accès au service</h3><p data-i18n="terms1Content">Le service TeacherMeals est réservé au personnel enseignant de l'établissement. L'accès est conditionné à la possession d'identifiants scolaires valides.</p></div>
-                <div class="card"><h3 data-i18n="terms2Title">2. Commandes</h3><p data-i18n="terms2Content">Les commandes doivent être passées entre 6h et 19h, du lundi au vendredi. Maximum 3 articles par catégorie. Le service est indisponible les weekends, jours fériés, et en dehors des horaires d'ouverture. Toute commande validée engage l'utilisateur.</p></div>
-                <div class="card"><h3 data-i18n="terms3Title">3. Annulation</h3><p data-i18n="terms3Content">Une commande peut être modifiée ou annulée dans les <strong>24 heures</strong> suivant sa validation, depuis l'onglet <strong>Historique</strong> de votre profil. Passé ce délai, le repas sera préparé et facturé normalement.</p></div>
+                <p class="legal-date" data-i18n="lastUpdate">Dernière mise à jour : septembre 2026</p>
+                <div class="card"><h3 data-i18n="terms1Title">1. Accès au service</h3><p data-i18n="terms1Content">Le service TeacherMeals est réservé au personnel enseignant de l'établissement. Vous créez votre propre compte avec une adresse e-mail et un mot de passe. Un compte utilisé de manière abusive peut être suspendu.</p></div>
+                <div class="card"><h3 data-i18n="terms2Title">2. Commandes</h3><p data-i18n="terms2Content">Les commandes se passent du lundi au vendredi, de 5h à minuit, pour un retrait le prochain jour ouvré. Maximum 3 articles par catégorie. Les commandes sont fermées la nuit et le weekend, et peuvent l'être les jours fériés. Toute commande validée engage l'utilisateur.</p></div>
+                <div class="card"><h3 data-i18n="terms3Title">3. Annulation</h3><p data-i18n="terms3Content">Une commande peut être modifiée ou annulée jusqu'à minuit la veille du jour de retrait, depuis Profil → En cours. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, le repas est préparé et facturé normalement.</p></div>
                 <div class="card"><h3 data-i18n="terms4Title">4. Comportement</h3><p data-i18n="terms4Content">Les utilisateurs s'engagent à utiliser le service de bonne foi et à ne pas tenter d'en perturber le fonctionnement. Tout abus pourra entraîner la suspension du compte.</p></div>
                 <div class="card"><h3 data-i18n="terms5Title">5. Responsabilité</h3><p data-i18n="terms5Content">L'établissement ne saurait être tenu responsable des interruptions de service dues à des raisons techniques ou de force majeure. En cas de problème, contactez le support via la page Contact.</p></div>
             </div>
         </section>
 
-        <!-- ===================== FORGOT PASSWORD ===================== -->
-        <section id="forgot-password" class="page">
-            <div class="forgot-card">
-                <div class="forgot-icon">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                </div>
-                <!-- Formulaire -->
-                <div id="forgot-form-view" class="forgot-form">
-                    <h2>Mot de passe oublié ?</h2>
-                    <p>Entrez votre adresse e-mail. Si un compte existe, vous recevrez un lien de réinitialisation.</p>
-                    <form id="forgot-form" autocomplete="off">
-                        <div class="input-group" style="text-align:left">
-                            <label for="forgot-email">Adresse e-mail</label>
-                            <input type="email" id="forgot-email" placeholder="nom@ecole.fr" required>
-                        </div>
-                        <button type="submit" class="btn-primary full-width" id="forgot-submit-btn">Envoyer le lien</button>
-                    </form>
-                    <p style="margin-top:16px;font-size:0.83rem;color:var(--text-muted)">
-                        <a href="#" id="back-to-signin-forgot" style="color:#5865f2;font-weight:600;text-decoration:none">← Retour à la connexion</a>
-                    </p>
-                </div>
-                <!-- Succès simulé -->
-                <div id="forgot-success-view" class="hidden" style="text-align:center">
-                    <div style="font-size:2.5rem;margin-bottom:12px"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7-10-7"/></svg></div>
-                    <h2 style="margin-bottom:10px">Email envoyé !</h2>
-                    <p>Si l'adresse <strong id="forgot-email-shown">—</strong> est associée à un compte, vous recevrez un lien dans quelques instants.</p>
-                    <p style="font-size:0.82rem;color:var(--text-muted);margin-top:8px">Pensez à vérifier vos spams.</p>
-                    <button class="btn-secondary" style="margin-top:20px" id="forgot-back-btn">Retour à la connexion</button>
-                </div>
-            </div>
-        </section>
 
     </main>
 
@@ -760,7 +628,7 @@
                 <form id="reset-pw-form">
                     <div class="input-group" style="text-align:left">
                         <label for="reset-pw-email">Adresse e-mail</label>
-                        <input type="email" id="reset-pw-email" placeholder="nom@ecole.fr" required>
+                        <input type="email" id="reset-pw-email" placeholder="nom@exemple.fr" required>
                     </div>
                     <button type="submit" class="btn-primary full-width" id="reset-pw-submit-btn">Envoyer le lien</button>
                 </form>
@@ -770,18 +638,10 @@
                 <div style="display:flex;align-items:center;justify-content:center;margin-bottom:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7-10-7"/></svg></div>
                 <h2>Email envoyé !</h2>
                 <p id="reset-pw-sent-addr" style="font-size:.9rem;color:var(--text-muted);margin-bottom:20px">—</p>
-                <p style="font-size:.88rem">Consultez votre boîte mail et cliquez sur le lien pour réinitialiser votre mot de passe. Vérifiez aussi vos spams.</p>
+                <p style="font-size:.88rem">Si un compte existe pour cette adresse, vous recevrez un lien de réinitialisation. Vérifiez aussi vos spams.</p>
                 <button class="btn-secondary full-width" id="reset-pw-done-btn" style="margin-top:20px">Retour à la connexion</button>
             </div>
         </div>
-    </div>
-
-    <!-- ===================== SITE CLOSED OVERLAY ===================== -->
-    <div id="site-closed-overlay" class="site-closed-overlay hidden">
-        <div class="site-closed-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="10" width="12" height="10" rx="2"/><path d="M8 10 L8 6 C8 2 16 2 16 6 L16 10"/></svg></div>
-        <h2 id="closed-title">Site fermé</h2>
-        <p id="closed-subtitle">Le service est disponible de 6h à 19h.</p>
-        <p id="closed-next" style="margin-top:8px;font-size:.88rem;color:var(--text-muted)"></p>
     </div>
 
     <!-- Modal modification / annulation de commande -->
@@ -808,7 +668,7 @@
     <!-- Modal slider de livraison (style TGTG) -->
     <div id="delivery-modal" class="modal-overlay hidden">
         <div class="modal-box delivery-modal-box">
-            <button class="delivery-modal-close" id="delivery-modal-close">
+            <button class="delivery-modal-close" id="delivery-modal-close" aria-label="Fermer">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
             <div class="delivery-icon">
@@ -821,7 +681,7 @@
             <div class="delivery-slider-track" id="delivery-slider-track">
                 <div class="delivery-slider-fill" id="delivery-slider-fill"></div>
                 <div class="delivery-slider-label" id="delivery-slider-label">Glissez pour confirmer →</div>
-                <div class="delivery-slider-thumb" id="delivery-slider-thumb">
+                <div class="delivery-slider-thumb" id="delivery-slider-thumb" role="button" tabindex="0" aria-label="Confirmer la réception">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
             </div>
