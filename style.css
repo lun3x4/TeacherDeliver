@@ -38,6 +38,8 @@
     --shadow-lg: 0 8px 28px rgba(0,0,0,0.11);
     --transition-fast: 0.15s ease;
     --transition-normal: 0.25s ease;
+    --accent-green: #34c759;
+    --accent-green-soft: rgba(52,199,89,0.18);
 }
 
 body.dark-mode {
@@ -198,7 +200,7 @@ a:hover { opacity:0.7; }
    FORMS
    ============================================================ */
 fieldset { border:none; padding:0; margin-bottom:20px; }
-legend { font-weight:700; font-size:0.95rem; margin-bottom:14px; color:var(--text-primary); }
+legend { display:block; width:100%; font-weight:650; font-size:1rem; margin-bottom:14px; padding-bottom:12px; border-bottom:2px solid var(--border-light); color:var(--text-primary); }
 .form-row { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
 .input-group { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
 label { font-size:0.82rem; font-weight:700; letter-spacing:0.03em; text-transform:uppercase; color:var(--text-secondary); }
@@ -260,7 +262,7 @@ textarea { resize:none; overflow:hidden; min-height:72px; }
 /* ============================================================
    ORDER PAGE — MENU ITEMS
    ============================================================ */
-.menu-section { margin-bottom:16px; }
+.menu-section { margin-bottom:20px; }
 .menu-section-header {
     display:flex; align-items:center; gap:10px;
     margin-bottom:14px; padding-bottom:12px;
@@ -296,11 +298,11 @@ textarea { resize:none; overflow:hidden; min-height:72px; }
 .menu-tag-halal     { background:#e3f2fd; color:#5FAF8E; }
 .menu-tag-glutenfree{ background:#fffde7; color:#E6B86A; }
 .menu-tag-spicy     { background:#fce4ec; color:#D96B6B; }
-body.dark-mode .menu-tag-veg    { background:#3F7A3E; color:#a5d6a7; }
-body.dark-mode .menu-tag-vegan  { background:#2F6F5E; color:#c5e1a5; }
-body.dark-mode .menu-tag-halal  { background:#2C5E4C; color:#90caf9; }
-body.dark-mode .menu-tag-glutenfree { background:#8A6428; color:#ffe0b2; }
-body.dark-mode .menu-tag-spicy  { background:#7A2E2E; color:#ffcdd2; }
+body.dark-mode .menu-tag-veg         { background:rgba(76,175,80,.18);  color:#8bd17c; }
+body.dark-mode .menu-tag-vegan       { background:rgba(139,195,74,.18); color:#b3d96b; }
+body.dark-mode .menu-tag-halal       { background:rgba(66,133,244,.18); color:#7fb0ff; }
+body.dark-mode .menu-tag-glutenfree  { background:rgba(245,166,35,.18); color:#f0c674; }
+body.dark-mode .menu-tag-spicy       { background:rgba(235,87,87,.18);  color:#f18c8c; }
 
 /* Quantity stepper */
 .qty-stepper {
@@ -324,17 +326,18 @@ body.dark-mode .qty-stepper.has-qty { box-shadow:0 0 0 2px rgba(227,227,227,0.1)
 
 /* Cart bar */
 .cart-bar {
-    position:fixed; bottom:16px;
+    position:fixed; bottom:16px; left:50%;
+    width:min(640px, calc(100% - 32px));
     background:var(--primary-color); color:var(--bg-primary);
     border-radius:var(--radius-lg);
-    padding:1% 19.4%;
+    padding:14px 26px;
     display:flex; align-items:center; justify-content:space-between; gap:14px;
     box-shadow:var(--shadow-lg);
-    opacity:0; transform:translateY(20px); pointer-events:none;
+    opacity:0; transform:translate(-50%, 20px); pointer-events:none;
     transition:opacity 0.3s ease, transform 0.3s ease;
     margin-top:20px; flex-wrap:wrap;
 }
-.cart-bar.active { opacity:1; transform:translateY(0); pointer-events:all; }
+.cart-bar.active { opacity:1; transform:translate(-50%, 0); pointer-events:all; }
 .cart-bar-info { display:flex; align-items:center; gap:14px; }
 #cart-count-badge { font-weight:600; font-size:0.9rem; }
 .cart-bar-total { font-size:1.1rem; font-weight:800; }
@@ -343,7 +346,6 @@ body.dark-mode .qty-stepper.has-qty { box-shadow:0 0 0 2px rgba(227,227,227,0.1)
 .cart-bar .btn-danger { background:rgba(255,255,255,0.15); color:var(--bg-primary); border:1px solid rgba(255,255,255,0.25); padding:9px 14px; font-size:0.88rem; }
 
 /* Extras */
-.section-extras legend { font-size:0.88rem; }
 .extras-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; }
 .extra-row {
     display:flex; align-items:center; gap:8px;
@@ -543,7 +545,8 @@ body.dark-mode .success-icon { background:#1b5e20; color:#a5d6a7; }
 .apple-switch input { opacity:0; width:0; height:0; position:absolute; }
 .apple-switch .slider { position:absolute; inset:0; background:#ccc; border-radius:26px; transition:background 0.25s ease; }
 .apple-switch .slider::before { content:''; position:absolute; height:20px; width:20px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:transform 0.25s ease; box-shadow:0 1px 4px rgba(0,0,0,0.25); }
-.apple-switch input:checked + .slider { background:#34c759; }
+
+.apple-switch input:checked + .slider { background:var(--accent-green); box-shadow:0 0 0 4px var(--accent-green-soft); }
 .apple-switch input:checked + .slider::before { transform:translateX(20px); }
 body.dark-mode .apple-switch .slider { background:#3a3a3c; }
 
@@ -800,11 +803,11 @@ body.dark-mode .btn-icon-danger:hover { background:#b71c1c; color:#ffcdd2; }
 .mini-tag-halal     { background:#e3f2fd; color:#5FAF8E; }
 .mini-tag-glutenfree{ background:#fffde7; color:#E6B86A; }
 .mini-tag-spicy     { background:#fce4ec; color:#D96B6B; }
-body.dark-mode .mini-tag-veg        { background:#3F7A3E; color:#a5d6a7; }
-body.dark-mode .mini-tag-vegan      { background:#2F6F5E; color:#c5e1a5; }
-body.dark-mode .mini-tag-halal      { background:#2C5E4C; color:#90caf9; }
-body.dark-mode .mini-tag-glutenfree { background:#8A6428; color:#ffe0b2; }
-body.dark-mode .mini-tag-spicy      { background:#7A2E2E; color:#ffcdd2; }
+body.dark-mode .mini-tag-veg         { background:rgba(76,175,80,.18);  color:#8bd17c; }
+body.dark-mode .mini-tag-vegan       { background:rgba(139,195,74,.18); color:#b3d96b; }
+body.dark-mode .mini-tag-halal       { background:rgba(66,133,244,.18); color:#7fb0ff; }
+body.dark-mode .mini-tag-glutenfree  { background:rgba(245,166,35,.18); color:#f0c674; }
+body.dark-mode .mini-tag-spicy       { background:rgba(235,87,87,.18);  color:#f18c8c; }
 .mini-tag-limit { background:#fff8e1; color:#e6510070; }
 body.dark-mode .mini-tag-limit { background:#bf360c70; color:#ffccbc; }
 
@@ -814,11 +817,11 @@ body.dark-mode .mini-tag-limit { background:#bf360c70; color:#ffccbc; }
 .mini-tag-halal     { background:#e3f2fd; color:#5FAF8E; }
 .mini-tag-glutenfree{ background:#fffde7; color:#E6B86A; }
 .mini-tag-spicy     { background:#fce4ec; color:#D96B6B; }
-body.dark-mode .mini-tag-veg    { background:#3F7A3E; color:#a5d6a7; }
-body.dark-mode .mini-tag-vegan  { background:#2F6F5E; color:#c5e1a5; }
-body.dark-mode .mini-tag-halal  { background:#2C5E4C; color:#90caf9; }
-body.dark-mode .mini-tag-glutenfree { background:#8A6428; color:#ffe0b2; }
-body.dark-mode .mini-tag-spicy  { background:#7A2E2E; color:#ffcdd2; }
+body.dark-mode .mini-tag-veg         { background:rgba(76,175,80,.18);  color:#8bd17c; }
+body.dark-mode .mini-tag-vegan       { background:rgba(139,195,74,.18); color:#b3d96b; }
+body.dark-mode .mini-tag-halal       { background:rgba(66,133,244,.18); color:#7fb0ff; }
+body.dark-mode .mini-tag-glutenfree  { background:rgba(245,166,35,.18); color:#f0c674; }
+body.dark-mode .mini-tag-spicy       { background:rgba(235,87,87,.18);  color:#f18c8c; }
 
 /* Extras inline: row avec checkbox + label + champ texte inline */
 .extras-grid { display:flex; flex-direction:column; gap:8px; }
@@ -952,12 +955,14 @@ body.dark-mode .mini-tag-spicy  { background:#7A2E2E; color:#ffcdd2; }
 
     /* Cart bar – full width */
     .cart-bar {
-        left: 0; right: 0; bottom: 0;
+        left: 0; right: 0; bottom: 0; width: auto;
+        transform: translateY(20px);
         border-radius: 0;
         border-top: 1px solid rgba(255,255,255,0.1);
         padding: 12px 16px 16px;
         margin: 0;
     }
+    .cart-bar.active { transform: translateY(0); }
 
     /* Payment */
     .payment-methods { grid-template-columns: 1fr; }
@@ -1121,7 +1126,13 @@ body.dark-mode .status-badge.status-delivered { background:#1b5e20; color:#a5d6a
 /* ============================================================
    COMMANDES EN COURS
    ============================================================ */
-.order-active-card { border-left: 3px solid var(--success-color); }
+.order-active-card { border-left: 4px solid var(--accent-green); }
+.order-active-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 8px; margin-bottom: 8px;
+}
+.order-active-id { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+.order-active-meta { font-size: 0.82rem; color: var(--text-muted); margin: 8px 0; }
 .order-active-footer {
     display: flex;
     align-items: center;
@@ -1132,6 +1143,10 @@ body.dark-mode .status-badge.status-delivered { background:#1b5e20; color:#a5d6a
     padding-top: 12px;
     border-top: 1px solid var(--border-light);
 }
+.order-active-actions-left { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.order-active-actions-left .btn-secondary,
+.order-active-actions-left .btn-danger { font-size: 0.8rem; padding: 6px 12px; min-height: 32px; }
+.order-active-deadline-note { font-size: 0.78rem; color: var(--text-muted); margin: 0; }
 /* Section note (used in profile active orders) */
 .section-note { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
 
@@ -1139,15 +1154,16 @@ body.dark-mode .status-badge.status-delivered { background:#1b5e20; color:#a5d6a
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 16px;
-    background: var(--success-color);
+    padding: 6px 14px;
+    min-height: 32px;
+    background: var(--accent-green);
     color: #fff;
     border: none;
     border-radius: var(--radius-sm);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background var(--transition-fast);
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 .btn-deliver:hover { background: #0ea472; }
 
@@ -1202,7 +1218,7 @@ body.dark-mode .delivery-slider-track { background: var(--border-medium); }
     position: absolute;
     left: 0; top: 0; bottom: 0;
     width: 0%;
-    background: linear-gradient(90deg, #34c759, #30d158);
+    background: linear-gradient(90deg, var(--accent-green), #30d158);
     border-radius: 50px;
     transition: none;
 }
@@ -1243,9 +1259,10 @@ body.dark-mode .delivery-slider-track { background: var(--border-medium); }
 }
 .delivery-slider-thumb:active { cursor: grabbing; }
 .delivery-slider-thumb.completed {
-    background: #34c759;
+    background: var(--accent-green);
     color: #fff;
-    transition: background 0.3s;
+    box-shadow: 0 0 0 6px var(--accent-green-soft), 0 2px 8px rgba(0,0,0,0.18);
+    transition: background 0.3s, box-shadow 0.3s;
 }
 
 
@@ -1261,3 +1278,22 @@ body.dark-mode .delivery-slider-track { background: var(--border-medium); }
 
 .payment-hint { font-size:0.85rem; color:var(--text-muted); margin:0; }
 .qty-btn:disabled { opacity:.4; cursor:not-allowed; }
+
+/* ============================================================
+   COOKIE CONSENT BANNER
+   ============================================================ */
+.cookie-banner {
+    position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 9500;
+    max-width: 480px; margin: 0 auto;
+    background: var(--surface-elevated); color: var(--text-primary);
+    border: 1px solid var(--border-light); border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 14px;
+}
+.cookie-banner p { margin: 0; font-size: 0.86rem; color: var(--text-secondary); }
+.cookie-banner-actions { display: flex; gap: 10px; justify-content: flex-end; }
+@media (max-width: 480px) {
+    .cookie-banner-actions { flex-direction: column-reverse; }
+    .cookie-banner-actions .btn-primary, .cookie-banner-actions .btn-secondary { width: 100%; }
+}
