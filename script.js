@@ -226,7 +226,24 @@ Object.assign(i18n.fr, {
     "privacy5Content": "Nous utilisons uniquement des cookies et du stockage local essentiels au fonctionnement du service (connexion, langue, thème). Aucun cookie publicitaire ou de traçage n'est utilisé.",
     "terms1Content": "Le service TeacherMeals est réservé au personnel enseignant de l'établissement. Vous créez votre propre compte avec une adresse e-mail et un mot de passe. Un compte utilisé de manière abusive peut être suspendu.",
     "terms2Content": "Les commandes se passent du lundi au vendredi, de 5h à minuit, pour un retrait le prochain jour ouvré. Maximum 3 articles par catégorie. Les commandes sont fermées la nuit et le weekend, et peuvent l'être les jours fériés. Toute commande validée engage l'utilisateur.",
-    "terms3Content": "Une commande peut être modifiée ou annulée jusqu'à minuit la veille du jour de retrait, depuis Profil → En cours. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, le repas est préparé et facturé normalement."
+    "terms3Content": "Une commande peut être modifiée ou annulée jusqu'à minuit la veille du jour de retrait, depuis Profil → En cours. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, le repas est préparé et facturé normalement.",
+    "profileNavActive": "En cours",
+    "activeOrdersTitle": "Commandes en cours",
+    "activeOrdersNote": "Vos commandes en attente de livraison. Cliquez sur \u00ab Récupérer \u00bb au moment du retrait.",
+    "noActiveOrders": "Aucune commande en cours.",
+    "btnPickup": "Récupérer",
+    "confirmCancelActiveOrder": "Annuler cette commande ?",
+    "cancelErrorMsg": "Erreur lors de l'annulation.",
+    "modifyHintMsg": "Modifiez votre commande ci-dessous et revalidez.",
+    "deliveryModalTitle": "Confirmer la réception",
+    "deliverySliderLabel": "Glissez pour confirmer →",
+    "deliverySuccessMsg": "Commande livrée ! Bon appétit",
+    "deliveryToastSuccess": "Bon appétit !",
+    "deliveryToastError": "Erreur lors de la confirmation.",
+    "cookieBannerText": "Nous utilisons uniquement des cookies et un stockage local essentiels (connexion, langue, thème). Acceptez-vous leur enregistrement sur cet appareil ?",
+    "cookieAccept": "Accepter",
+    "cookieDecline": "Refuser",
+    "cookieDeclinedToast": "Cookies refusés : vos préférences seront effacées à la fermeture."
 });
 Object.assign(i18n.en, {
     "homeTitle": "TeacherMeals",
@@ -269,7 +286,24 @@ Object.assign(i18n.en, {
     "privacy5Content": "We only use cookies and local storage essential to the service (sign-in, language, theme). No advertising or tracking cookies are used.",
     "terms1Content": "TeacherMeals is reserved for the institution's teaching staff. You create your own account with an email address and a password. An account used abusively may be suspended.",
     "terms2Content": "Orders are placed Monday to Friday, from 5am to midnight, for pickup on the next working day. Maximum 3 items per category. Orders are closed at night and on weekends, and may be closed on public holidays. Any validated order is binding.",
-    "terms3Content": "An order can be edited or cancelled until midnight the day before pickup, from Profile → In progress. Weekends are closed, so for a Monday pickup the limit is Friday midnight. After that, the meal is prepared and charged as usual."
+    "terms3Content": "An order can be edited or cancelled until midnight the day before pickup, from Profile → In progress. Weekends are closed, so for a Monday pickup the limit is Friday midnight. After that, the meal is prepared and charged as usual.",
+    "profileNavActive": "In progress",
+    "activeOrdersTitle": "Orders in progress",
+    "activeOrdersNote": "Your orders awaiting pickup. Click \u201cPick up\u201d when you collect your meal.",
+    "noActiveOrders": "No orders in progress.",
+    "btnPickup": "Pick up",
+    "confirmCancelActiveOrder": "Cancel this order?",
+    "cancelErrorMsg": "Error cancelling the order.",
+    "modifyHintMsg": "Edit your order below and re-submit it.",
+    "deliveryModalTitle": "Confirm pickup",
+    "deliverySliderLabel": "Slide to confirm →",
+    "deliverySuccessMsg": "Order delivered! Enjoy your meal",
+    "deliveryToastSuccess": "Enjoy your meal!",
+    "deliveryToastError": "Error confirming pickup.",
+    "cookieBannerText": "We only use essential cookies and local storage (sign-in, language, theme). Do you agree to store them on this device?",
+    "cookieAccept": "Accept",
+    "cookieDecline": "Decline",
+    "cookieDeclinedToast": "Cookies declined: your preferences will be cleared when you close the site."
 });
 
 /* ---------- Helpers : échappement HTML & dates de retrait ---------- */
@@ -292,6 +326,31 @@ function canEditOrder(o)         { return new Date() < getEditDeadline(orderPick
 
 let isLoginMode = true;
 let unsubscribeOrders = null;
+
+/* ---------- Consentement cookies : essentiel uniquement, effacé si refusé ---------- */
+function initCookieConsent() {
+    const banner = document.getElementById('cookie-banner');
+    if (!banner) return;
+    if (!localStorage.getItem('cookieConsent')) banner.classList.remove('hidden');
+    document.getElementById('cookie-accept')?.addEventListener('click', () => {
+        localStorage.setItem('cookieConsent', 'accepted');
+        sessionStorage.removeItem('cookieDeclined');
+        banner.classList.add('hidden');
+    });
+    document.getElementById('cookie-decline')?.addEventListener('click', () => {
+        sessionStorage.setItem('cookieDeclined', '1');
+        localStorage.removeItem('cookieConsent');
+        banner.classList.add('hidden');
+        showToast(t('cookieDeclinedToast'));
+    });
+    window.addEventListener('beforeunload', () => {
+        if (sessionStorage.getItem('cookieDeclined') === '1') {
+            localStorage.removeItem('theme');
+            localStorage.removeItem('lang');
+            localStorage.removeItem('cookieConsent');
+        }
+    });
+}
 
 /* ============================================================
    INITIALIZATION
@@ -328,6 +387,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3. Setup listeners & UI
     setupEventListeners();
+    initCookieConsent();
     initTime();
     setLanguage(state.lang);
 
@@ -1424,11 +1484,15 @@ function exportCSV() {
 /* ============================================================
    COMMANDES EN COURS (avec slider de livraison)
    ============================================================ */
+function orderStatusLabel(status) {
+    return status === 'Confirmée' ? t('statusConfirmed') : (status === 'Annulée' ? t('statusCancelled') : t('statusModified'));
+}
+
 function renderActiveOrders(orders) {
     const list = document.getElementById('profile-active-orders-list');
     if (!list) return;
     if (!orders || orders.length === 0) {
-        list.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:32px 0">Aucune commande en cours.</p>`;
+        list.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:32px 0">${t('noActiveOrders')}</p>`;
         return;
     }
     list.innerHTML = '';
@@ -1440,54 +1504,51 @@ function renderActiveOrders(orders) {
         const pickupLine = `${t('pickupOn')} ${fmtDay(pickup)}` + (canModify ? ` · ${t('editableUntil')} ${fmtDay(lastEditDay(pickup))}` : '');
 
         const card = document.createElement('div');
-        card.className = 'card order-history-card order-active-card';
+        card.className = 'card order-active-card';
         card.innerHTML = `
-            <div class="order-history-header">
-                <div>
+            <div class="order-active-top">
+                <div class="order-active-id">
                     <strong class="order-history-ref">${esc(o.ref || '—')}</strong>
                     <span class="order-history-date">${esc(o.time || '')}</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:8px">
-                    <span class="order-history-total">${esc(o.total || '—')}</span>
-                    <span class="status-badge ${sc}">${esc(o.status)}</span>
-                </div>
+                <span class="status-badge ${sc}">${esc(orderStatusLabel(o.status))}</span>
             </div>
             <div class="order-history-items">${items || '—'}</div>
             ${o.extras ? `<div class="order-history-extras">${t('extrasLabel')}${esc(o.extras)}</div>` : ''}
-            <p class="section-note" style="margin:8px 0">${esc(pickupLine)}</p>
+            <div class="order-active-meta">${esc(pickupLine)}</div>
             <div class="order-active-footer">
-                ${canModify ? `
-                <div class="order-history-actions" style="margin-top:0">
+                <div class="order-active-actions-left">
+                    ${canModify ? `
                     <button class="btn-secondary" data-action="modify" data-id="${o.firebaseId}">
                         <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                        Modifier
+                        ${t('editBtn')}
                     </button>
                     <button class="btn-danger" data-action="cancel" data-id="${o.firebaseId}">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:4px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                        Annuler
-                    </button>
-                </div>` : `<p style="font-size:.78rem;color:var(--text-muted);margin:0">${t('editDeadlinePassed')}</p>`}
+                        ${t('cancelBtn')}
+                    </button>` : `<p class="order-active-deadline-note">${t('editDeadlinePassed')}</p>`}
+                </div>
                 <button class="btn-deliver" data-action="deliver" data-id="${o.firebaseId}" data-ref="${esc(o.ref || '—')}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                    Récupérer
+                    ${t('btnPickup')}
                 </button>
             </div>
         `;
 
         card.querySelector('[data-action="cancel"]')?.addEventListener('click', async () => {
             if (!canEditOrder(o)) { showToast(t('editDeadlinePassed')); loadUserHistory(); return; }
-            if (!confirm('Annuler cette commande ?')) return;
+            if (!confirm(t('confirmCancelActiveOrder'))) return;
             try {
                 await updateDoc(doc(db, "orders", o.firebaseId), { status: 'Annulée' });
-                showToast('Commande annulée.');
+                showToast(t('toastOrderCancelled'));
                 loadUserHistory();
-            } catch (e) { showToast('Erreur annulation.'); }
+            } catch (e) { showToast(t('cancelErrorMsg')); }
         });
 
         card.querySelector('[data-action="modify"]')?.addEventListener('click', () => {
             const cl = isSiteClosed();
             if (cl.closed) { showToast(t(cl.reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); return; }
-            showToast('Modifiez votre commande ci-dessous et revalidez.');
+            showToast(t('modifyHintMsg'));
             navigateTo('order');
             renderMenu();
             setTimeout(() => {
@@ -1574,6 +1635,9 @@ function openDeliveryModal(orderId, ref) {
     if (label) label.style.opacity = '1';
     if (thumb) { thumb.style.left = '4px'; thumb.classList.remove('completed'); }
     if (refEl) refEl.textContent = 'Réf. ' + ref;
+    const titleEl = document.querySelector('.delivery-modal-title'); if (titleEl) titleEl.textContent = t('deliveryModalTitle');
+    const lbl = document.getElementById('delivery-slider-label'); if (lbl) lbl.textContent = t('deliverySliderLabel');
+    const successMsg = document.querySelector('#delivery-success p'); if (successMsg) successMsg.textContent = t('deliverySuccessMsg');
 
     modal.classList.remove('hidden');
     initDeliverySlider(orderId);
@@ -1660,13 +1724,13 @@ function initDeliverySlider(orderId) {
             document.getElementById('delivery-success')?.classList.remove('hidden');
             try {
                 await updateDoc(doc(db, "orders", orderId), { status: 'Livrée' });
-                showToast('Bon appétit !');
+                showToast(t('deliveryToastSuccess'));
                 setTimeout(() => {
                     document.getElementById('delivery-modal')?.classList.add('hidden');
                     loadUserHistory();
                 }, 2000);
             } catch (err) {
-                showToast('Erreur lors de la confirmation.');
+                showToast(t('deliveryToastError'));
             }
         }, 500);
     }
