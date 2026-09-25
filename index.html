@@ -10,6 +10,13 @@
 </head>
 <body>
 
+    <div id="cookie-banner" class="cookie-banner hidden" role="dialog" aria-label="Cookies">
+        <p data-i18n="cookieBannerText">Nous utilisons uniquement des cookies et un stockage local essentiels (connexion, langue, thème). Acceptez-vous leur enregistrement sur cet appareil ?</p>
+        <div class="cookie-banner-actions">
+            <button class="btn-secondary" id="cookie-decline" data-i18n="cookieDecline">Refuser</button>
+            <button class="btn-primary" id="cookie-accept" data-i18n="cookieAccept">Accepter</button>
+        </div>
+    </div>
 
     <header class="glass-header" role="banner">
         <div class="logo" aria-label="Logo TeacherMeals"><span>TeacherMeals</span></div>
@@ -414,7 +421,7 @@
                         </button>
                         <button class="profile-nav-btn" data-section="section-active-orders">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span>En cours</span>
+                            <span data-i18n="profileNavActive">En cours</span>
                         </button>
                         <button class="profile-nav-btn" data-section="section-orders">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
@@ -485,10 +492,10 @@
 
                     <!-- Active Orders Section -->
                     <div id="section-active-orders" class="profile-section">
-                        <h2>Commandes en cours</h2>
-                        <p class="section-note">Vos commandes en attente de livraison. Cliquez sur une commande pour confirmer la réception.</p>
+                        <h2 data-i18n="activeOrdersTitle">Commandes en cours</h2>
+                        <p class="section-note" data-i18n="activeOrdersNote">Vos commandes en attente de livraison. Cliquez sur « Récupérer » au moment du retrait.</p>
                         <div id="profile-active-orders-list">
-                            <p style="color:var(--text-muted);text-align:center;padding:32px 0">Aucune commande en cours.</p>
+                            <p style="color:var(--text-muted);text-align:center;padding:32px 0" data-i18n="noActiveOrders">Aucune commande en cours.</p>
                         </div>
                     </div>
 
@@ -674,13 +681,13 @@
             <div class="delivery-icon">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M6 11h.01M18 11h.01"/></svg>
             </div>
-            <h3 class="delivery-modal-title">Confirmer la réception</h3>
+            <h3 class="delivery-modal-title" data-i18n="deliveryModalTitle">Confirmer la réception</h3>
             <p class="delivery-modal-subtitle" id="delivery-modal-order-ref">Réf. —</p>
 
             <!-- Slider TGTG -->
             <div class="delivery-slider-track" id="delivery-slider-track">
                 <div class="delivery-slider-fill" id="delivery-slider-fill"></div>
-                <div class="delivery-slider-label" id="delivery-slider-label">Glissez pour confirmer →</div>
+                <div class="delivery-slider-label" id="delivery-slider-label" data-i18n="deliverySliderLabel">Glissez pour confirmer →</div>
                 <div class="delivery-slider-thumb" id="delivery-slider-thumb" role="button" tabindex="0" aria-label="Confirmer la réception">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </div>
@@ -690,7 +697,7 @@
                 <div class="delivery-success-icon">
                     <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
-                <p>Commande livrée ! Bon appétit</p>
+                <p data-i18n="deliverySuccessMsg">Commande livrée ! Bon appétit</p>
             </div>
         </div>
     </div>
