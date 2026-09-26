@@ -55,11 +55,56 @@
                 <div class="card step-card"><div class="step-number">2</div><h3 data-i18n="step2Title">Commander</h3><p data-i18n="step2Desc">Choisissez entrée, plat et dessert entre 5h et minuit.</p></div>
                 <div class="card step-card"><div class="step-number">3</div><h3 data-i18n="step3Title">Récupérer</h3><p data-i18n="step3Desc">Récupérez votre repas à la cantine le prochain jour ouvré.</p></div>
             </div>
+
+            <section class="home-menu-preview">
+                <div class="home-menu-preview-header">
+                    <h2 data-i18n="menuPreviewTitle">Au menu cette semaine</h2>
+                    <button class="btn-secondary" data-target="order" data-i18n="seeFullMenu">Voir le menu complet →</button>
+                </div>
+                <div id="home-menu-preview-grid" class="home-menu-preview-grid">
+                    <p style="color:var(--text-muted);grid-column:1/-1" data-i18n="menuPreviewEmpty">Le menu sera bientôt disponible.</p>
+                </div>
+            </section>
+
+            <section class="home-highlights">
+                <h2 data-i18n="whyTitle">Pourquoi TeacherMeals</h2>
+                <div class="highlights-grid">
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h1v11h2V11h1c1.1 0 2-.9 2-2V2M16 2v20M21 2v20M16 8h5"/></svg></div>
+                        <h3 data-i18n="why1Title">Fait maison</h3>
+                        <p data-i18n="why1Desc">Des plats préparés chaque jour par l'équipe de la cantine.</p>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                        <h3 data-i18n="why2Title">Sans file d'attente</h3>
+                        <p data-i18n="why2Desc">Votre repas est prêt à l'heure, vous n'attendez pas.</p>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+                        <h3 data-i18n="why3Title">Paiement simple</h3>
+                        <p data-i18n="why3Desc">Badge école ou espèces, réglé à la cantine, sans app tierce.</p>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3.5-7.1M21 3v6h-6"/></svg></div>
+                        <h3 data-i18n="why4Title">Flexible</h3>
+                        <p data-i18n="why4Desc">Modifiable ou annulable jusqu'à minuit la veille du retrait.</p>
+                    </div>
+                </div>
+            </section>
+
             <div class="faq-section">
                 <h3 data-i18n="faqTitle">Questions Fréquentes</h3>
                 <details class="faq-item"><summary data-i18n="faq1Q">Quand puis-je commander ?</summary><p data-i18n="faq1A">Du lundi au vendredi, de 5h00 à minuit (heure de Paris). Les commandes sont fermées la nuit et le weekend.</p></details>
                 <details class="faq-item"><summary data-i18n="faq2Q">Puis-je commander le weekend ?</summary><p data-i18n="faq2A">Non, les commandes sont fermées le samedi et le dimanche. Retour lundi à 5h00.</p></details>
                 <details class="faq-item"><summary data-i18n="faq3Q">Jusqu'à quand puis-je modifier ma commande ?</summary><p data-i18n="faq3A">Jusqu'à minuit la veille du jour de retrait. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit.</p></details>
+            </div>
+
+            <div class="card home-cta">
+                <div>
+                    <h2 data-i18n="ctaTitle">Prêt à commander ?</h2>
+                    <p data-i18n="ctaSubtitle">Réservez votre repas de demain en moins d'une minute.</p>
+                </div>
+                <button class="btn-primary" data-target="order" data-i18n="ctaBtn">Commander maintenant →</button>
             </div>
         </section>
 
@@ -67,6 +112,13 @@
         <section id="order" class="page">
             <h2 data-i18n="orderTitle">Nouvelle commande</h2>
             <p class="section-note" id="order-pickup-note"></p>
+            <div class="card order-limits-banner">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <div>
+                    <strong data-i18n="orderLimitsTitle">Ce que vous pouvez commander</strong>
+                    <p data-i18n="orderLimitsInfo">Vous pouvez choisir jusqu'à 2 entrées, 2 plats et 2 desserts par commande.</p>
+                </div>
+            </div>
             <div id="weekend-banner" class="banner error hidden"><strong data-i18n="weekendBanner">Site fermé le weekend.</strong> <span data-i18n="statusReturnMonday">Retour lundi.</span></div>
             <div id="night-closed-banner" class="banner error hidden">
                 <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Commandes fermées.</strong> Les commandes sont disponibles du lundi au vendredi de <strong>5h00 à minuit</strong>. Revenez à 5h00 !
@@ -93,41 +145,13 @@
 
                     <div id="menu-container"></div>
 
-                    <fieldset class="card section-extras">
-                        <legend data-i18n="extrasTitle">Extras &amp; Accessoires</legend>
-                        <div class="extras-grid">
-                            <div class="extra-row">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" name="extra" value="cutlery">
-                                    <span class="checkmark"></span><span data-i18n="extraCutlery">Couverts</span>
-                                </label>
-                            </div>
-                            <div class="extra-row">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" name="extra" value="napkin">
-                                    <span class="checkmark"></span><span data-i18n="extraNapkin">Serviette</span>
-                                </label>
-                            </div>
-                            <div class="extra-row">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" name="extra" value="sauces" id="extra-sauces-cb">
-                                    <span class="checkmark"></span><span data-i18n="extraSauces">Sauces</span>
-                                </label>
-                                <input type="text" class="extra-inline-input" id="extra-sauces-input" placeholder="Précisez…" maxlength="120">
-                            </div>
-                            <div class="extra-row">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" name="extra" value="allergies" id="extra-allergies-cb">
-                                    <span class="checkmark"></span><span data-i18n="extraAllergies">Allergies</span>
-                                </label>
-                                <input type="text" class="extra-inline-input" id="extra-allergies-input" placeholder="Précisez…" maxlength="120">
-                            </div>
-                        </div>
-                        <div class="input-group" style="margin-top:14px;margin-bottom:0">
-                            <label for="order-notes" data-i18n="orderNotes">Notes / Autres</label>
+                    <div class="card menu-section">
+                        <div class="menu-section-header"><h3 data-i18n="notesTitle">Notes &amp; allergies</h3></div>
+                        <div class="input-group" style="margin-bottom:0">
+                            <label for="order-notes" data-i18n="orderNotes">Allergies, sauces, remarques…</label>
                             <textarea id="order-notes" name="notes" data-i18n-placeholder="orderNotesPlaceholder" placeholder="Précisez ici vos allergies, préférences de sauces, ou toute autre demande spéciale…" maxlength="400" rows="2" class="auto-resize"></textarea>
                         </div>
-                    </fieldset>
+                    </div>
 
                     <!-- Cart bar -->
                     <div class="cart-bar" id="cart-bar">
@@ -314,38 +338,44 @@
 
         <!-- ===================== CONTACT ===================== -->
         <section id="contact" class="page">
-            <div id="contact-form-view">
-                <h2 data-i18n="contactTitle">Contact Support</h2>
-                <form id="contact-form">
-                    <div class="input-group">
-                        <label data-i18n="problemType">Type de problème</label>
-                        <select required id="contact-type">
-                            <option value="" data-i18n="selectOption">Sélectionner…</option>
-                            <option value="Facturation" data-i18n="typeBilling">Facturation</option>
-                            <option value="Problème de commande" data-i18n="typeOrderProblem">Problème de commande</option>
-                            <option value="Problème de menu" data-i18n="typeMenuProblem">Problème de menu</option>
-                            <option value="Compte" data-i18n="typeAccount">Compte</option>
-                            <option value="Autre" data-i18n="typeOther">Autre</option>
-                        </select>
+            <div class="legal-page">
+                <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
+                <div id="contact-form-view">
+                    <h1 data-i18n="contactTitle">Contact Support</h1>
+                    <p class="legal-date" data-i18n="contactSubtitle">Une question, un souci ? Notre équipe vous répond au plus vite.</p>
+                    <div class="card">
+                        <form id="contact-form">
+                            <div class="input-group">
+                                <label data-i18n="problemType">Type de problème</label>
+                                <select required id="contact-type">
+                                    <option value="" data-i18n="selectOption">Sélectionner…</option>
+                                    <option value="Facturation" data-i18n="typeBilling">Facturation</option>
+                                    <option value="Problème de commande" data-i18n="typeOrderProblem">Problème de commande</option>
+                                    <option value="Problème de menu" data-i18n="typeMenuProblem">Problème de menu</option>
+                                    <option value="Compte" data-i18n="typeAccount">Compte</option>
+                                    <option value="Autre" data-i18n="typeOther">Autre</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label data-i18n="detailsLabel">Détails (20-2000 caractères)</label>
+                                <textarea id="contact-msg" data-i18n-placeholder="detailsPlaceholder" minlength="20" maxlength="2000" required class="auto-resize" rows="3" placeholder="Décrivez votre problème en détail…"></textarea>
+                            </div>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="contact-anon">
+                                    <span class="checkmark"></span>
+                                    <span data-i18n="submitAnonymously">Soumettre anonymement (sans réponse possible)</span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn-primary" data-i18n="sendBtn">Envoyer</button>
+                        </form>
                     </div>
-                    <div class="input-group">
-                        <label data-i18n="detailsLabel">Détails (20-2000 caractères)</label>
-                        <textarea id="contact-msg" data-i18n-placeholder="detailsPlaceholder" minlength="20" maxlength="2000" required class="auto-resize" rows="3" placeholder="Décrivez votre problème en détail…"></textarea>
-                    </div>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="contact-anon">
-                            <span class="checkmark"></span>
-                            <span data-i18n="submitAnonymously">Soumettre anonymement (sans réponse possible)</span>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn-primary" data-i18n="sendBtn">Envoyer</button>
-                </form>
-            </div>
-            <div id="contact-success-view" class="hidden" style="text-align:center;padding:40px 0">
-                <h2 data-i18n="contactThanks">Merci pour votre retour</h2>
-                <p data-i18n="contactReply">Nous vous répondrons dans les plus brefs délais.</p>
-                <button class="btn-secondary" id="contact-return-home" data-i18n="backToHome">Retour à l'accueil</button>
+                </div>
+                <div id="contact-success-view" class="hidden" style="text-align:center;padding:40px 0">
+                    <h2 data-i18n="contactThanks">Merci pour votre retour</h2>
+                    <p data-i18n="contactReply">Nous vous répondrons dans les plus brefs délais.</p>
+                    <button class="btn-secondary" id="contact-return-home" data-i18n="backToHome">Retour à l'accueil</button>
+                </div>
             </div>
         </section>
 
@@ -556,39 +586,31 @@
         <section id="help" class="page">
             <div class="legal-page">
                 <button class="btn-back" data-target="home">← <span data-i18n="backBtn">Retour</span></button>
-                <h1>Centre d'aide</h1>
-                <p class="legal-date">Trouvez rapidement des réponses à vos questions</p>
+                <h1 data-i18n="helpCenter">Centre d'aide</h1>
+                <p class="legal-date" data-i18n="helpPageSubtitle">Trouvez rapidement des réponses à vos questions</p>
 
                 <div class="help-contact-banner card">
                     <div>
-                        <strong>Vous n'avez pas trouvé votre réponse ?</strong>
-                        <p style="margin:4px 0 0;font-size:.88rem;color:var(--text-muted)">Notre équipe est disponible du lundi au vendredi.</p>
+                        <strong data-i18n="helpContactTitle">Vous n'avez pas trouvé votre réponse ?</strong>
+                        <p style="margin:4px 0 0;font-size:.88rem;color:var(--text-muted)" data-i18n="helpContactSubtitle">Notre équipe est disponible du lundi au vendredi.</p>
                     </div>
                     <button class="btn-primary" data-target="contact" style="white-space:nowrap">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        Nous contacter
+                        <span data-i18n="helpContactBtn">Nous contacter</span>
                     </button>
                 </div>
 
-                <h3 style="margin:28px 0 12px" >Questions fréquentes</h3>
+                <h3 style="margin:28px 0 12px" data-i18n="helpFaqHeading">Questions fréquentes</h3>
 
-                <details class="faq-item card"><summary>Comment passer une commande ?</summary><p>Créez un compte ou connectez-vous, ouvrez <strong>Commander</strong>, choisissez vos plats, cliquez sur <em>Valider la commande</em>, puis choisissez votre moyen de paiement et confirmez. Votre commande apparaît ensuite dans <strong>Profil → En cours</strong>.</p></details>
-
-                <details class="faq-item card"><summary>Quels sont les horaires du service ?</summary><p>Vous pouvez commander du <strong>lundi au vendredi de 5h00 à minuit</strong> (heure de Paris), pour un retrait à la cantine le prochain jour ouvré. Les commandes sont fermées la nuit et le weekend.</p></details>
-
-                <details class="faq-item card"><summary>Puis-je modifier ou annuler ma commande ?</summary><p>Oui, depuis <strong>Profil → En cours</strong>, jusqu'à minuit la veille du jour de retrait. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, la commande est en préparation.</p></details>
-
-                <details class="faq-item card"><summary>Comment confirmer la réception de ma commande ?</summary><p>Lorsque vous récupérez votre repas à la cantine, ouvrez <strong>Profil → En cours</strong>, cliquez sur <em>Récupérer</em> et faites glisser le curseur (ou appuyez sur Entrée quand il est sélectionné au clavier). Montrez l'écran à la personne qui vous remet le repas.</p></details>
-
-                <details class="faq-item card"><summary>Vais-je recevoir un e-mail de confirmation ?</summary><p>Non, aucun e-mail de confirmation n'est envoyé. Votre commande est bien enregistrée dès qu'elle apparaît dans <strong>Profil → En cours</strong>, avec sa référence.</p></details>
-
-                <details class="faq-item card"><summary>J'ai oublié mon mot de passe</summary><p>Sur la page de connexion, cliquez sur <em>Mot de passe oublié ?</em> et entrez votre adresse email. Si un compte existe, vous recevrez un lien de réinitialisation dans les minutes qui suivent.</p></details>
-
-                <details class="faq-item card"><summary>Quels moyens de paiement sont acceptés ?</summary><p>Deux moyens : <strong>Badge école</strong> (débit sur votre compte établissement) et <strong>Espèces</strong> (à remettre à la cantine au retrait). Aucun paiement en ligne.</p></details>
-
-                <details class="faq-item card"><summary>Les commandes annulées sont-elles remboursées ?</summary><p>Avec le badge école, le montant n'est pas débité si vous annulez dans les délais. En espèces, vous payez au retrait : il n'y a donc rien à rembourser.</p></details>
-
-                <details class="faq-item card"><summary>Comment supprimer mon compte ?</summary><p>Rendez-vous dans <strong>Profil → Paramètres</strong>, section <em>Confidentialité &amp; Sécurité</em>, puis cliquez sur <em>Supprimer mon compte</em>. Cette action est irréversible.</p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ1"></summary><p data-i18n-html="helpFaqA1"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ2"></summary><p data-i18n-html="helpFaqA2"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ3"></summary><p data-i18n-html="helpFaqA3"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ4"></summary><p data-i18n-html="helpFaqA4"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ5"></summary><p data-i18n-html="helpFaqA5"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ6"></summary><p data-i18n-html="helpFaqA6"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ7"></summary><p data-i18n-html="helpFaqA7"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ8"></summary><p data-i18n-html="helpFaqA8"></p></details>
+                <details class="faq-item card"><summary data-i18n="helpFaqQ9"></summary><p data-i18n-html="helpFaqA9"></p></details>
             </div>
         </section>
 
