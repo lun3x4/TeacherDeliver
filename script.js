@@ -54,8 +54,7 @@ const i18n = {
         faq2Q: 'Puis-je commander le weekend ?', faq2A: 'Non, le site est fermé samedi et dimanche. Retour lundi.',
         faq3Q: "Jusqu'à quand puis-je modifier ma commande ?", faq3A: "Jusqu'à minuit la veille du jour de retrait.",
         orderTitle: 'Commande du Jour', weekendBanner: 'Site fermé le weekend.', orderYourInfo: 'Vos informations', orderFirstName: 'Prénom *', orderLastName: 'Nom *',
-        extrasTitle: 'Extras & Accessoires', extraCutlery: 'Couverts', extraNapkin: 'Serviette', extraSauces: 'Sauces', extraAllergies: 'Allergies',
-        orderNotes: 'Notes / Autres', orderNotesPlaceholder: 'Précisez ici vos allergies, préférences de sauces, ou toute autre demande spéciale…',
+        orderNotes: 'Allergies, sauces, remarques…', orderNotesPlaceholder: 'Précisez ici vos allergies, préférences de sauces, ou toute autre demande spéciale…',
         cartArticle: 'article', cartArticles: 'articles', validateOrder: 'Valider la Commande →', cancel: 'Annuler',
         modalConfirmTitle: 'Confirmer votre commande', modalConfirmEmailSent: 'Un email de confirmation va être envoyé à :', modalConfirmClickLink: "Cliquez sur le lien dans l'email pour valider définitivement votre commande.",
         modalSendEmail: "Envoyer l'email de confirmation", modalCancel: 'Annuler',
@@ -67,7 +66,7 @@ const i18n = {
         catStarter: 'Entrées', catMain: 'Plats principaux', catDessert: 'Desserts', catMaxPerCategory: 'max', catMaxPerCategorySuffix: 'par catégorie', stockLabel: 'Stock :',
         tagVeg: 'Végétarien', tagVegan: 'Végétalien', tagGlutenfree: 'Sans Gluten', tagHalal: 'Halal', tagSpicy: 'Épicé',
         adminTitle: 'Tableau de Bord Admin', adminTabOrders: 'Commandes', adminTabMenu: 'Gérer le menu',
-        adminSearchPlaceholder: 'Rechercher un professeur…', allStatuses: 'Tous les statuts', statusConfirmed: 'Confirmée', statusModified: 'Modifiée', statusCancelled: 'Annulée', exportCSV: 'Exporter CSV',
+        adminSearchPlaceholder: 'Rechercher un professeur…', allStatuses: 'Tous les statuts', statusConfirmed: 'Confirmée', statusModified: 'Modifiée', statusCancelled: 'Annulée', statusDelivered: 'Livrée', exportCSV: 'Exporter CSV',
         thTeacher: 'Professeur', thTime: 'Heure', thStarter: 'Entrée', thMain: 'Plat', thDessert: 'Dessert', thExtras: 'Extras', thTotal: 'Total', thStatut: 'Statut', thActions: 'Actions',
         menuFormTitle: 'Ajouter un plat', addDish: 'Ajouter un plat', addTheDish: 'Ajouter le plat', dishName: 'Nom du plat *', dishCategory: 'Catégorie *', chooseCategory: 'Choisir…',
         categoryStarter: 'Entrée', categoryMain: 'Plat principal', categoryDessert: 'Dessert', priceLabel: 'Prix (€) *', limitedStock: 'Stock limité (0 = illimité)', tagsLabel: 'Étiquettes',
@@ -127,8 +126,7 @@ const i18n = {
         faq2Q: 'Can I order on weekends?', faq2A: 'No, the site is closed Saturday and Sunday. Back Monday.',
         faq3Q: 'Until when can I modify my order?', faq3A: 'Until midnight the day before pickup.',
         orderTitle: "Today's Order", weekendBanner: 'Site closed on weekends.', orderYourInfo: 'Your information', orderFirstName: 'First name *', orderLastName: 'Last name *',
-        extrasTitle: 'Extras & Accessories', extraCutlery: 'Cutlery', extraNapkin: 'Napkin', extraSauces: 'Sauces', extraAllergies: 'Allergies',
-        orderNotes: 'Notes / Other', orderNotesPlaceholder: 'Specify allergies, sauce preferences, or any special request…',
+        orderNotes: 'Allergies, sauces, remarks…', orderNotesPlaceholder: 'Specify allergies, sauce preferences, or any special request…',
         cartArticle: 'item', cartArticles: 'items', validateOrder: 'Validate Order →', cancel: 'Cancel',
         modalConfirmTitle: 'Confirm your order', modalConfirmEmailSent: 'A confirmation email will be sent to:', modalConfirmClickLink: 'Click the link in the email to finally validate your order.',
         modalSendEmail: 'Send confirmation email', modalCancel: 'Cancel',
@@ -140,7 +138,7 @@ const i18n = {
         catStarter: 'Starters', catMain: 'Main courses', catDessert: 'Desserts', catMaxPerCategory: 'max', catMaxPerCategorySuffix: 'per category', stockLabel: 'Stock:',
         tagVeg: 'Végétarien', tagVegan: 'Vegan', tagGlutenfree: 'Gluten Free', tagHalal: 'Halal', tagSpicy: 'Spicy',
         adminTitle: 'Admin Dashboard', adminTabOrders: 'Orders', adminTabMenu: 'Manage menu',
-        adminSearchPlaceholder: 'Search for a teacher…', allStatuses: 'All statuses', statusConfirmed: 'Confirmed', statusModified: 'Modified', statusCancelled: 'Cancelled', exportCSV: 'Export CSV',
+        adminSearchPlaceholder: 'Search for a teacher…', allStatuses: 'All statuses', statusConfirmed: 'Confirmed', statusModified: 'Modified', statusCancelled: 'Cancelled', statusDelivered: 'Delivered', exportCSV: 'Export CSV',
         thTeacher: 'Teacher', thTime: 'Time', thStarter: 'Starter', thMain: 'Main', thDessert: 'Dessert', thExtras: 'Extras', thTotal: 'Total', thStatut: 'Status', thActions: 'Actions',
         menuFormTitle: 'Add a dish', addDish: 'Add a dish', addTheDish: 'Add dish', dishName: 'Dish name *', dishCategory: 'Category *', chooseCategory: 'Choose…',
         categoryStarter: 'Starter', categoryMain: 'Main course', categoryDessert: 'Dessert', priceLabel: 'Price (€) *', limitedStock: 'Limited stock (0 = unlimited)', tagsLabel: 'Tags',
@@ -243,7 +241,43 @@ Object.assign(i18n.fr, {
     "cookieBannerText": "Nous utilisons uniquement des cookies et un stockage local essentiels (connexion, langue, thème). Acceptez-vous leur enregistrement sur cet appareil ?",
     "cookieAccept": "Accepter",
     "cookieDecline": "Refuser",
-    "cookieDeclinedToast": "Cookies refusés : vos préférences seront effacées à la fermeture."
+    "cookieDeclinedToast": "Cookies refusés : vos préférences seront effacées à la fermeture.",
+    "orderLimitsInfo": "Vous pouvez choisir jusqu'à 2 entrées, 2 plats et 2 desserts par commande.",
+    "orderLimitsTitle": "Ce que vous pouvez commander",
+    "notesTitle": "Notes & allergies",
+    "menuPreviewTitle": "Au menu cette semaine",
+    "menuPreviewEmpty": "Le menu sera bientôt disponible.",
+    "seeFullMenu": "Voir le menu complet →",
+    "whyTitle": "Pourquoi TeacherMeals",
+    "why1Title": "Fait maison", "why1Desc": "Des plats préparés chaque jour par l'équipe de la cantine.",
+    "why2Title": "Sans file d'attente", "why2Desc": "Votre repas est prêt à l'heure, vous n'attendez pas.",
+    "why3Title": "Paiement simple", "why3Desc": "Badge école ou espèces, réglé à la cantine, sans app tierce.",
+    "why4Title": "Flexible", "why4Desc": "Modifiable ou annulable jusqu'à minuit la veille du retrait.",
+    "ctaTitle": "Prêt à commander ?", "ctaSubtitle": "Réservez votre repas de demain en moins d'une minute.", "ctaBtn": "Commander maintenant →",
+    "helpPageSubtitle": "Trouvez rapidement des réponses à vos questions",
+    "helpContactTitle": "Vous n'avez pas trouvé votre réponse ?",
+    "helpContactSubtitle": "Notre équipe est disponible du lundi au vendredi.",
+    "helpContactBtn": "Nous contacter",
+    "helpFaqHeading": "Questions fréquentes",
+    "helpFaqQ1": "Comment passer une commande ?",
+    "helpFaqA1": "Créez un compte ou connectez-vous, ouvrez <strong>Commander</strong>, choisissez vos plats, cliquez sur <em>Valider la commande</em>, puis choisissez votre moyen de paiement et confirmez. Votre commande apparaît ensuite dans <strong>Profil → En cours</strong>.",
+    "helpFaqQ2": "Quels sont les horaires du service ?",
+    "helpFaqA2": "Vous pouvez commander du <strong>lundi au vendredi de 5h00 à minuit</strong> (heure de Paris), pour un retrait à la cantine le prochain jour ouvré. Les commandes sont fermées la nuit et le weekend.",
+    "helpFaqQ3": "Puis-je modifier ou annuler ma commande ?",
+    "helpFaqA3": "Oui, depuis <strong>Profil → En cours</strong>, jusqu'à minuit la veille du jour de retrait. Le weekend étant fermé, pour un retrait le lundi la limite est le vendredi à minuit. Passé ce délai, la commande est en préparation.",
+    "helpFaqQ4": "Comment confirmer la réception de ma commande ?",
+    "helpFaqA4": "Lorsque vous récupérez votre repas à la cantine, ouvrez <strong>Profil → En cours</strong>, cliquez sur <em>Récupérer</em> et faites glisser le curseur (ou appuyez sur Entrée quand il est sélectionné au clavier). Montrez l'écran à la personne qui vous remet le repas.",
+    "helpFaqQ5": "Vais-je recevoir un e-mail de confirmation ?",
+    "helpFaqA5": "Non, aucun e-mail de confirmation n'est envoyé. Votre commande est bien enregistrée dès qu'elle apparaît dans <strong>Profil → En cours</strong>, avec sa référence.",
+    "helpFaqQ6": "J'ai oublié mon mot de passe",
+    "helpFaqA6": "Sur la page de connexion, cliquez sur <em>Mot de passe oublié ?</em> et entrez votre adresse email. Si un compte existe, vous recevrez un lien de réinitialisation dans les minutes qui suivent.",
+    "helpFaqQ7": "Quels moyens de paiement sont acceptés ?",
+    "helpFaqA7": "Deux moyens : <strong>Badge école</strong> (débit sur votre compte établissement) et <strong>Espèces</strong> (à remettre à la cantine au retrait). Aucun paiement en ligne.",
+    "helpFaqQ8": "Les commandes annulées sont-elles remboursées ?",
+    "helpFaqA8": "Avec le badge école, le montant n'est pas débité si vous annulez dans les délais. En espèces, vous payez au retrait : il n'y a donc rien à rembourser.",
+    "helpFaqQ9": "Comment supprimer mon compte ?",
+    "helpFaqA9": "Rendez-vous dans <strong>Profil → Paramètres</strong>, section <em>Confidentialité &amp; Sécurité</em>, puis cliquez sur <em>Supprimer mon compte</em>. Cette action est irréversible.",
+    "contactSubtitle": "Une question, un souci ? Notre équipe vous répond au plus vite."
 });
 Object.assign(i18n.en, {
     "homeTitle": "TeacherMeals",
@@ -303,7 +337,43 @@ Object.assign(i18n.en, {
     "cookieBannerText": "We only use essential cookies and local storage (sign-in, language, theme). Do you agree to store them on this device?",
     "cookieAccept": "Accept",
     "cookieDecline": "Decline",
-    "cookieDeclinedToast": "Cookies declined: your preferences will be cleared when you close the site."
+    "cookieDeclinedToast": "Cookies declined: your preferences will be cleared when you close the site.",
+    "orderLimitsInfo": "You can choose up to 2 starters, 2 main courses and 2 desserts per order.",
+    "orderLimitsTitle": "What you can order",
+    "notesTitle": "Notes & allergies",
+    "menuPreviewTitle": "This week's menu",
+    "menuPreviewEmpty": "The menu will be available soon.",
+    "seeFullMenu": "See full menu →",
+    "whyTitle": "Why TeacherMeals",
+    "why1Title": "Home-cooked", "why1Desc": "Meals prepared fresh every day by the canteen team.",
+    "why2Title": "No queuing", "why2Desc": "Your meal is ready on time, no waiting in line.",
+    "why3Title": "Simple payment", "why3Desc": "School badge or cash, paid at the canteen, no third-party app.",
+    "why4Title": "Flexible", "why4Desc": "Editable or cancellable until midnight the day before pickup.",
+    "ctaTitle": "Ready to order?", "ctaSubtitle": "Book tomorrow's meal in under a minute.", "ctaBtn": "Order now →",
+    "helpPageSubtitle": "Find quick answers to your questions",
+    "helpContactTitle": "Didn't find your answer?",
+    "helpContactSubtitle": "Our team is available Monday to Friday.",
+    "helpContactBtn": "Contact us",
+    "helpFaqHeading": "Frequently asked questions",
+    "helpFaqQ1": "How do I place an order?",
+    "helpFaqA1": "Create an account or sign in, open <strong>Order</strong>, choose your dishes, click <em>Validate order</em>, then pick a payment method and confirm. Your order then appears in <strong>Profile → In progress</strong>.",
+    "helpFaqQ2": "What are the service hours?",
+    "helpFaqA2": "You can order <strong>Monday to Friday from 5:00am to midnight</strong> (Paris time), for pickup at the canteen the next working day. Orders are closed at night and on weekends.",
+    "helpFaqQ3": "Can I edit or cancel my order?",
+    "helpFaqA3": "Yes, from <strong>Profile → In progress</strong>, until midnight the day before pickup. Weekends are closed, so for a Monday pickup the limit is Friday midnight. After that, the order is being prepared.",
+    "helpFaqQ4": "How do I confirm I received my order?",
+    "helpFaqA4": "When you collect your meal at the canteen, open <strong>Profile → In progress</strong>, click <em>Pick up</em> and slide the control (or press Enter when it's focused via keyboard). Show the screen to the person handing you the meal.",
+    "helpFaqQ5": "Will I get a confirmation email?",
+    "helpFaqA5": "No, no confirmation email is sent. Your order is confirmed as soon as it appears in <strong>Profile → In progress</strong>, with its reference.",
+    "helpFaqQ6": "I forgot my password",
+    "helpFaqA6": "On the sign-in page, click <em>Forgot password?</em> and enter your email address. If an account exists, you'll receive a reset link within minutes.",
+    "helpFaqQ7": "What payment methods are accepted?",
+    "helpFaqA7": "Two options: <strong>School badge</strong> (debited from your school account) and <strong>Cash</strong> (paid at the canteen on pickup). No online payment.",
+    "helpFaqQ8": "Are cancelled orders refunded?",
+    "helpFaqA8": "With the school badge, the amount is never debited if you cancel in time. With cash, you pay on pickup, so there is nothing to refund.",
+    "helpFaqQ9": "How do I delete my account?",
+    "helpFaqA9": "Go to <strong>Profile → Settings</strong>, under <em>Privacy &amp; Security</em>, then click <em>Delete my account</em>. This action cannot be undone.",
+    "contactSubtitle": "A question or an issue? Our team will get back to you quickly."
 });
 
 /* ---------- Helpers : échappement HTML & dates de retrait ---------- */
@@ -408,6 +478,7 @@ async function fetchMenu() {
         state.menu = [];
         snapshot.forEach(d => state.menu.push({ id: d.id, ...d.data() }));
         renderMenu();
+        renderHomeMenuPreview();
         if (state.currentUser?.role === 'admin') renderAdminMenuList();
     } catch (e) {
         console.error("Erreur chargement menu :", e);
@@ -916,6 +987,10 @@ function applyTranslations() {
         const key = el.getAttribute('data-i18n');
         if (L[key] !== undefined) el.textContent = L[key];
     });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (L[key] !== undefined) el.innerHTML = L[key];
+    });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
         if (L[key] !== undefined) el.placeholder = L[key];
@@ -942,6 +1017,7 @@ function setLanguage(lang) {
     const activePage = document.querySelector('.page.active')?.id;
     if (activePage === 'order') renderMenu();
     if (activePage === 'management') { renderAdminOrders(); renderAdminMenuList(); }
+    renderHomeMenuPreview();
     updateStatusStrip();
     updateOrderFormForClosure(isSiteClosed().closed);
     calculateTotal();
@@ -1079,7 +1155,7 @@ function renderMenu() {
     const container = document.getElementById('menu-container');
     if (!container) return;
     container.innerHTML = '';
-    const MAX = 3;
+    const MAX = 2;
     const catLabels = { starter: t('catStarter'), main: t('catMain'), dessert: t('catDessert') };
 
     ['starter','main','dessert'].forEach(cat => {
@@ -1133,6 +1209,26 @@ function renderMenu() {
     });
     calculateTotal();
     updateOrderFormForClosure(isSiteClosed().closed);
+}
+
+function renderHomeMenuPreview() {
+    const grid = document.getElementById('home-menu-preview-grid');
+    if (!grid) return;
+    const items = (state.menu || []).filter(i => i.visible).slice(0, 6);
+    if (!items.length) { grid.innerHTML = `<p style="color:var(--text-muted);grid-column:1/-1">${t('menuPreviewEmpty')}</p>`; return; }
+    const catKey = { starter: 'catStarter', main: 'catMain', dessert: 'catDessert' };
+    grid.innerHTML = items.map(item => {
+        const tags = (item.tags || []).slice(0, 2).map(tg => `<span class="menu-tag menu-tag-${esc(tg)}">${esc(tagLabel(tg))}</span>`).join('');
+        return `
+        <div class="home-menu-card">
+            <div class="home-menu-card-top">
+                <span class="home-menu-card-cat">${esc(t(catKey[item.category] || 'catMain'))}</span>
+                <span class="home-menu-card-price">€${Number(item.price).toFixed(2)}</span>
+            </div>
+            <div class="home-menu-card-name">${esc(item.name)}</div>
+            <div class="menu-item-tags">${tags}</div>
+        </div>`;
+    }).join('');
 }
 
 function getCatTotal(cat) {
@@ -1579,6 +1675,12 @@ function renderActiveOrders(orders) {
 /* ============================================================
    HISTORIQUE (livrées + annulées, sans boutons d'action)
    ============================================================ */
+function orderPlacedLabel(o) {
+    const d = new Date(o.timestamp);
+    const dateStr = isNaN(d) ? '' : d.toLocaleDateString(state.lang === 'en' ? 'en-GB' : 'fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return [dateStr, o.time].filter(Boolean).join(' · ');
+}
+
 function renderProfileOrders(orders) {
     const list = document.getElementById('profile-orders-list');
     if (!list) return;
@@ -1595,13 +1697,13 @@ function renderProfileOrders(orders) {
         card.className = 'card order-history-card';
         card.innerHTML = `
             <div class="order-history-header">
-                <div>
+                <div class="order-history-id">
                     <strong class="order-history-ref">${esc(o.ref || '—')}</strong>
-                    <span class="order-history-date">${esc(o.time || '')}</span>
+                    <span class="order-history-date">${esc(orderPlacedLabel(o))}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
                     <span class="order-history-total">${esc(o.total || '—')}</span>
-                    <span class="status-badge ${sc}">${isDelivered ? 'Livrée' : esc(o.status)}</span>
+                    <span class="status-badge ${sc}">${isDelivered ? t('statusDelivered') : orderStatusLabel(o.status)}</span>
                 </div>
             </div>
             <div class="order-history-items">${items || '—'}</div>
