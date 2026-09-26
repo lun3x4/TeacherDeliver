@@ -392,7 +392,8 @@ body.dark-mode .qty-stepper.has-qty { box-shadow:0 0 0 2px rgba(227,227,227,0.1)
 .order-history-card { margin-bottom:12px; }
 .order-history-header { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; }
 .order-history-ref { font-size:0.9rem; font-family:monospace; }
-.order-history-date { font-size:0.78rem; color:var(--text-muted); margin-left:8px; }
+.order-history-id { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+.order-history-date { font-size:0.78rem; color:var(--text-muted); }
 .order-history-total { font-weight:800; font-size:0.95rem; }
 .order-history-items { font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px; }
 .order-history-extras { font-size:0.78rem; color:var(--text-muted); margin-bottom:8px; }
@@ -546,7 +547,7 @@ body.dark-mode .success-icon { background:#1b5e20; color:#a5d6a7; }
 .apple-switch .slider { position:absolute; inset:0; background:#ccc; border-radius:26px; transition:background 0.25s ease; }
 .apple-switch .slider::before { content:''; position:absolute; height:20px; width:20px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:transform 0.25s ease; box-shadow:0 1px 4px rgba(0,0,0,0.25); }
 
-.apple-switch input:checked + .slider { background:var(--accent-green); box-shadow:0 0 0 4px var(--accent-green-soft); }
+.apple-switch input:checked + .slider { background:var(--accent-green); }
 .apple-switch input:checked + .slider::before { transform:translateX(20px); }
 body.dark-mode .apple-switch .slider { background:#3a3a3c; }
 
@@ -656,13 +657,6 @@ body.dark-mode .profile-logout-btn:hover { background:#450a0a !important; }
 .forgot-success { display:none; }
 .forgot-success.show { display:block; }
 .forgot-form.hidden { display:none; }
-.order-history-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; flex-wrap:wrap; gap:8px; }
-.order-history-ref { font-family:monospace; font-size:0.85rem; display:block; }
-.order-history-date { font-size:0.75rem; color:var(--text-muted); }
-.order-history-total { font-weight:700; font-size:0.95rem; }
-.order-history-items { font-size:0.88rem; color:var(--text-secondary); }
-.order-history-extras { font-size:0.8rem; color:var(--text-muted); margin-top:3px; }
-
 /* Settings rows */
 .settings-group { margin-bottom:16px; }
 .settings-group h3 { margin-bottom:14px; font-size:1rem; border-bottom:1px solid var(--border-light); padding-bottom:10px; }
@@ -685,7 +679,6 @@ body.dark-mode .profile-logout-btn:hover { background:#450a0a !important; }
 /* ============================================================
    CONTACT
    ============================================================ */
-#contact { max-width: 600px; margin: 0 auto; }
 #contact h2 { margin-bottom: 20px; }
 #contact-form-view, #contact-success-view { padding-bottom: 48px; }
 
@@ -1102,7 +1095,6 @@ body.dark-mode .status-badge.status-delivered { background:#1b5e20; color:#a5d6a
     gap: 16px;
     padding: 16px 20px;
     background: var(--bg-secondary);
-    border-left: 4px solid var(--primary-color);
     margin-bottom: 8px;
     flex-wrap: wrap;
 }
@@ -1126,7 +1118,6 @@ body.dark-mode .status-badge.status-delivered { background:#1b5e20; color:#a5d6a
 /* ============================================================
    COMMANDES EN COURS
    ============================================================ */
-.order-active-card { border-left: 4px solid var(--accent-green); }
 .order-active-top {
     display: flex; align-items: flex-start; justify-content: space-between;
     gap: 8px; margin-bottom: 8px;
@@ -1297,3 +1288,36 @@ body.dark-mode .delivery-slider-track { background: var(--border-medium); }
     .cookie-banner-actions { flex-direction: column-reverse; }
     .cookie-banner-actions .btn-primary, .cookie-banner-actions .btn-secondary { width: 100%; }
 }
+
+/* Order page : limits banner */
+.order-limits-banner { display:flex; align-items:flex-start; gap:12px; margin-bottom:16px; color:var(--text-secondary); }
+.order-limits-banner svg { color:var(--text-muted); margin-top:2px; flex-shrink:0; }
+.order-limits-banner strong { display:block; color:var(--text-primary); margin-bottom:2px; }
+.order-limits-banner p { margin:0; font-size:0.9rem; }
+
+/* Home : menu preview (DoorDash-style teaser) */
+.home-menu-preview { margin: 44px 0; }
+.home-menu-preview-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+.home-menu-preview-header h2 { margin:0; }
+.home-menu-preview-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+.home-menu-card { background:var(--surface-elevated); border:1px solid var(--border-light); border-radius:var(--radius-md); box-shadow:var(--shadow-sm); padding:16px; transition:box-shadow var(--transition-fast), transform var(--transition-fast); }
+.home-menu-card:hover { box-shadow:var(--shadow-md); transform:translateY(-2px); }
+.home-menu-card-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.home-menu-card-cat { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; color:var(--text-muted); }
+.home-menu-card-price { font-weight:800; font-size:0.95rem; }
+.home-menu-card-name { font-weight:650; font-size:0.95rem; margin-bottom:8px; }
+
+/* Home : "why us" highlights */
+.home-highlights { margin: 44px 0; }
+.highlights-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; margin-top:18px; }
+.highlight-card { text-align:left; }
+.highlight-icon { width:40px; height:40px; border-radius:50%; background:var(--bg-secondary); border:1px solid var(--border-light); color:var(--text-primary); display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+.highlight-card h3 { font-size:1rem; margin-bottom:4px; }
+.highlight-card p { font-size:0.88rem; color:var(--text-secondary); margin:0; }
+
+/* Home : CTA banner */
+.home-cta { display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; margin:44px 0 12px; background:var(--primary-color); color:var(--bg-primary); }
+.home-cta h2 { color:var(--bg-primary); margin-bottom:4px; }
+.home-cta p { margin:0; opacity:0.8; }
+.home-cta .btn-primary { background:var(--bg-primary); color:var(--text-primary); white-space:nowrap; }
+.home-cta .btn-primary:hover { background:var(--border-light); }
