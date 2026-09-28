@@ -34,7 +34,8 @@ const state = {
     currentUser: null,  // { uid, email, role, firstName, lastName }
     orders: [],
     menu: [],
-    lang: localStorage.getItem('lang') || 'fr'
+    lang: localStorage.getItem('lang') || 'fr',
+    siteConfig: { override: 'auto', maxPerCategory: 2, signupsOpen: true, announcement: '' }
 };
 
 const i18n = {
@@ -277,7 +278,39 @@ Object.assign(i18n.fr, {
     "helpFaqA8": "Avec le badge école, le montant n'est pas débité si vous annulez dans les délais. En espèces, vous payez au retrait : il n'y a donc rien à rembourser.",
     "helpFaqQ9": "Comment supprimer mon compte ?",
     "helpFaqA9": "Rendez-vous dans <strong>Profil → Paramètres</strong>, section <em>Confidentialité &amp; Sécurité</em>, puis cliquez sur <em>Supprimer mon compte</em>. Cette action est irréversible.",
-    "contactSubtitle": "Une question, un souci ? Notre équipe vous répond au plus vite."
+    "contactSubtitle": "Une question, un souci ? Notre équipe vous répond au plus vite.",
+    "toastSettingsSaved": "Réglages enregistrés.",
+    "closedAdminMsg": "Le service est temporairement fermé par l'administration.",
+    "closedBannerTitle": "Commandes fermées.",
+    "settingsSupportLegal": "Assistance &amp; Légal",
+    "settingsAdminTitle": "Administration",
+    "siteOverrideLabel": "État du site",
+    "siteOverrideDesc": "Forcer l'ouverture ou la fermeture, quelle que soit l'heure",
+    "siteOverrideAuto": "Automatique (horaires normaux)",
+    "siteOverrideOpen": "Toujours ouvert",
+    "siteOverrideClosed": "Toujours fermé",
+    "maxPerCatLabel": "Limite par catégorie",
+    "maxPerCatDesc": "Nombre maximum d'articles par catégorie (entrées, plats, desserts)",
+    "thOrderId": "N° Commande",
+    "thDateTime": "Date &amp; Heure",
+    "thCustomer": "Client",
+    "thItemsOrdered": "Articles commandés",
+    "thPayment": "Paiement",
+    "thNotes": "Notes",
+    "allPaymentMethods": "Tous les paiements",
+    "csvOrderId": "N° Commande",
+    "csvDateTime": "Date & Heure",
+    "csvCustomer": "Client",
+    "csvItemsOrdered": "Articles commandés",
+    "accountNote": "Gérez vos informations personnelles et votre mot de passe.",
+    "settingsNote": "Personnalisez votre expérience et gérez votre confidentialité.",
+    "settingsAdminExtra": "D'autres réglages utiles",
+    "signupsLabel": "Nouvelles inscriptions",
+    "signupsDesc": "Autoriser la création de nouveaux comptes professeur",
+    "announcementLabel": "Message d'annonce",
+    "announcementDesc": "Affiché en haut de l'accueil pour tous les utilisateurs (laisser vide pour ne rien afficher)",
+    "announcementPlaceholder": "ex : Menu spécial cette semaine !",
+    "toastSignupsClosed": "Les nouvelles inscriptions sont temporairement fermées."
 });
 Object.assign(i18n.en, {
     "homeTitle": "TeacherMeals",
@@ -373,7 +406,39 @@ Object.assign(i18n.en, {
     "helpFaqA8": "With the school badge, the amount is never debited if you cancel in time. With cash, you pay on pickup, so there is nothing to refund.",
     "helpFaqQ9": "How do I delete my account?",
     "helpFaqA9": "Go to <strong>Profile → Settings</strong>, under <em>Privacy &amp; Security</em>, then click <em>Delete my account</em>. This action cannot be undone.",
-    "contactSubtitle": "A question or an issue? Our team will get back to you quickly."
+    "contactSubtitle": "A question or an issue? Our team will get back to you quickly.",
+    "toastSettingsSaved": "Settings saved.",
+    "closedAdminMsg": "The service is temporarily closed by the administration.",
+    "closedBannerTitle": "Orders closed.",
+    "settingsSupportLegal": "Support &amp; Legal",
+    "settingsAdminTitle": "Administration",
+    "siteOverrideLabel": "Site status",
+    "siteOverrideDesc": "Force the site open or closed, regardless of the time",
+    "siteOverrideAuto": "Automatic (normal hours)",
+    "siteOverrideOpen": "Always open",
+    "siteOverrideClosed": "Always closed",
+    "maxPerCatLabel": "Limit per category",
+    "maxPerCatDesc": "Maximum number of items per category (starters, mains, desserts)",
+    "thOrderId": "Order ID",
+    "thDateTime": "Date &amp; Time",
+    "thCustomer": "Customer",
+    "thItemsOrdered": "Items ordered",
+    "thPayment": "Payment",
+    "thNotes": "Notes",
+    "allPaymentMethods": "All payment methods",
+    "csvOrderId": "Order ID",
+    "csvDateTime": "Date & Time",
+    "csvCustomer": "Customer",
+    "csvItemsOrdered": "Items ordered",
+    "accountNote": "Manage your personal information and password.",
+    "settingsNote": "Customize your experience and manage your privacy.",
+    "settingsAdminExtra": "Other useful settings",
+    "signupsLabel": "New sign-ups",
+    "signupsDesc": "Allow new teacher accounts to be created",
+    "announcementLabel": "Announcement message",
+    "announcementDesc": "Shown at the top of the home page for everyone (leave empty to show nothing)",
+    "announcementPlaceholder": "e.g. Special menu this week!",
+    "toastSignupsClosed": "New sign-ups are temporarily closed."
 });
 
 /* ---------- Helpers : échappement HTML & dates de retrait ---------- */
@@ -455,11 +520,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 2. Charger le menu
     await fetchMenu();
 
+    // 2bis. Config du site partagée (override admin, limite par catégorie)
+    onSnapshot(doc(db, 'config', 'site'), snap => {
+        const d = snap.exists() ? snap.data() : {};
+        state.siteConfig.override       = d.override || 'auto';
+        state.siteConfig.maxPerCategory = d.maxPerCategory > 0 ? d.maxPerCategory : 2;
+        state.siteConfig.signupsOpen    = d.signupsOpen !== false;
+        state.siteConfig.announcement   = d.announcement || '';
+        syncAdminSettingsInputs();
+        renderAnnouncementBanner();
+        updateStatusStrip();
+        updateNavigationForClosure(isSiteClosed().closed);
+        const activePage = document.querySelector('.page.active')?.id;
+        if (activePage === 'order') { renderMenu(); updateOrderFormForClosure(isSiteClosed().closed); }
+    });
+
     // 3. Setup listeners & UI
     setupEventListeners();
     initCookieConsent();
     initTime();
     setLanguage(state.lang);
+    renderAnnouncementBanner();
 
     // Rafraîchir l'état de fermeture toutes les 30 secondes (navigation + status strip)
     setInterval(() => {
@@ -564,6 +645,7 @@ async function handleAuthSubmit(e) {
         const remember = !isLoginMode || document.getElementById('remember-me')?.checked !== false;
         await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
         if (!isLoginMode) {
+            if (!state.siteConfig.signupsOpen) { showToast(t('toastSignupsClosed')); btn.disabled = false; btn.textContent = t('registerBtn'); return; }
             const fName = document.getElementById('reg-fname').value.trim();
             const lName = document.getElementById('reg-lname').value.trim();
             const conf  = document.getElementById('auth-confirm-password').value;
@@ -658,6 +740,18 @@ function setupEventListeners() {
     fab?.addEventListener('click', e => { e.stopPropagation(); popover.classList.toggle('show'); });
     document.addEventListener('click', e => {
         if (popover && !popover.contains(e.target) && e.target !== fab) popover.classList.remove('show');
+        document.querySelectorAll('.has-submenu.open').forEach(sm => { if (!sm.contains(e.target)) sm.classList.remove('open'); });
+    });
+
+    // Sous-menus (Aide / Langue) : ouverture au clic/tap, en plus du survol souris — nécessaire sur mobile.
+    document.querySelectorAll('.has-submenu').forEach(item => {
+        item.addEventListener('click', e => {
+            if (e.target.closest('.sous-menu')) return; // clic sur une option : laisser son propre handler agir
+            e.stopPropagation();
+            const wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.has-submenu.open').forEach(o => o.classList.remove('open'));
+            if (!wasOpen) item.classList.add('open');
+        });
     });
 
     // Dark mode
@@ -684,6 +778,28 @@ function setupEventListeners() {
             if (sel) sel.value = opt.dataset.lang;
         });
     });
+    // Réglages admin (visibles uniquement pour role === 'admin')
+    document.getElementById('admin-site-override')?.addEventListener('change', async e => {
+        try { await setDoc(doc(db, 'config', 'site'), { override: e.target.value }, { merge: true }); showToast(t('toastSettingsSaved')); }
+        catch (err) { showToast(t('toastError') + err.message); }
+    });
+    document.getElementById('admin-max-per-cat')?.addEventListener('change', async e => {
+        const val = Math.min(5, Math.max(1, parseInt(e.target.value) || 2));
+        e.target.value = val;
+        try { await setDoc(doc(db, 'config', 'site'), { maxPerCategory: val }, { merge: true }); showToast(t('toastSettingsSaved')); }
+        catch (err) { showToast(t('toastError') + err.message); }
+    });
+    document.getElementById('admin-signups-toggle')?.addEventListener('change', async e => {
+        try { await setDoc(doc(db, 'config', 'site'), { signupsOpen: e.target.checked }, { merge: true }); showToast(t('toastSettingsSaved')); }
+        catch (err) { showToast(t('toastError') + err.message); }
+    });
+    document.getElementById('admin-announcement')?.addEventListener('change', async e => {
+        const val = e.target.value.trim().slice(0, 200);
+        e.target.value = val;
+        try { await setDoc(doc(db, 'config', 'site'), { announcement: val }, { merge: true }); showToast(t('toastSettingsSaved')); }
+        catch (err) { showToast(t('toastError') + err.message); }
+    });
+
     document.getElementById('settings-lang-select')?.addEventListener('change', e => {
         setLanguage(e.target.value);
         document.querySelectorAll('.lang-option').forEach(o => {
@@ -861,6 +977,7 @@ function setupEventListeners() {
     // Admin – recherche & filtre
     document.getElementById('admin-search')?.addEventListener('input', renderAdminOrders);
     document.getElementById('admin-status-filter')?.addEventListener('change', renderAdminOrders);
+    document.getElementById('admin-payment-filter')?.addEventListener('change', renderAdminOrders);
 
     // Admin – export CSV
     document.getElementById('export-csv-btn')?.addEventListener('click', exportCSV);
@@ -910,7 +1027,8 @@ function updateAuthUI() {
         // Montrer Profil et Paramètres dans le FAB
         document.getElementById('settings-profile-btn')?.classList.remove('hidden');
         document.getElementById('settings-prefs-btn')?.classList.remove('hidden');
-        if (state.currentUser.role === 'admin') { show('nav-admin'); show('mob-nav-admin'); }
+        document.querySelectorAll('#settings-admin-group, .admin-only-group').forEach(el => el.classList.toggle('hidden', state.currentUser.role !== 'admin'));
+        if (state.currentUser.role === 'admin') { show('nav-admin'); show('mob-nav-admin'); syncAdminSettingsInputs(); }
         const av  = document.getElementById('header-avatar');
         const av2 = document.getElementById('mob-header-avatar');
         const nm  = document.getElementById('header-username');
@@ -923,10 +1041,31 @@ function updateAuthUI() {
         show('mob-nav-signin'); hide('mob-nav-profile');
         hide('settings-logout'); show('settings-signin');
         hide('nav-admin'); hide('mob-nav-admin');
+        document.querySelectorAll('#settings-admin-group, .admin-only-group').forEach(el => el.classList.add('hidden'));
         // Cacher Profil et Paramètres dans le FAB si non connecté
         document.getElementById('settings-profile-btn')?.classList.add('hidden');
         document.getElementById('settings-prefs-btn')?.classList.add('hidden');
     }
+}
+
+function syncAdminSettingsInputs() {
+    const sel = document.getElementById('admin-site-override');
+    const num = document.getElementById('admin-max-per-cat');
+    const su  = document.getElementById('admin-signups-toggle');
+    const an  = document.getElementById('admin-announcement');
+    if (sel) sel.value = state.siteConfig.override;
+    if (num) num.value = state.siteConfig.maxPerCategory;
+    if (su && document.activeElement !== su) su.checked = state.siteConfig.signupsOpen;
+    if (an && document.activeElement !== an) an.value = state.siteConfig.announcement;
+}
+
+function renderAnnouncementBanner() {
+    const el = document.getElementById('home-announcement');
+    if (!el) return;
+    const msg = (state.siteConfig.announcement || '').trim();
+    if (!msg) { el.classList.add('hidden'); return; }
+    el.querySelector('span').textContent = msg;
+    el.classList.remove('hidden');
 }
 
 function prefillNameFields() {
@@ -1045,6 +1184,8 @@ const OPEN_HOUR  = 5;   // 5h
 const CLOSE_HOUR = 24;  // minuit
 
 function isSiteClosed() {
+    if (state.siteConfig?.override === 'open')   return { closed: false };
+    if (state.siteConfig?.override === 'closed') return { closed: true, reason: 'admin' };
     const now  = new Date();
     const day  = now.getDay();
     const hour = now.getHours();
@@ -1098,6 +1239,8 @@ function updateOrderFormForClosure(isClosed) {
         } else {
             nightBanner?.classList.remove('hidden');
             weekendBanner?.classList.add('hidden');
+            const body = document.getElementById('night-banner-body');
+            if (body) body.textContent = t(reason === 'admin' ? 'closedAdminMsg' : 'closedNightMsg');
         }
 
         // Désactiver tous les champs et boutons du formulaire
@@ -1108,7 +1251,7 @@ function updateOrderFormForClosure(isClosed) {
         }
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.title = t(reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg');
+            submitBtn.title = t(reason === 'weekend' ? 'closedWeekendMsg' : reason === 'admin' ? 'closedAdminMsg' : 'closedNightMsg');
         }
         if (cancelBtn) cancelBtn.disabled = true;
 
@@ -1132,15 +1275,18 @@ function updateOrderFormForClosure(isClosed) {
 function updateStatusStrip() {
     const now = new Date(), hour = now.getHours(), day = now.getDay();
     const isWE = day === 0 || day === 6;
-    const isOpen = !isWE && hour >= OPEN_HOUR && hour < CLOSE_HOUR;
+    const override = state.siteConfig?.override;
+    const isOpen = override === 'open' ? true : override === 'closed' ? false : (!isWE && hour >= OPEN_HOUR && hour < CLOSE_HOUR);
     const strip = document.getElementById('status-strip');
     if (strip) {
         const closeStr = CLOSE_HOUR >= 24 ? t('midnight') : `${CLOSE_HOUR}h`;
         strip.innerHTML = isOpen
             ? `<span style="color:#34c759">&#9679; ${t('statusOpen')}</span> &nbsp;|&nbsp; ${t('statusClosesAt')} ${closeStr}`
-            : `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; ${t(isWE ? 'statusOpensMonday' : 'statusOpensToday')} ${OPEN_HOUR}h`;
+            : override === 'closed'
+                ? `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span>`
+                : `<span style="color:var(--danger-color)">&#9679; ${t('statusClosed')}</span> &nbsp;|&nbsp; ${t(isWE ? 'statusOpensMonday' : 'statusOpensToday')} ${OPEN_HOUR}h`;
     }
-    document.getElementById('weekend-banner')?.classList.toggle('hidden', !isWE);
+    document.getElementById('weekend-banner')?.classList.toggle('hidden', !isWE || override === 'open');
 }
 
 function initTime() {
@@ -1155,7 +1301,7 @@ function renderMenu() {
     const container = document.getElementById('menu-container');
     if (!container) return;
     container.innerHTML = '';
-    const MAX = 2;
+    const MAX = state.siteConfig?.maxPerCategory || 2;
     const catLabels = { starter: t('catStarter'), main: t('catMain'), dessert: t('catDessert') };
 
     ['starter','main','dessert'].forEach(cat => {
@@ -1267,7 +1413,7 @@ function calculateTotal() {
 function startCheckout(e) {
     e.preventDefault();
     const { closed, reason } = isSiteClosed();
-    if (closed) { showToast(t(reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); return; }
+    if (closed) { showToast(t(reason === 'weekend' ? 'closedWeekendMsg' : reason === 'admin' ? 'closedAdminMsg' : 'closedNightMsg')); return; }
     if (parseInt(document.getElementById('total-count').textContent) === 0) { showToast(t('toastEmptyCart')); return; }
     buildPaymentRecap();
     document.getElementById('order-form-container').classList.add('hidden');
@@ -1316,7 +1462,7 @@ async function confirmPayment() {
     btn.disabled = true; btn.textContent = t('validating');
     const reset = () => { btn.disabled = false; btn.textContent = t('confirmPaymentBtn'); };
     const { closed, reason } = isSiteClosed();
-    if (closed) { showToast(t(reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); reset(); return; }
+    if (closed) { showToast(t(reason === 'weekend' ? 'closedWeekendMsg' : reason === 'admin' ? 'closedAdminMsg' : 'closedNightMsg')); reset(); return; }
     const method = document.querySelector('input[name="payment"]:checked')?.value || 'badge';
     const pickup = getPickupDate();
     const isModification = !!state.editingOrderId;
@@ -1358,18 +1504,24 @@ async function confirmPayment() {
 /* ============================================================
    ADMIN : COMMANDES
    ============================================================ */
+function getFilteredAdminOrders() {
+    const searchVal     = (document.getElementById('admin-search')?.value || '').toLowerCase();
+    const statusFilter  = document.getElementById('admin-status-filter')?.value || '';
+    const paymentFilter = document.getElementById('admin-payment-filter')?.value || '';
+    return state.orders.filter(o =>
+        o.status !== 'Livrée' &&  // Les commandes livrées disparaissent de la gestion
+        (!searchVal    || (o.user || '').toLowerCase().includes(searchVal) || (o.ref || '').toLowerCase().includes(searchVal)) &&
+        (!statusFilter  || o.status  === statusFilter) &&
+        (!paymentFilter || o.payment === paymentFilter)
+    );
+}
+
 function renderAdminOrders() {
     const tbody    = document.getElementById('orders-table-body');
     const tfoot    = document.getElementById('orders-table-foot');
     const emptyMsg = document.getElementById('table-empty');
     if (!tbody) return;
-    const searchVal    = (document.getElementById('admin-search')?.value || '').toLowerCase();
-    const statusFilter = document.getElementById('admin-status-filter')?.value || '';
-    const filtered = state.orders.filter(o =>
-        o.status !== 'Livrée' &&  // Les commandes livrées disparaissent de la gestion
-        (!searchVal    || (o.user || '').toLowerCase().includes(searchVal)) &&
-        (!statusFilter || o.status === statusFilter)
-    );
+    const filtered = getFilteredAdminOrders();
     tbody.innerHTML = '';
     const tw = document.querySelector('.table-wrapper');
     if (filtered.length === 0) {
@@ -1383,21 +1535,20 @@ function renderAdminOrders() {
     if (tw) tw.style.display = '';
     let grandTotal = 0;
     filtered.forEach(o => {
-        const starter = (o.items||[]).filter(i=>i.category==='starter').map(i=>`${i.qty}× ${esc(i.name)}`).join(', ') || '—';
-        const main    = (o.items||[]).filter(i=>i.category==='main').map(i    =>`${i.qty}× ${esc(i.name)}`).join(', ') || '—';
-        const dessert = (o.items||[]).filter(i=>i.category==='dessert').map(i =>`${i.qty}× ${esc(i.name)}`).join(', ') || '—';
-        const statusLabel = o.status==='Confirmée' ? t('statusConfirmed') : (o.status==='Annulée' ? t('statusCancelled') : t('statusModified'));
+        const items = (o.items || []).map(i => `${i.qty}× ${esc(i.name)}`).join(', ') || '—';
+        const statusLabel = orderStatusLabel(o.status);
         const sc = o.status==='Confirmée'?'status-ok':(o.status==='Annulée'?'status-cancelled':'status-modified');
+        const paymentLabel = t(o.payment === 'cash' ? 'paymentCash' : 'paymentBadge');
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><div class="cell-user"><strong>${esc(o.user||'—')}</strong><small class="ref-label">${esc(o.ref||'')}</small></div></td>
-            <td>${esc(o.time||'—')}</td>
-            <td class="cell-dish">${starter}</td>
-            <td class="cell-dish">${main}</td>
-            <td class="cell-dish">${dessert}</td>
-            <td>${esc(o.extras||'—')}</td>
+            <td><span class="ref-label">${esc(o.ref || '—')}</span></td>
+            <td>${esc(orderPlacedLabel(o))}</td>
+            <td><strong>${esc(o.user||'—')}</strong></td>
+            <td class="cell-dish">${items}</td>
             <td><strong>${esc(o.total||'—')}</strong></td>
+            <td><span class="payment-pill payment-pill-${esc(o.payment || 'badge')}">${esc(paymentLabel)}</span></td>
             <td><span class="status-badge ${sc}">${statusLabel}</span></td>
+            <td class="cell-notes"><span class="notes-truncate" title="${esc(o.notes || '')}">${esc(o.notes || '—')}</span></td>
             <td class="cell-actions">
                 <button class="btn-icon" title="${t('confirmBtn')}" onclick="window.updateOrderStatus('${o.firebaseId}','Confirmée')">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1411,8 +1562,8 @@ function renderAdminOrders() {
         if (!isNaN(val)) grandTotal += val;
     });
     if (tfoot) tfoot.innerHTML = `<tr class="table-footer-row">
-        <td colspan="6"><strong>${filtered.length} ${filtered.length>1 ? t('ordersCountPlural') : t('ordersCount')}</strong></td>
-        <td><strong>€${grandTotal.toFixed(2)}</strong></td><td colspan="2"></td>
+        <td colspan="4"><strong>${filtered.length} ${filtered.length>1 ? t('ordersCountPlural') : t('ordersCount')}</strong></td>
+        <td><strong>€${grandTotal.toFixed(2)}</strong></td><td colspan="3"></td>
     </tr>`;
     renderAdminStats(filtered, grandTotal);
 }
@@ -1557,14 +1708,13 @@ window.editMenuItemFirebase = id => {
    EXPORT CSV
    ============================================================ */
 function exportCSV() {
-    if (!state.orders.length) { showToast(t('toastNoOrdersExport')); return; }
-    const headers = [t('csvRef'),t('csvTeacher'),t('csvEmail'),t('csvTime'),t('csvStarter'),t('csvMain'),t('csvDessert'),t('csvExtras'),t('csvNotes'),t('csvPayment'),t('csvTotal'),t('csvStatus')];
-    const rows = state.orders.map(o => {
-        const starter = (o.items||[]).filter(i=>i.category==='starter').map(i=>`${i.qty}x${i.name}`).join(' / ') || '—';
-        const main    = (o.items||[]).filter(i=>i.category==='main').map(i    =>`${i.qty}x${i.name}`).join(' / ') || '—';
-        const dessert = (o.items||[]).filter(i=>i.category==='dessert').map(i =>`${i.qty}x${i.name}`).join(' / ') || '—';
-        return [o.ref||'',o.user||'',o.userEmail||'',o.time||'',starter,main,dessert,
-                o.extras||'',o.notes||'',o.payment||'',o.total||'',o.status||'']
+    const rowsSource = getFilteredAdminOrders();
+    if (!rowsSource.length) { showToast(t('toastNoOrdersExport')); return; }
+    const headers = [t('csvOrderId'),t('csvDateTime'),t('csvCustomer'),t('csvItemsOrdered'),t('csvTotal'),t('csvPayment'),t('csvStatus'),t('csvNotes')];
+    const rows = rowsSource.map(o => {
+        const items = (o.items||[]).map(i=>`${i.qty}x${i.name}`).join(' / ') || '—';
+        const paymentLabel = t(o.payment === 'cash' ? 'paymentCash' : 'paymentBadge');
+        return [o.ref||'', orderPlacedLabel(o), o.user||'', items, o.total||'', paymentLabel, orderStatusLabel(o.status), o.notes||'']
             .map(v=>{ let s = String(v); if (/^[=+\-@]/.test(s)) s = "'" + s; return `"${s.replace(/"/g,'""')}"`; }).join(',');
     });
     const csv  = [headers.join(','), ...rows].join('\n');
@@ -1643,7 +1793,7 @@ function renderActiveOrders(orders) {
 
         card.querySelector('[data-action="modify"]')?.addEventListener('click', () => {
             const cl = isSiteClosed();
-            if (cl.closed) { showToast(t(cl.reason === 'weekend' ? 'closedWeekendMsg' : 'closedNightMsg')); return; }
+            if (cl.closed) { showToast(t(cl.reason === 'weekend' ? 'closedWeekendMsg' : cl.reason === 'admin' ? 'closedAdminMsg' : 'closedNightMsg')); return; }
             showToast(t('modifyHintMsg'));
             navigateTo('order');
             renderMenu();
