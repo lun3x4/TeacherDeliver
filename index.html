@@ -46,6 +46,10 @@
         <!-- ===================== HOME ===================== -->
         <section id="home" class="page active">
             <div class="hero-section">
+                <div id="home-announcement" class="home-announcement hidden">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <span></span>
+                </div>
                 <h1 data-i18n="homeTitle">TeacherMeals</h1>
                 <p class="hero-description" data-i18n="homeDescription">Précommandez vos repas du lundi au vendredi. Frais, pratiques et prêts à récupérer.</p>
                 <div class="status-strip" id="status-strip" role="status" aria-live="polite"></div>
@@ -121,7 +125,7 @@
             </div>
             <div id="weekend-banner" class="banner error hidden"><strong data-i18n="weekendBanner">Site fermé le weekend.</strong> <span data-i18n="statusReturnMonday">Retour lundi.</span></div>
             <div id="night-closed-banner" class="banner error hidden">
-                <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Commandes fermées.</strong> Les commandes sont disponibles du lundi au vendredi de <strong>5h00 à minuit</strong>. Revenez à 5h00 !
+                <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span data-i18n="closedBannerTitle">Commandes fermées.</span></strong> <span id="night-banner-body" data-i18n="closedNightMsg">Les commandes sont disponibles du lundi au vendredi de 5h00 à minuit.</span>
             </div>
 
             <!-- Order Form -->
@@ -244,8 +248,13 @@
             <!-- Orders Tab -->
             <div id="orders-tab" class="admin-tab-content active">
                 <div class="admin-toolbar">
-                    <input type="text" data-i18n-placeholder="adminSearchPlaceholder" placeholder="Rechercher un professeur…" id="admin-search" class="admin-search-input">
+                    <input type="text" data-i18n-placeholder="adminSearchPlaceholder" placeholder="Rechercher par n° de commande ou nom…" id="admin-search" class="admin-search-input">
                     <div class="admin-toolbar-right">
+                        <select id="admin-payment-filter">
+                            <option value="" data-i18n="allPaymentMethods">Tous les paiements</option>
+                            <option value="badge" data-i18n="paymentBadge">Badge école</option>
+                            <option value="cash" data-i18n="paymentCash">Espèces</option>
+                        </select>
                         <select id="admin-status-filter">
                             <option value="" data-i18n="allStatuses">Tous les statuts</option>
                             <option value="Confirmée" data-i18n="statusConfirmed">Confirmée</option>
@@ -262,9 +271,9 @@
                 <div class="table-wrapper">
                     <table id="orders-table" class="admin-table">
                         <thead><tr>
-                            <th data-i18n="thTeacher">Professeur</th><th data-i18n="thTime">Heure</th><th data-i18n="thStarter">Entrée</th>
-                            <th data-i18n="thMain">Plat</th><th data-i18n="thDessert">Dessert</th><th data-i18n="thExtras">Extras</th>
-                            <th data-i18n="thTotal">Total</th><th data-i18n="thStatut">Statut</th><th data-i18n="thActions">Actions</th>
+                            <th data-i18n="thOrderId">N° Commande</th><th data-i18n="thDateTime">Date &amp; Heure</th><th data-i18n="thCustomer">Client</th>
+                            <th data-i18n="thItemsOrdered">Articles commandés</th><th data-i18n="thTotal">Total</th><th data-i18n="thPayment">Paiement</th>
+                            <th data-i18n="thStatut">Statut</th><th data-i18n="thNotes">Notes</th><th data-i18n="thActions">Actions</th>
                         </tr></thead>
                         <tbody id="orders-table-body"></tbody>
                         <tfoot id="orders-table-foot"></tfoot>
@@ -441,9 +450,13 @@
 
                 <!-- Sidebar -->
                 <aside class="profile-sidebar">
-                    <div class="profile-avatar-large" id="profile-avatar-large">?</div>
-                    <div class="profile-name-display" id="profile-name-display">—</div>
-                    <div class="profile-email-display" id="profile-email-display">—</div>
+                    <div class="profile-identity">
+                        <div class="profile-avatar-large" id="profile-avatar-large">?</div>
+                        <div class="profile-identity-text">
+                            <div class="profile-name-display" id="profile-name-display">—</div>
+                            <div class="profile-email-display" id="profile-email-display">—</div>
+                        </div>
+                    </div>
                     <nav class="profile-nav">
                         <button class="profile-nav-btn active" data-section="section-account">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -474,6 +487,7 @@
                     <!-- Account Section -->
                     <div id="section-account" class="profile-section active">
                         <h2 data-i18n="myAccount">Mon Compte</h2>
+                        <p class="section-note" data-i18n="accountNote">Gérez vos informations personnelles et votre mot de passe.</p>
 
                         <div class="card">
                             <h3 data-i18n="personalInfo">Informations personnelles</h3>
@@ -541,6 +555,7 @@
                     <!-- Settings Section -->
                     <div id="section-settings" class="profile-section">
                         <h2 data-i18n="profileNavSettings">Paramètres</h2>
+                        <p class="section-note" data-i18n="settingsNote">Personnalisez votre expérience et gérez votre confidentialité.</p>
 
                         <div class="card settings-group">
                             <h3 data-i18n="settingsDisplay">Affichage</h3>
@@ -567,6 +582,26 @@
                         </div>
 
                         <div class="card settings-group">
+                            <h3 data-i18n="settingsSupportLegal">Assistance &amp; Légal</h3>
+                            <div class="settings-link-row" data-target="help">
+                                <span data-i18n="helpCenter">Centre d'aide</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                            <div class="settings-link-row" data-target="contact">
+                                <span data-i18n="navContact">Contact</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                            <div class="settings-link-row" data-target="privacy">
+                                <span data-i18n="privacyTitle">Politique de Confidentialité</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                            <div class="settings-link-row" data-target="terms">
+                                <span data-i18n="termsTitle">Conditions d'Utilisation</span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </div>
+                        </div>
+
+                        <div class="card settings-group">
                             <h3 data-i18n="settingsPrivacy">Confidentialité &amp; Sécurité</h3>
                             <div class="settings-row settings-row-btn">
                                 <div>
@@ -574,6 +609,49 @@
                                     <div class="settings-row-desc" data-i18n="deleteAccountDesc">Action irréversible — toutes vos données seront effacées</div>
                                 </div>
                                 <button class="btn-danger" id="delete-account-btn" style="padding:8px 16px;font-size:.85rem" data-i18n="deleteBtn">Supprimer</button>
+                            </div>
+                        </div>
+
+                        <div class="card settings-group hidden" id="settings-admin-group" data-admin-group>
+                            <h3 data-i18n="settingsAdminTitle">Administration</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="siteOverrideLabel">État du site</div>
+                                    <div class="settings-row-desc" data-i18n="siteOverrideDesc">Forcer l'ouverture ou la fermeture, quelle que soit l'heure</div>
+                                </div>
+                                <select id="admin-site-override" class="settings-select">
+                                    <option value="auto" data-i18n="siteOverrideAuto">Automatique (horaires normaux)</option>
+                                    <option value="open" data-i18n="siteOverrideOpen">Toujours ouvert</option>
+                                    <option value="closed" data-i18n="siteOverrideClosed">Toujours fermé</option>
+                                </select>
+                            </div>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="maxPerCatLabel">Limite par catégorie</div>
+                                    <div class="settings-row-desc" data-i18n="maxPerCatDesc">Nombre maximum d'articles par catégorie (entrées, plats, desserts)</div>
+                                </div>
+                                <input type="number" id="admin-max-per-cat" class="settings-select" style="width:70px;text-align:center" min="1" max="5" step="1" value="2">
+                            </div>
+                        </div>
+
+                        <div class="card settings-group hidden admin-only-group" data-admin-group>
+                            <h3 data-i18n="settingsAdminExtra">D'autres réglages utiles</h3>
+                            <div class="settings-row">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="signupsLabel">Nouvelles inscriptions</div>
+                                    <div class="settings-row-desc" data-i18n="signupsDesc">Autoriser la création de nouveaux comptes professeur</div>
+                                </div>
+                                <label class="apple-switch">
+                                    <input type="checkbox" id="admin-signups-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-row settings-row-stacked">
+                                <div>
+                                    <div class="settings-row-label" data-i18n="announcementLabel">Message d'annonce</div>
+                                    <div class="settings-row-desc" data-i18n="announcementDesc">Affiché en haut de l'accueil pour tous les utilisateurs (laisser vide pour ne rien afficher)</div>
+                                </div>
+                                <input type="text" id="admin-announcement" data-i18n-placeholder="announcementPlaceholder" placeholder="ex : Menu spécial cette semaine !" maxlength="200" style="width:100%">
                             </div>
                         </div>
                     </div>
@@ -740,8 +818,10 @@
                 </li>
 
                 <li class="has-submenu" id="pref-link">
-                    <span data-i18n="help">Aide</span>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <div class="submenu-trigger">
+                        <span data-i18n="help">Aide</span>
+                        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
                     <ul class="sous-menu">
                         <li data-target="help" class="page-link" data-i18n="helpCenter">Centre d'aide</li>
                         <li data-target="contact" class="page-link" data-i18n="navContact">Contact</li>
@@ -750,8 +830,10 @@
                 </li>
 
                 <li class="has-submenu" id="lang-menu">
-                    <span id="lang-label">Langue : FR</span>
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    <div class="submenu-trigger">
+                        <span id="lang-label">Langue : FR</span>
+                        <svg class="chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </div>
                     <ul class="sous-menu">
                         <li data-lang="fr" class="lang-option active-lang">FR — Français</li>
                         <li data-lang="en" class="lang-option">EN — English</li>
@@ -794,23 +876,23 @@
     <nav class="mobile-nav" aria-label="Navigation mobile">
         <button class="mobile-nav-btn active" data-target="home" id="mob-nav-home">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            Accueil
+            <span data-i18n="navHome">Accueil</span>
         </button>
         <button class="mobile-nav-btn" data-target="order" id="mob-nav-order">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            Commander
+            <span data-i18n="navOrder">Commander</span>
         </button>
         <button class="mobile-nav-btn hidden" data-target="management" id="mob-nav-admin">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            Gestion
+            <span data-i18n="navManagement">Gestion</span>
         </button>
         <button class="mobile-nav-btn" data-target="signin" id="mob-nav-signin">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-            Connexion
+            <span data-i18n="navSignin">Connexion</span>
         </button>
         <button class="mobile-nav-btn hidden" data-target="profile" id="mob-nav-profile">
             <div class="avatar-mini" id="mob-header-avatar" style="width:22px;height:22px;font-size:0.65rem">?</div>
-            Profil
+            <span data-i18n="navProfile">Profil</span>
         </button>
     </nav>
 
